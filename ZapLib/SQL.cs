@@ -75,7 +75,7 @@ namespace ZapLib
         private string buildconnString(string s)
         {
             s += ";Connect Timeout=" + Timeout;
-            s += ";Encrypt" + Encrypt;
+            s += ";Encrypt=" + Encrypt;
             s += ";TrustServerCertificate=" + TrustServerCertificate;
             s += ";ApplicationIntent=" + ApplicationIntent;
             s += ";MultiSubnetFailover=" + MultiSubnetFailover;
