@@ -7,13 +7,13 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.11.0
+PM> Install-Package ZapLib -Version 1.14.0
 ```
 
 ## System requirement
 
 * `v1.10.0` 以前的版本支援 .NET Framework 4.0 以上
-* `v1.11.0` 開始的版本僅支援 .NET Framework 4.5 以上
+* `v1.12.0` 開始的版本僅支援 .NET Framework 4.5 以上
 
 ## API Reference
 
@@ -28,6 +28,30 @@ PM> Install-Package ZapLib -Version 1.11.0
 * 實務案例(一)：
 * 實務案例(二)：
 
+
+## ChangeLog
+
+* `v1.14.0`
+  * 新增了 SQL BCP 的功能，可以快速寫入大量資料，使用範例如下：  
+
+```csharp
+
+
+// 建立 DataTable 物件
+var dt = new DataTable();
+dt.Columns.Add("words", typeof(string));
+
+// 將資料塞進 DataTable 中
+foreach (string word in words)
+{
+    var row = dt.NewRow();
+    row["words"] = new_word;
+    dt.Rows.Add(row);
+}
+// 全部一次性寫入
+SQL db = new SQL();
+result = db.quickBulkCopy(dt, "dbo.UD");
+```
 
 ## License MIT
 

@@ -26,3 +26,4 @@ _notes
 *.jfm
 *.csproj.vspscc
 *.exe
+*.nupkg

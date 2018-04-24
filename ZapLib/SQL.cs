@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace ZapLib
 {
@@ -194,6 +195,33 @@ namespace ZapLib
             return obj;
         }
 
+        public bool quickBulkCopy(DataTable data, string tableName)
+        {
+            bool result = false;
+            connet();
+            if (isConn)
+            {
+                try
+                {
+                    using (var bcp = new SqlBulkCopy(Conn, SqlBulkCopyOptions.FireTriggers, null))
+                    {
+                        bcp.DestinationTableName = tableName;
+                        bcp.WriteToServer(data);
+                    }
+                    if (isTran) tran.Commit();
+                    result = true;
+                }
+                catch (Exception e)
+                {
+                    log.write("SQL BCP Error: " + tableName);
+                    log.write(e.ToString());
+                    if (isTran) tran.Rollback();
+                }
+                close();
+            }
+            return result;
+        }
+
         /*
             fetch one and return T Array 
             if query fail reutrn null
@@ -212,7 +240,7 @@ namespace ZapLib
                 for (int i = 0; i < r.FieldCount; i++)
                 {
                     var value = r.GetValue(i);
-                    var prop = obj.GetType().GetProperty(r.GetName(i));
+                    var prop = obj.GetType().GetProperty(r.GetName(i), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if ((prop != null) && prop.CanWrite)
                         prop.SetValue(obj, Convert.IsDBNull(value) ? null : value, null);
                 }
@@ -273,7 +301,7 @@ namespace ZapLib
                 {
                     string name = item.Key;
                     object value = item.Value.Value;
-                    var prop = obj.GetType().GetProperty(name);
+                    var prop = obj.GetType().GetProperty(name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if ((prop != null) && prop.CanWrite)
                     {
                         if (value.GetType() == typeof(DBNull)) value = null;
