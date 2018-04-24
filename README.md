@@ -35,8 +35,6 @@ PM> Install-Package ZapLib -Version 1.14.0
   * 新增了 SQL BCP 的功能，可以快速寫入大量資料，使用範例如下：  
 
 ```csharp
-
-
 // 建立 DataTable 物件
 var dt = new DataTable();
 dt.Columns.Add("words", typeof(string));
