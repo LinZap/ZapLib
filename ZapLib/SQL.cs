@@ -17,7 +17,8 @@ namespace ZapLib
         private SqlConnection Conn = null;
         private bool isTran = false;
         private MyLog log;
-
+        
+        private List<string> errormessage = new List<string>();
         public int Timeout { get; set; } = 15;
         public bool Encrypt { get; set; } = false;
         public string ApplicationIntent { get; set; } = "ReadWrite";
@@ -47,7 +48,10 @@ namespace ZapLib
             connString = buildconnString(basestring);
             log = new MyLog();
         }
-
+        public List<string> responseMessage()
+        {
+            return errormessage;
+        }
         public SqlConnection connet()
         {
             try
@@ -68,6 +72,7 @@ namespace ZapLib
             catch (Exception e)
             {
                 log.write(e.ToString());
+                errormessage.Add(e.ToString());
                 Conn = null;
             }
             return Conn;
@@ -139,6 +144,7 @@ namespace ZapLib
                 catch (Exception e)
                 {
                     log.write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
                     log.write(e.ToString());
 
                     try
@@ -149,6 +155,7 @@ namespace ZapLib
                     catch (Exception x)
                     {
                         log.write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
                         log.write(x.ToString());
                     }
                 }
@@ -178,6 +185,7 @@ namespace ZapLib
                 catch (Exception e)
                 {
                     log.write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
                     log.write(e.ToString());
                     try
                     {
@@ -187,6 +195,7 @@ namespace ZapLib
                     catch (Exception x)
                     {
                         log.write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
                         log.write(x.ToString());
                     }
                 }
@@ -214,6 +223,7 @@ namespace ZapLib
                 catch (Exception e)
                 {
                     log.write("SQL BCP Error: " + tableName);
+                    errormessage.Add("SQL BCP Error: " + tableName);
                     log.write(e.ToString());
                     if (isTran) tran.Rollback();
                 }
@@ -279,7 +289,10 @@ namespace ZapLib
                 {
                     var value = prop.GetValue(output, null);
                     if (value.GetType() != typeof(SqlDbType))
+                    {
                         log.write("when SQL.setParaOutput: output key " + prop.Name + " is not SqlDbType type");
+                        errormessage.Add("when SQL.setParaOutput: output key " + prop.Name + " is not SqlDbType type");
+                    }
                     SqlParameter outputIdParam = ((SqlDbType)value == SqlDbType.NVarChar) ? new SqlParameter("@" + prop.Name, (SqlDbType)value, 4000) : new SqlParameter("@" + prop.Name, (SqlDbType)value);
                     outputIdParam.Direction = ParameterDirection.Output;
                     cmd.Parameters.Add(outputIdParam);
@@ -312,6 +325,7 @@ namespace ZapLib
                         catch (Exception e)
                         {
                             log.write("can not covert type mapping to Model: " + e.ToString());
+                            errormessage.Add(("can not covert type mapping to Model: " + e.ToString());
                         }
                     }
                 }
