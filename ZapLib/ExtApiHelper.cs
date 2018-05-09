@@ -163,10 +163,10 @@ namespace ZapLib
         /*
             response text using attachment (download)
         */
-        public HttpResponseMessage getAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK)
+        public HttpResponseMessage getAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK, string filenameExt = ".xls")
         {
             resp.StatusCode = code;
-            string fn = (filename ?? Guid.NewGuid().ToString()) + ".xls";
+            string fn = (filename ?? Guid.NewGuid().ToString()) + filenameExt;
             if (content != null)
             {
                 string mimeType = MimeMapping.GetMimeMapping(fn);
@@ -178,7 +178,6 @@ namespace ZapLib
             }
             return resp;
         }
-
         /*
            get query value by key from request query string 
            if can not get value, return null
