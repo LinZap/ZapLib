@@ -375,7 +375,20 @@ namespace ZapLib
         {
             return statusCode;
         }
-
+        /*
+           directly return ResponseHeader
+       */
+        public WebHeaderCollection getResponseHeader()
+        {
+            return webResponse.Headers;
+        }
+        /*
+            return ResponseHeader by key
+       */
+        public string getResponseHeader(string key)
+        {
+            return webResponse.Headers[key];
+        }
         /*
             append query string by QueryString object to URL
         */
