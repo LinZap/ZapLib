@@ -5,16 +5,18 @@ namespace ZapLib
 {
     public class MyLog
     {
+        public string path { get; set; }
+        public string name { get; set; }
         public void write(string msg)
         {
-            string logfile = Config.get("Storage");
+            string logfile = path ?? Config.get("Storage");
             if (logfile == null) return;
+
             DateTime now = DateTime.Now;
-            string time = now.ToString("HH:mm:ss"),
-                   date = now.ToString("yyyyMMdd"),
-                   path = string.Format(@"{0}\{1}.txt", logfile, date),
+            string name = this.name ?? now.ToString("yyyyMMdd"),
+                   time = now.ToString("HH:mm:ss"),
                    txt = string.Format("[{0}] {1}", time, msg) + Environment.NewLine;
-            File.AppendAllText(path, txt);
+            File.AppendAllText(string.Format(@"{0}\{1}.txt", logfile, name), txt);
         }
     }
 }
