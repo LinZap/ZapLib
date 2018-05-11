@@ -163,13 +163,13 @@ namespace ZapLib
         /*
             response text using attachment (download)
         */
-        public HttpResponseMessage getAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK, string filenameExt = ".xls")
+        public HttpResponseMessage getAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK)
         {
             resp.StatusCode = code;
-            string fn = (filename ?? Guid.NewGuid().ToString()) + filenameExt;
+            string fn = (filename ?? Guid.NewGuid().ToString());
             if (content != null)
             {
-                string mimeType = MimeMapping.GetMimeMapping(fn);
+                string mimeType = MimeMapping.GetMimeMapping(fn) ?? "application/octet-stream";
                 resp.Content = new StringContent(content, Encoding.UTF8, mimeType);
                 resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
