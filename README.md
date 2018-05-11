@@ -32,10 +32,9 @@ PM> Install-Package ZapLib -Version 1.15.0
 ## ChangeLog
 改版紀錄
 
-### * `v1.15.0`
+### `v1.15.0`
 
 * 可以取得 SQL 最後錯誤資訊，不一定要寫入 Log 觀察，使用範例如下：  
-
 ```csharp
 SQL db = new SQL("localhost", "dbname", "account", "password");
 object[] o = db.quickQuery<object>("select * from class");
@@ -57,10 +56,7 @@ log.write("wewfewfewfewfewf");
 log.write("safawfqafw");
 ```
   
-* 新增 Fetch 可以取得 Response 的 Header 資訊
-  
-如果無法取得 Header 則會回傳 NULL
-  
+* 新增 Fetch 可以取得 Response 的 Header 資訊 (如果無法取得 Header 則會回傳 NULL)
 ```csharp
 Fetch fetch = new Fetch("http://localhost");
 fetch.get(null);
@@ -69,7 +65,7 @@ WebHeaderCollection all_headers = fetch.getResponseHeaders();  // 取得全部 Heade
 ```
   
 
-### * `v1.14.0`
+### `v1.14.0`
   * 新增了 SQL BCP 的功能，可以快速寫入大量資料，使用範例如下：  
 
 ```csharp
