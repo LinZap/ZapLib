@@ -18,7 +18,7 @@ namespace ZapLib
         private bool isTran = false;
         private MyLog log;
         
-        private List<string> errormessage = new List<string>();
+        private List<string> errormessage;
         public int Timeout { get; set; } = 15;
         public bool Encrypt { get; set; } = false;
         public string ApplicationIntent { get; set; } = "ReadWrite";
@@ -37,6 +37,7 @@ namespace ZapLib
             isTran = transaction;
             connString = buildconnString(basestring);
             log = new MyLog();
+            errormessage = new List<string>();
         }
 
         /* exactlly user defined */
@@ -47,11 +48,16 @@ namespace ZapLib
             isTran = transaction;
             connString = buildconnString(basestring);
             log = new MyLog();
+            errormessage = new List<string>();
         }
-        public List<string> responseMessage()
+
+
+        public string getErrorMessage()
         {
-            return errormessage;
+            return String.Join("\n", errormessage);
         }
+
+
         public SqlConnection connet()
         {
             try
@@ -325,7 +331,7 @@ namespace ZapLib
                         catch (Exception e)
                         {
                             log.write("can not covert type mapping to Model: " + e.ToString());
-                            errormessage.Add(("can not covert type mapping to Model: " + e.ToString());
+                            errormessage.Add("can not covert type mapping to Model: " + e.ToString());
                         }
                     }
                 }
