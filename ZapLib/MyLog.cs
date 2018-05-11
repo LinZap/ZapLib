@@ -9,14 +9,14 @@ namespace ZapLib
         public string name { get; set; }
         public void write(string msg)
         {
-            string logfile = this.path != null ? this.path : Config.get("Storage");
+            string logfile = path ?? Config.get("Storage");
             if (logfile == null) return;
+
             DateTime now = DateTime.Now;
-            string name = this.name != null ? this.name : now.ToString("yyyyMMdd"),
+            string name = this.name ?? now.ToString("yyyyMMdd"),
                    time = now.ToString("HH:mm:ss"),
-                   path = string.Format(@"{0}\{1}.txt", logfile, name),
                    txt = string.Format("[{0}] {1}", time, msg) + Environment.NewLine;
-            File.AppendAllText(path, txt);
+            File.AppendAllText(string.Format(@"{0}\{1}.txt", logfile, name), txt);
         }
     }
 }
