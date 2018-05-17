@@ -7,13 +7,14 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.16.0
+PM> Install-Package ZapLib -Version 1.16.1
 ```
 
 ## System requirement
 
 * `v1.10.0` 以前的版本支援 .NET Framework 4.0 以上
 * `v1.12.0` 開始的版本僅支援 .NET Framework 4.5 以上
+* `v1.16.0` 開始的版本包含 SignalR
 
 ## API Reference
 
@@ -25,6 +26,7 @@ PM> Install-Package ZapLib -Version 1.16.0
 * Query String：
 * Config：
 * Log：
+* ApiControllerSignalR：
 * 實務案例(一)：
 * 實務案例(二)：
 
