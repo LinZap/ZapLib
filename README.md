@@ -32,10 +32,29 @@ PM> Install-Package ZapLib -Version 1.16.0
 ## ChangeLog
 改版紀錄
 
-### `v1.16.0`
-新增了 SignalR 的 ApiController `ApiControllerSignalR`，使用範例如下：  
+### `v1.16.1`
+新增了 `ApiController` 擴充了 SignalR 功能的 `ApiControllerSignalR` 類別，使用範例如下：  
+  
+首先在 Web API 專案根目錄下新增 `Startup.cs` 並撰寫以下程式碼 (這裡的設定可以依照需求調整)
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        var hubConfiguration = new HubConfiguration();
+        hubConfiguration.EnableDetailedErrors = true;
+        app.MapSignalR(hubConfiguration);
+    }
+}
+``` 
+  
+接下來在根目錄下的 `Global.asax` 中加入以下程式碼 (這裡的 `TimeSpan.FromSeconds(10)` 可依照需求調整)
 
-`MsgHub.cs`  
+```csharp
+GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(10);
+```
+  
+接下來新增一個 `Hubs` 目錄，並在其中新增一個 `MsgHub.cs` 類別
 
 ```csharp
 [HubName("messaging")]
@@ -44,6 +63,8 @@ public class MsgHub : Hub
 	// write something...
 }
 ```
+  
+最後，開啟欲使用 SignalR 的 Controller，將原先的 `ApiController` 改為 ZapLib 提供的 `ApiControllerSignalR`，如此一來便能使用下方展示的擴充功能
   
 `___Controller.cs`  
 
@@ -60,20 +81,25 @@ public class MsgController : ApiControllerSignalR<MsgHub>
 		// 檢查特定 ID 連線狀態
 		bool isAlive = IsConnectionIdAlive("Connection ID");
 
-		string[] connectionIds = new string[]{ /*...*/ };
+		string[] connectionIds = new string[]{   };
+
 		// 廣播給某群人
-		Hub.Clients.Clients(connectionIds).receiveMsg(m);
+		Hub.Clients.Clients(connectionIds).receiveMsg("...");
 		
 		// 解析一群 ID 的連線狀態
-		List<string> Alive, Dead;
-		ResolveConnectionIds(connectionIds, Alive out, Dead out);
+		IList<string> Alive, Dead;
+        ResolveConnectionIds(connectionIds, out Alive, out Dead);
+
 		foreach(var id in Dead)
 		{
-			// 無效的連線 IDs
+			// 無效的連線 ID
 		}
 	}
 }
 ```
+
+> 其中 `Hub` 是 `GlobalHost.ConnectionManager.GetHubContext` 取出的 `HubContext` 可以直接使用原生的功能 
+> 另外 `ResolveConnectionIds(IList<string> connectionIds, out IList<string> Alive, out IList<string> Dead)` 與 `IsConnectionIdAlive(string connectionId)` 提供的功能實作原理，可以參閱[技術說明](https://www.facebook.com/groups/1634561570101701/permalink/2516506991907150/)
 
 
 ### `v1.15.0`
