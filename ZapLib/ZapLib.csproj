@@ -88,7 +88,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="ZapLib.nuspec" />
+    <None Include="ZapLib.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />

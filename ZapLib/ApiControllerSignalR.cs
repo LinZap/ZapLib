@@ -32,17 +32,27 @@ namespace ZapLib
             Dead = new List<string>();
             if (connectionIds == null) return;
             var heardbeat = GlobalHost.DependencyResolver.Resolve<ITransportHeartbeat>();
+            Dictionary<string, bool> connections = new Dictionary<string, bool>();
+
             foreach (var connection in heardbeat.GetConnections())
+                connections.Add(connection.ConnectionId, connection.IsAlive);
+            
+
+            foreach(var id in connectionIds)
             {
-                var connectionId = connection.ConnectionId;
-                if (connectionIds.Contains(connectionId))
-                    if (connection.IsAlive)
+                if (connections.ContainsKey(id)){
+                    var isAlive = false;
+                    if (connections.TryGetValue(id, out isAlive))
                     {
-                        Alive.Add(connectionId);
-                        continue;
+                        if (isAlive)
+                        {
+                            Alive.Add(id);
+                            continue;
+                        }
                     }
-                Dead.Add(connectionId);
-            }     
+                }
+                Dead.Add(id);
+            }      
         }
 
     }
