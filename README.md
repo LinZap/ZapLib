@@ -1,4 +1,4 @@
-# ZapLib
+# [ZapLib](https://www.nuget.org/packages/ZapLib/)
 
 ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人員能夠快速完成複雜的功能。無論您需要 Http 請求、SQL Server 的查詢、.NET Web Api 的擴充函式、SMTP 寄信、Regular Expression... 等，都能用簡單的程式碼來完成它！
 
