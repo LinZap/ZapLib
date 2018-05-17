@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.15.0
+PM> Install-Package ZapLib -Version 1.16.0
 ```
 
 ## System requirement
@@ -31,6 +31,50 @@ PM> Install-Package ZapLib -Version 1.15.0
 
 ## ChangeLog
 改版紀錄
+
+### `v1.16.0`
+新增了 SignalR 的 ApiController `ApiControllerSignalR`，使用範例如下：  
+
+`MsgHub.cs`  
+
+```csharp
+[HubName("messaging")]
+public class MsgHub : Hub
+{
+	// write something...
+}
+```
+  
+`___Controller.cs`  
+
+```csharp
+[RoutePrefix("api")]
+public class MsgController : ApiControllerSignalR<MsgHub>
+{
+    [HttpPost]
+    [Route("msg/send")]
+    public HttpResponseMessage sendMsg([FromBody]ModelMsg msg)
+    {
+		// 廣播給某個對象
+		Hub.Clients.Client( id ).pushMsg("...");
+		// 檢查特定 ID 連線狀態
+		bool isAlive = IsConnectionIdAlive("Connection ID");
+
+		string[] connectionIds = new string[]{ /*...*/ };
+		// 廣播給某群人
+		Hub.Clients.Clients(connectionIds).receiveMsg(m);
+		
+		// 解析一群 ID 的連線狀態
+		List<string> Alive, Dead;
+		ResolveConnectionIds(connectionIds, Alive out, Dead out);
+		foreach(var id in Dead)
+		{
+			// 無效的連線 IDs
+		}
+	}
+}
+```
+
 
 ### `v1.15.0`
 

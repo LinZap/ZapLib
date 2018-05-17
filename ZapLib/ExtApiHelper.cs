@@ -305,6 +305,6 @@ namespace ZapLib
             if (Request.TotalBytes > 0)
                 s = Encoding.GetEncoding("utf-8").GetString(Request.BinaryRead(Request.TotalBytes));
             return JsonConvert.DeserializeObject<T>(s);
-        }
+        }  
     }
 }
