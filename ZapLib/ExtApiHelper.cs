@@ -223,7 +223,17 @@ namespace ZapLib
                    new_sql = reg.Replace(sql, replacement);
             sql = string.Format("with tb as({0})select * from tb where rownumber between {1} and {2}", new_sql, start, end);
         }
-
+        public void addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)
+        {
+          int sysLimit = int.TryParse(Config.get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
+          int ilimit = int.TryParse(getQuery("limit"), out ilimit) ? ilimit : 50;
+          ilimit = Math.Min(sysLimit, ilimit) + 1;
+          Regex reg = new Regex("^select ");
+          string replacement = string.Format("select ROW_NUMBER() over({0}) as _seq,", "order by " + orderby),
+                new_sql = reg.Replace(sql, replacement),
+                clause = (String.IsNullOrEmpty(idcolumn) & String.IsNullOrEmpty(nextId)) ? "" : string.Format(" where {0}='{1}'", idcolumn, nextId);
+          sql = string.Format("with tb as({0})select top({1}) * from tb where _seq>=(select _seq from tb {2})", new_sql, ilimit, clause);
+        }
 
         /*
             upload file from multi-part form
