@@ -40,6 +40,7 @@ PM> Install-Package ZapLib -Version 1.17.0
 ](http://192.168.1.136/SideProject/ZapLib/issues/7) 中的描述，使用範例如下：
 
 * 第一頁(第一次抓取)：
+
 ```csharp
 // 在某一個 Controller 的 Action 中
 ExtApiHelper api = new ExtApiHelper(this);
