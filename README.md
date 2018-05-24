@@ -39,7 +39,7 @@ PM> Install-Package ZapLib -Version 1.17.0
 可以使用 ID 來做為分頁基準，細節可以參閱 [Identity Paging
 ](http://192.168.1.136/SideProject/ZapLib/issues/7) 中的描述，使用範例如下：
 
-* 第一頁(第一次抓取)：
+* 第一頁(第一次抓取)，`nextId` 為 `null`：
 
 ```csharp
 // 在某一個 Controller 的 Action 中
@@ -57,7 +57,7 @@ api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
 SQL db = new SQL();
 ModelEntity[] data = db.quickQuery<ModelEntity>(sql);
 
-if(data.Length > int.Parse(Config.get('APIDataLimit')))
+if(data.Length > int.Parse(Config.get("APIDataLimit")))
 {
 	// 取出最後一筆的 ID
 	string nextId = data[data.Length - 1].eid.ToString();
@@ -66,13 +66,13 @@ if(data.Length > int.Parse(Config.get('APIDataLimit')))
 }
 ```
   
-* 第二頁(第二次抓取)：
+* 第二頁(第二次抓取)，`nextId` 為 `100`：
   
 ```csharp
 string sql = "select * from entity where eid>10";
 api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
 
-// 此時 sql 是：with tb as(select ROW_NUMBER() over(order by eid desc) as _seq,* from entity where eid>2) select top(51) * from tb where _seq>=(select _seq from tb where eid='2') order by eid desc
+// 此時 sql 是：with tb as(select ROW_NUMBER() over(order by eid desc) as _seq,* from entity where eid>2) select top(51) * from tb where _seq>=(select _seq from tb where eid='100') order by eid desc
 ```
 
 
