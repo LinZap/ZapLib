@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.16.1
+PM> Install-Package ZapLib -Version 1.17.0
 ```
 
 ## System requirement
@@ -33,6 +33,47 @@ PM> Install-Package ZapLib -Version 1.16.1
 
 ## ChangeLog
 改版紀錄
+
+### `v1.17.0`
+新增了 `ExtApiHelper` 擴充功能 `addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)`  
+可以使用 ID 來做為分頁基準，細節可以參閱 [Identity Paging
+](http://192.168.1.136/SideProject/ZapLib/issues/7) 中的描述，使用範例如下：
+
+* 第一頁(第一次抓取)：
+```csharp
+// 在某一個 Controller 的 Action 中
+ExtApiHelper api = new ExtApiHelper(this);
+string sql = "select * from entity where eid>10";
+string nextId = null;
+api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
+
+// 此時 sql 是：select top(51) * from entity where eid>2 order by eid desc
+```
+
+* 此時請注意，API 預設抓取 n 筆資料(在 `Web.config` 中設定 `APIDataLimit` )，但 `addIdentityPaging` 會抓取 n+1 筆資料，目的是為了判斷是否還能翻下一頁，請自行刪除最後一筆資料並取得最後一筆資料的 ID，作為下一次翻頁的基準
+
+```csharp
+SQL db = new SQL();
+ModelEntity[] data = db.quickQuery<ModelEntity>(sql);
+
+if(data.Length > int.Parse(Config.get('APIDataLimit')))
+{
+	// 取出最後一筆的 ID
+	string nextId = data[data.Length - 1].eid.ToString();
+	// 刪除最後一筆資料
+	Array.Resize(ref data, data.Length - 1);
+}
+```
+  
+* 第二頁(第二次抓取)：
+  
+```csharp
+string sql = "select * from entity where eid>10";
+api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
+
+// 此時 sql 是：with tb as(select ROW_NUMBER() over(order by eid desc) as _seq,* from entity where eid>2) select top(51) * from tb where _seq>=(select _seq from tb where eid='2') order by eid desc
+```
+
 
 ### `v1.16.1`
 新增了 `ApiController` 擴充了 SignalR 功能的 `ApiControllerSignalR` 類別，使用範例如下：  
