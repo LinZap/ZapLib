@@ -23,5 +23,8 @@ namespace ZapLib.Tests
             Trace.WriteLine("------------------------");
             Assert.IsNotNull(error);
         }
+
+
+       
     }
 }

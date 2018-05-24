@@ -23,12 +23,13 @@ namespace ZapLib
         private List<CookieHeaderValue> cookies;
         private Dictionary<string, string> queries;
 
+
         public ExtApiHelper(ApiController api)
         {
             this.api = api;
-            request = api.Request;
+            request = api.Request ?? new HttpRequestMessage();
             cookies = new List<CookieHeaderValue>();
-            resp = request.CreateResponse();
+            resp = request == null ? new HttpResponseMessage() : request.CreateResponse();
         }
 
         /*
@@ -120,7 +121,7 @@ namespace ZapLib
         */
         public string getCookie(string key)
         {
-            CookieHeaderValue c = api.Request.Headers.GetCookies(key).FirstOrDefault();
+            CookieHeaderValue c = request.Headers.GetCookies(key).FirstOrDefault();
             return c == null ? null : c[key].Value;
         }
 
@@ -187,7 +188,7 @@ namespace ZapLib
             if (queries == null)
             {
                 queries = new Dictionary<string, string>();
-                foreach (KeyValuePair<string, string> kv in api.Request.GetQueryNameValuePairs())
+                foreach (KeyValuePair<string, string> kv in request.GetQueryNameValuePairs())
                 {
                     queries[kv.Key] = kv.Value;
                 }
@@ -224,6 +225,22 @@ namespace ZapLib
             sql = string.Format("with tb as({0})select * from tb where rownumber between {1} and {2}", new_sql, start, end);
         }
 
+        /*
+            add Identity Paging to SQL stament
+        */
+        public void addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)
+        {
+            bool isFirstPage = (String.IsNullOrEmpty(idcolumn) || String.IsNullOrEmpty(nextId));
+            int sysLimit = int.TryParse(Config.get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
+            int ilimit = int.TryParse(getQuery("limit"), out ilimit) ? ilimit : 50;
+            ilimit = Math.Min(sysLimit, ilimit) + 1;
+            Regex reg = new Regex("^select ");
+            string replacement = isFirstPage ? string.Format("select top({0}) ", ilimit) :
+                                               string.Format("select ROW_NUMBER() over(order by {0}) as _seq,", orderby),
+                  new_sql = reg.Replace(sql, replacement);
+            sql = isFirstPage ? string.Format("{0} order by {1}", new_sql, orderby):
+                                string.Format("with tb as({0}) select top({1}) * from tb where _seq>=(select _seq from tb where {2}='{3}') order by {4}", new_sql, ilimit, idcolumn, nextId, orderby);
+        }
 
         /*
             upload file from multi-part form
@@ -305,6 +322,6 @@ namespace ZapLib
             if (Request.TotalBytes > 0)
                 s = Encoding.GetEncoding("utf-8").GetString(Request.BinaryRead(Request.TotalBytes));
             return JsonConvert.DeserializeObject<T>(s);
-        }  
+        }
     }
 }
