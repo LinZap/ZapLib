@@ -179,6 +179,32 @@ namespace ZapLib
             }
             return resp;
         }
+
+
+        /*
+            response file stream using attachment (download)
+        */
+        public HttpResponseMessage getStreamResponse(string filePath, string name = null, string type = "application/octet-stream", string disposition= "attachment")
+        {       
+            string fn = (name ?? Guid.NewGuid().ToString());
+            if (File.Exists(filePath))
+            {
+                resp.StatusCode = HttpStatusCode.OK;
+                resp.Content = new StreamContent(File.OpenRead(filePath));
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                {
+                    FileName = fn
+                };
+            }
+            else
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+                resp.Content = new StringContent("NotFound");
+            }
+            return resp;
+        }
+
         /*
            get query value by key from request query string 
            if can not get value, return null

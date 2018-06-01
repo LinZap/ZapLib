@@ -34,6 +34,28 @@ PM> Install-Package ZapLib -Version 1.17.0
 ## ChangeLog
 改版紀錄
 
+### `v1.18.0`
+
+新增了 `ApiHelper.getStreamResponse` 用從伺服器中抓取檔案並以串流方式回應，使用範例如下：
+   
+**`getStreamResponse`**  
+  
+| arg  |  type | required | description |
+| --------  | -------- | -------- |  -------- |
+| filePath     |   string     | Y | 檔案實體路徑 |
+| name         |   string     | N | 檔案名稱，如果沒有給予，則會以亂數命名 |
+| type         |   string     | N | 檔案 MIME TYPE，如果沒有給予，則會以預設 `application/octet-stream` |
+| disposition  |   string     | N | 串流方式，預設為 `attachment` 會直接下載檔案，如果要在瀏覽器中顯示，例如圖片，可以設定成 `inline` |
+  
+> 注意：`disposition` 如果設置為 `inline`，`type` 也必須設定成可以支援直接顯示的類型 e.g. `image/jpeg`, `image/png` ...
+  
+```csharp
+// 在某一個 Controller 的 Action 中
+ExtApiHelper api = new ExtApiHelper(this);
+// 將會直接下載，並以亂數命名檔案名稱
+return api.getStreamResponse(@"D:\a.txt");
+```  
+  
 ### `v1.17.0`
 新增了 `ExtApiHelper` 擴充功能 `addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)`  
 可以使用 ID 來做為分頁基準，細節可以參閱 [Identity Paging
