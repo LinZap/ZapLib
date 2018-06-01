@@ -184,13 +184,13 @@ namespace ZapLib
         /*
             response file stream using attachment (download)
         */
-        public HttpResponseMessage getStreamResponse(string filePath, string name = null, string type = "application/octet-stream", string disposition= "attachment")
+        public HttpResponseMessage getStreamResponse(string file, string name = null, string type = "application/octet-stream", string disposition= "attachment")
         {       
             string fn = (name ?? Guid.NewGuid().ToString());
-            if (File.Exists(filePath))
+            if (File.Exists(file))
             {
                 resp.StatusCode = HttpStatusCode.OK;
-                resp.Content = new StreamContent(File.OpenRead(filePath));
+                resp.Content = new StreamContent(File.OpenRead(file));
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
                 resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
                 {
@@ -202,6 +202,22 @@ namespace ZapLib
                 resp.StatusCode = HttpStatusCode.NotFound;
                 resp.Content = new StringContent("NotFound");
             }
+            return resp;
+        }
+
+        /*
+           response file stream using attachment (download)
+       */
+        public HttpResponseMessage getStreamResponse(byte[] file, string name = null, string type = "application/octet-stream", string disposition = "attachment")
+        {
+            string fn = (name ?? Guid.NewGuid().ToString());
+            resp.StatusCode = HttpStatusCode.OK;
+            resp.Content = new ByteArrayContent(file);
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+            resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+            {
+                FileName = fn
+            };          
             return resp;
         }
 
