@@ -34,15 +34,15 @@ PM> Install-Package ZapLib -Version 1.17.0
 ## ChangeLog
 改版紀錄
 
-### `v1.18.0`
+### `v1.18.1`
 
-新增了 `ApiHelper.getStreamResponse` 用從伺服器中抓取檔案並以串流方式回應，使用範例如下：
+新增了 `ExtApiHelper.getStreamResponse` 用從伺服器中抓取檔案並以串流方式回應，使用範例如下：
    
 **`getStreamResponse`**  
   
 | arg  |  type | required | description |
 | --------  | -------- | -------- |  -------- |
-| filePath     |   string     | Y | 檔案實體路徑 |
+| file         |   string 或 byte[]   | Y | 檔案實體路徑 或 存放於記憶體中的檔案 |
 | name         |   string     | N | 檔案名稱，如果沒有給予，則會以亂數命名 |
 | type         |   string     | N | 檔案 MIME TYPE，如果沒有給予，則會以預設 `application/octet-stream` |
 | disposition  |   string     | N | 串流方式，預設為 `attachment` 會直接下載檔案，如果要在瀏覽器中顯示，例如圖片，可以設定成 `inline` |
