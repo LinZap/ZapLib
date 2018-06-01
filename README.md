@@ -34,7 +34,7 @@ PM> Install-Package ZapLib -Version 1.17.0
 ## ChangeLog
 改版紀錄
 
-### `v1.18.1`
+### `v1.18.2`
 
 新增了 `ExtApiHelper.getStreamResponse` 用從伺服器中抓取檔案並以串流方式回應，使用範例如下：
    
