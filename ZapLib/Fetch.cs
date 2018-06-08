@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using ZapLib.Security;
 
 namespace ZapLib
 {
@@ -31,6 +32,7 @@ namespace ZapLib
         public string contentType { get; set; } = "application/json";
         public bool isRaw { get; set; } = false;
         public WebResponse webResponse { get; set; } = null;
+        public bool validPlatform { get; set; } = false;
 
         public Fetch()
         {
@@ -47,15 +49,11 @@ namespace ZapLib
 
         private void appendHeaders()
         {
-
             if (header == null) return;
             if (header.GetType() == typeof(Dictionary<string, string>))
             {
                 foreach (KeyValuePair<string, string> prop in (Dictionary<string, string>)header)
-                {
-                    if (req != null) req.Headers.Add(prop.Key, prop.Key);
-                    if (client != null) client.DefaultRequestHeaders.Add(prop.Key, prop.Key);
-                }
+                    appendHeader(prop.Key, prop.Value);
             }
             else
             {
@@ -65,22 +63,25 @@ namespace ZapLib
                     {
                         string name = prop.Name;
                         object value = prop.GetValue(header, null);
-                        if (value != null)
-                        {
-                            if (req != null) req.Headers.Add(name, value.ToString());
-                            if (client != null) client.DefaultRequestHeaders.Add(name, value.ToString());
-                        }
+                        if (value != null) appendHeader(name, value.ToString());
                     }
                 }
                 catch (Exception e)
                 {
-                    log.write("can not set header:" + JsonConvert.SerializeObject(header));
-                    log.write("can not set header:" + e.ToString());
+                    Trace.WriteLine("can not set header:" + JsonConvert.SerializeObject(header));
+                    Trace.WriteLine("can not set header:" + e.ToString());
                 }
             }
 
             if (req != null && userAgent != null) ((HttpWebRequest)req).UserAgent = userAgent;
             if (client != null && userAgent != null) client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+        }
+
+
+        private void appendHeader(string key, string val)
+        {
+            if (req != null) req.Headers.Add(key, val);
+            if (client != null) client.DefaultRequestHeaders.Add(key, val);
         }
 
         /*
@@ -189,6 +190,8 @@ namespace ZapLib
                     streamWriter.Write(current_data);
                     streamWriter.Flush();
                 }
+            if (validPlatform)
+                procValidPlatform(current_data);
         }
 
 
@@ -212,6 +215,8 @@ namespace ZapLib
                     streamWriter.Write(current_data);
                     streamWriter.Flush();
                 }
+            if (validPlatform)
+                procValidPlatform(current_data);
         }
 
         /*
@@ -226,6 +231,8 @@ namespace ZapLib
 
             if (!string.IsNullOrWhiteSpace(proxy))
                 req.Proxy = new WebProxy(proxy, true);
+            if (validPlatform)
+                procValidPlatform(JsonConvert.SerializeObject(data));
         }
 
         /*
@@ -274,6 +281,18 @@ namespace ZapLib
                     formData.Add(fileStreamContent, prop.Name, filePath);
                 }
             }
+            if (validPlatform) procValidPlatform(formData.ReadAsStringAsync().Result);
+        }
+
+        public void procValidPlatform(string content)
+        {
+            Crypto crypto = new Crypto();
+            string Signature = crypto.Md5(content);
+            string Authorization = crypto.DESEncryption(Signature);
+            string IV = crypto.iv;
+            appendHeader("Channel-Signature", Signature);
+            appendHeader("Channel-Authorization", Authorization);
+            appendHeader("Channel-Iv", IV);
         }
 
         /*

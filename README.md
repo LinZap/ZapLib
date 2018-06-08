@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.17.0
+PM> Install-Package ZapLib -Version 1.19.0
 ```
 
 ## System requirement
@@ -33,6 +33,68 @@ PM> Install-Package ZapLib -Version 1.17.0
 
 ## ChangeLog
 改版紀錄
+
+### `v1.19.0`
+
+新增了全新的**平台驗證**功能於 `using ZapLib.Security`  
+
+**Controller 自動驗證**
+
+提供 WebApi Controller 新的標籤 `[ValidPlatform]` 用於驗證是否為信任的請求，使用方式如下：
+
+```csharp
+// 在某一個 Controller 的 Action 中
+[ValidPlatform]
+[Route("test")]
+public HttpResponseMessage test_file()
+{
+    // 如果驗證通過才會進入這個 Action    
+}
+```  
+    
+**`Fetch` 附加驗證**  
+
+如果使用 `Fetch` 呼叫具有 `[ValidPlatform]` 驗證的 API，可以啟用 `validPlatform` 改為 `true` 便會自動附加驗證的資訊  
+
+```csharp
+Fetch2 f = new Fetch2("https://httpbin.org/post");
+// 附加平台驗證資訊
+f.validPlatform = true;
+object res = f.post<object>(new { data = "123", result = true, number = 123 });
+``` 
+
+**`系統金鑰` 與 `上帝鑰匙`**
+
+要通過平台驗證，兩個平台必須要有相同的 **`系統金鑰`**，如果要改變預設的 **`系統金鑰`**，可以在系統進入點添增設定
+
+`WebApiConfig.cs`  
+```csharp
+ZapLib.Security.Const.Key = "新的金鑰";
+``` 
+
+為了開發人員方便，驗證留有一個後門 **`上帝鑰匙`** 可以直接通過驗證，預設為 `nvOcQMfERrASHCIuE797`，也可以在系統進入點修改它
+
+`WebApiConfig.cs`  
+```csharp
+ZapLib.Security.Const.GodKey = "上帝鑰匙";
+``` 
+
+
+**驗證方式與規格**
+
+平台驗證實作了 [DES](https://zh.wikipedia.org/wiki/%E8%B3%87%E6%96%99%E5%8A%A0%E5%AF%86%E6%A8%99%E6%BA%96) 方法，但是稍作改良，請求端會再 HTTP Header 附加 3 個欄位資料  
+
+| key  |  description |
+| --------  | -------- | 
+| `Channel-Signature` | 將傳送的資料以 MD5 加密後的字串，作為請求的簽章 |  
+| `Channel-Iv` | 一組每次都會亂數產生的加密種子 |  
+| `Channel-Authorization` | 以 `Channel-Signature` + `Channel-Iv` + `系統金鑰` 使用 DES 雜湊後的結果 |
+
+如果在 Controller 附加了 `[ValidPlatform]` 則會在進入 Action 之前，先將 `Channel-Signature` + `Channel-Iv` + `系統金鑰` 在進行一次 DES 雜湊，比對 `Channel-Authorization` 數值是否相同，如果相同就會驗證通過。   
+驗證不通過時，會直接回傳 `401 Unauthorized` 未授權回應。
+
+
+
 
 ### `v1.18.2`
 

@@ -83,7 +83,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryString.cs" />
     <Compile Include="RegExp.cs" />
+    <Compile Include="Security\Const.cs" />
+    <Compile Include="Security\Crypto.cs" />
+    <Compile Include="Security\ValidPlatformAttribute.cs" />
     <Compile Include="SQL.cs" />
+    <Compile Include="ValidPlatformAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
