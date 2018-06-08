@@ -87,7 +87,6 @@
     <Compile Include="Security\Crypto.cs" />
     <Compile Include="Security\ValidPlatformAttribute.cs" />
     <Compile Include="SQL.cs" />
-    <Compile Include="ValidPlatformAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

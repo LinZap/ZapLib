@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.19.0
+PM> Install-Package ZapLib -Version 1.19.1
 ```
 
 ## System requirement
@@ -34,7 +34,7 @@ PM> Install-Package ZapLib -Version 1.19.0
 ## ChangeLog
 改版紀錄
 
-### `v1.19.0`
+### `v1.19.1`
 
 新增了全新的**平台驗證**功能於 `using ZapLib.Security`  
 
