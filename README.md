@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.19.1
+PM> Install-Package ZapLib -Version 1.20.0
 ```
 
 ## System requirement
@@ -33,7 +33,7 @@ PM> Install-Package ZapLib -Version 1.19.1
 * [實務案例(一)：FSX 小型檔案儲存系統](http://192.168.1.136/SideProject/FSX)
 * [實務案例(二)：使用 SignalR 推播技術的聊天室](http://192.168.1.136/zap/signalr-server)
 
-## [ChangeLog](blob/master/ChangeLog.md)
+## [ChangeLog](http://192.168.1.136/SideProject/ZapLib/blob/master/CHANGELOG.md)
 
 ## License MIT
 

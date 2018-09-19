@@ -16,7 +16,7 @@ SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // 使用自訂 
 
 **`getConnection()`**
 
-並且新增了 `` 方法取代原先只能用 `connet()` 方法取得目前連線物件的方式  
+並且新增了 `getConnection()` 方法取代原先只能用 `connet()` 方法取得目前連線物件的方式  
 
 ```csharp
 SQL db = new SQL(); 
