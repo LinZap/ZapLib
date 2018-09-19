@@ -16,17 +16,10 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void post()
         {
-            Fetch f = new Fetch("http://localhost:61256/api/attachment");
-
-
-            //byte[] file = Encoding.UTF8.GetBytes("ewfewfewfewfewfewfwef");
-            byte[] file = File.ReadAllBytes("123.txt");
-
-            string res = f.post(new
-            {
-                file
-            });
-
+            Fetch f = new Fetch("https://httpbin.org/get");
+            f.userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
+            f.header = new { };
+            var res = f.get(null);
 
             Trace.WriteLine(res);
         }
