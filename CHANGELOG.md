@@ -15,7 +15,7 @@ SQL API 可以使用自訂的 Connection String 進行連線
 SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // 使用自訂 Connection String 連線
 ```
 
-**`getConnection()`** 與 `dynamicFetch()`
+**`getConnection()`** 
 
 並且新增了 `getConnection()` 方法取代原先只能用 `connet()` 方法取得目前連線物件的方式  
 
@@ -26,7 +26,7 @@ SqlConnection myConn = db.getConnection();
 ```
 
 
-**`quickDynamicQuery()`**
+**`quickDynamicQuery()` 與 `dynamicFetch()`**
 
 新增了動態快速查詢 API，將返回 `dynamic[]` 型態的資料，查詢失敗一樣回傳 `null`  
 
@@ -51,11 +51,11 @@ stmt.Close();
 db.close();
 ```
 
-**`quickDynamicQuery()`** 與 `dynamicExec()`
+**`quickDynamicQuery()` 與 `dynamicExec()`**
 
 新增了快速執行 stored procedure，將返回 `dynamic` 型態的資料，查詢失敗一樣回傳 `null`  
 
-```
+```csharp
 SQL db = new SQL();
 
 var input_para = new
@@ -75,7 +75,7 @@ Trace.WriteLine((int)data.res);
 
 如果需要手動連線，進行細節操作
 
-```
+```csharp
 SQL db = new SQL();
 db.connet();
 dynamic obj = dynamicExec(sql, input_para, output_para);
