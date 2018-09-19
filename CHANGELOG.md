@@ -45,7 +45,7 @@ for(int i = 0; i < data.Length; i++)
 ```csharp
 SQL db = new SQL(); 
 db.connet();
-SqlDataReader stmt = query(sql, param);
+SqlDataReader stmt = db.query(sql);
 dynamic[] data = dynamicFetch(stmt);
 stmt.Close();
 db.close();
