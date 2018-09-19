@@ -4,17 +4,18 @@
 
 ## `v1.20.0`
 
-
 ### SQL API 新增功能
 
-**SQL API**
+
+**使用連線字串連線**
+
 SQL API 可以使用自訂的 Connection String 進行連線  
 
 ```csharp
 SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // 使用自訂 Connection String 連線
 ```
 
-**`getConnection()`**
+**`getConnection()`** 與 `dynamicFetch()`
 
 並且新增了 `getConnection()` 方法取代原先只能用 `connet()` 方法取得目前連線物件的方式  
 
@@ -23,6 +24,7 @@ SQL db = new SQL();
 db.connect();
 SqlConnection myConn = db.getConnection();
 ```
+
 
 **`quickDynamicQuery()`**
 
@@ -36,12 +38,22 @@ for(int i = 0; i < data.Length; i++)
 {
     Trace.WriteLine((string)data[i].cname);
 }
-Assert.IsNotNull(data);
 ```
 
-**`quickDynamicQuery()`**
+如果需要手動連線，進行細節操作
 
-新增了動態快速執行 SP，將返回 `dynamic` 型態的資料，查詢失敗一樣回傳 `null`  
+```csharp
+SQL db = new SQL(); 
+db.connet();
+SqlDataReader stmt = query(sql, param);
+dynamic[] data = dynamicFetch(stmt);
+stmt.Close();
+db.close();
+```
+
+**`quickDynamicQuery()`** 與 `dynamicExec()`
+
+新增了快速執行 stored procedure，將返回 `dynamic` 型態的資料，查詢失敗一樣回傳 `null`  
 
 ```
 SQL db = new SQL();
@@ -60,6 +72,17 @@ var output_para = new
 dynamic data = db.quickDynamicExec("xp_checklogin", input_para, output_para);
 Trace.WriteLine((int)data.res);
 ```
+
+如果需要手動連線，進行細節操作
+
+```
+SQL db = new SQL();
+db.connet();
+dynamic obj = dynamicExec(sql, input_para, output_para);
+db.close();
+```
+
+
 
 ## `v1.19.1`
 
