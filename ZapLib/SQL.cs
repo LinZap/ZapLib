@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Reflection;
 
 namespace ZapLib
@@ -17,7 +18,7 @@ namespace ZapLib
         private SqlConnection Conn = null;
         private bool isTran = false;
         private MyLog log;
-        
+
         private List<string> errormessage;
         public int Timeout { get; set; } = 15;
         public bool Encrypt { get; set; } = false;
@@ -51,14 +52,26 @@ namespace ZapLib
             errormessage = new List<string>();
         }
 
+        /* use connection string */
+        public SQL(string connectionString)
+        {
+            connString = connectionString;
+            log = new MyLog();
+            errormessage = new List<string>();
+        }
+
 
         public string getErrorMessage()
         {
             return String.Join("\n", errormessage);
         }
 
+        public SqlConnection getConnection()
+        {
+            return Conn;
+        }
 
-        public SqlConnection connet()
+        public void connet()
         {
             try
             {
@@ -81,7 +94,6 @@ namespace ZapLib
                 errormessage.Add(e.ToString());
                 Conn = null;
             }
-            return Conn;
         }
 
         private string buildconnString(string s)
@@ -122,6 +134,23 @@ namespace ZapLib
             Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(cmd, output);
             cmd.ExecuteNonQuery();
             return getParaOutput<T>(tmpOutputParams);
+        }
+
+        /*
+            [Beta API]
+            exec stroed procedure  
+            not handle error 
+            else dynamic (T)
+        */
+        public dynamic dynamicExec(string sql, object param = null, object output = null)
+        {
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Clear();
+            setParaInput(cmd, param);
+            Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(cmd, output);
+            cmd.ExecuteNonQuery();
+            return getDynamicParaOutput(tmpOutputParams);
         }
 
         /*
@@ -170,6 +199,53 @@ namespace ZapLib
             return data;
         }
 
+        /*
+            [Beta] return dynamic object
+            once connect and query and then close connection
+            single conn, query and (fetchAll or row)
+            @sql 
+            @cols
+            @isfetchall (default = true)
+        */
+        public dynamic[] quickDynamicQuery(string sql, object param = null, bool isfetchall = true)
+        {
+            dynamic[] data = null;
+            connet();
+            if (isConn)
+            {
+                try
+                {
+                    SqlDataReader stmt = query(sql, param);
+                    if (stmt != null)
+                    {
+                        data = dynamicFetch(stmt, isfetchall);
+                        stmt.Close();
+                    }
+                    if (isTran) tran.Commit();
+                }
+                catch (Exception e)
+                {
+                    log.write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    log.write(e.ToString());
+                    try
+                    {
+                        if (isTran)
+                            tran.Rollback();
+                    }
+                    catch (Exception x)
+                    {
+                        log.write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        log.write(x.ToString());
+                    }
+                }
+                close();
+            }
+            return data;
+        }
+
+
 
         /*
             exec stored procedure
@@ -210,6 +286,49 @@ namespace ZapLib
             return obj;
         }
 
+        /*
+            [Beta] return dynamic object
+            exec stored procedure
+            params: [{},{}...]
+            output: ["",""...]
+            Dictionary<output, val>
+        */
+        public dynamic quickDynamicExec(string sql, object param = null, object output = null)
+        {
+            dynamic obj = null;
+            connet();
+            if (isConn)
+            {
+                try
+                {
+                    obj = dynamicExec(sql, param, output);
+                    if (isTran) tran.Commit();
+                }
+                catch (Exception e)
+                {
+                    log.write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    log.write(e.ToString());
+                    try
+                    {
+                        if (isTran)
+                            tran.Rollback();
+                    }
+                    catch (Exception x)
+                    {
+                        log.write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        log.write(x.ToString());
+                    }
+                }
+                close();
+            }
+            return obj;
+        }
+
+        /*
+             Writing Large Amounts Of Data
+        */
         public bool quickBulkCopy(DataTable data, string tableName)
         {
             bool result = false;
@@ -264,6 +383,32 @@ namespace ZapLib
                 if (!fetchAll) break;
             }
 
+            return data.ToArray();
+        }
+
+        /*
+            [Beta API]
+            fetch one and return dynamic Array
+            if query fail reutrn null
+            else return dynamic[] -> otherwise no one row, array length always 1 
+        */
+        public dynamic[] dynamicFetch(SqlDataReader r, bool fetchAll = true)
+        {
+            if (r == null) return null;
+            List<dynamic> data = new List<dynamic>();
+           
+            while (r.Read())
+            {
+                IDictionary<string, object> dict = new ExpandoObject() as IDictionary<string, object>;
+                for (int i = 0; i < r.FieldCount; i++)
+                {
+                    var value = r.GetValue(i);
+                    var key = r.GetName(i);
+                    dict[key] = Convert.IsDBNull(value) ? null : value;
+                }
+                data.Add(dict);
+                if (!fetchAll) break;
+            }
             return data.ToArray();
         }
 
@@ -334,6 +479,25 @@ namespace ZapLib
                             errormessage.Add("can not covert type mapping to Model: " + e.ToString());
                         }
                     }
+                }
+            }
+            return obj;
+        }
+
+        /*
+            [Beta]
+            get output paras values 
+        */
+        private dynamic getDynamicParaOutput(Dictionary<string, SqlParameter> tmpOutputParams)
+        {
+            IDictionary<string, object> obj = new ExpandoObject() as IDictionary<string, object>;
+            if (tmpOutputParams != null)
+            {
+                foreach (var item in tmpOutputParams)
+                {
+                    string name = item.Key;
+                    object value = item.Value.Value;
+                    obj[name] = value.GetType() == typeof(DBNull) ? null : value;
                 }
             }
             return obj;

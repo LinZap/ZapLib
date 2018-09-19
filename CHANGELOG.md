@@ -2,6 +2,65 @@
 
 改版紀錄
 
+## `v1.20.0`
+
+
+### SQL API 新增功能
+
+**SQL API**
+SQL API 可以使用自訂的 Connection String 進行連線  
+
+```csharp
+SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // 使用自訂 Connection String 連線
+```
+
+**`getConnection()`**
+
+並且新增了 `` 方法取代原先只能用 `connet()` 方法取得目前連線物件的方式  
+
+```csharp
+SQL db = new SQL(); 
+db.connect();
+SqlConnection myConn = db.getConnection();
+```
+
+**`quickDynamicQuery()`**
+
+新增了動態快速查詢 API，將返回 `dynamic[]` 型態的資料，查詢失敗一樣回傳 `null`  
+
+```csharp
+SQL db = new SQL();
+dynamic[] data = db.quickDynamicQuery("select * from entity");
+
+for(int i = 0; i < data.Length; i++)
+{
+    Trace.WriteLine((string)data[i].cname);
+}
+Assert.IsNotNull(data);
+```
+
+**`quickDynamicQuery()`**
+
+新增了動態快速執行 SP，將返回 `dynamic` 型態的資料，查詢失敗一樣回傳 `null`  
+
+```
+SQL db = new SQL();
+
+var input_para = new
+{
+    act = "admin",
+    passportcode = "1234567890"
+};
+
+var output_para = new
+{
+    res = SqlDbType.Int
+};
+
+dynamic data = db.quickDynamicExec("xp_checklogin", input_para, output_para);
+Trace.WriteLine((int)data.res);
+```
+
 ## `v1.19.1`
 
 新增了全新的**平台驗證**功能於 `using ZapLib.Security`  

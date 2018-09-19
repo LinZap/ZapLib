@@ -1,13 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ZapLib;
+﻿using ZapLib;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using Microsoft.CSharp;
+using Newtonsoft.Json;
 
 namespace ZapLib.Tests
 {
@@ -156,37 +154,76 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void transaction()
         {
-string Host = "192.168.1.190";
-string DBName = "TestFpage";
-string User = "sa";
-string Password = "1qaz@WSX";
-           
+            string Host = "192.168.1.190";
+            string DBName = "TestFpage";
+            string User = "sa";
+            string Password = "1qaz@WSX";
 
-string sql_1 = "insert into TestTable(oid) values(@oid)";
-string sql_2 = "insert2 into TestTable(oid) values(@oid)";
 
-SQL db = new SQL(Host, DBName, User, Password, true);
-                  
-db.connet();
+            string sql_1 = "insert into TestTable(oid) values(@oid)";
+            string sql_2 = "insert2 into TestTable(oid) values(@oid)";
 
-if (db.isConn)
-{
-    try
-    {
-        var reader = db.query(sql_1, new { oid = 10 });
-        reader.Close();
-        reader = db.query(sql_2, new { oid = 20 });
-        reader.Close();
-        db.tran.Commit();           
-    }
-    catch(Exception e)
-    {
-        db.tran.Rollback();
-        Console.WriteLine(e.ToString());
-    }
-}
+            SQL db = new SQL(Host, DBName, User, Password, true);
 
-db.close();
+            db.connet();
+
+            if (db.isConn)
+            {
+                try
+                {
+                    var reader = db.query(sql_1, new { oid = 10 });
+                    reader.Close();
+                    reader = db.query(sql_2, new { oid = 20 });
+                    reader.Close();
+                    db.tran.Commit();
+                }
+                catch (Exception e)
+                {
+                    db.tran.Rollback();
+                    Console.WriteLine(e.ToString());
+                }
+            }
+
+            db.close();
+        }
+
+        [TestMethod()]
+        public void quickDynamicQuery()
+        {
+            string Host = "192.168.1.190";
+            string DBName = "TestFpage";
+            string User = "sa";
+            string Password = "1qaz@WSX";
+            SQL db = new SQL(Host, DBName, User, Password);
+            dynamic[] data = db.quickDynamicQuery("select * from entity");
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                Trace.WriteLine((string)data[i].cname);
+            }
+            Assert.IsNotNull(data);
+        }
+
+        [TestMethod()]
+        public void quickDynamicExec()
+        {
+            string Host = "192.168.1.190";
+            string DBName = "TestFpage";
+            string User = "sa";
+            string Password = "1qaz@WSX";
+            SQL db = new SQL(Host, DBName, User, Password);
+            var input_para = new
+            {
+                act = "admin",
+                passportcode = "1234567890"
+            };
+            var output_para = new
+            {
+                res = SqlDbType.Int
+            };
+            dynamic data = db.quickDynamicExec("xp_checklogin", input_para, output_para);
+            Trace.WriteLine((int)data.res);
+            Assert.IsNotNull(data);
         }
     }
     class ModelObject
