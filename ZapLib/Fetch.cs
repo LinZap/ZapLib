@@ -90,18 +90,7 @@ namespace ZapLib
         */
         public T post<T>(object data, object query = null, object files = null)
         {
-            bool statusCode;
-            if (files == null)
-            {
-                setPost(data, query);
-                statusCode = send();
-            }
-            else
-            {
-                setUpload(data, files);
-                statusCode = upload(query);
-            }
-            return statusCode ? getResponse<T>() : default(T);
+            return _post(data, query, files) ? getResponse<T>() : default(T);
         }
 
         /*
@@ -110,18 +99,25 @@ namespace ZapLib
         */
         public string post(object data, object query = null, object files = null)
         {
+            return _post(data, query, files) ? getResponse() : null;
+        }
+
+
+        private bool _post(object data, object query = null, object files = null)
+        {
             bool statusCode;
-            if (files == null)
-            {
-                setPost(data, query);
-                statusCode = send();
-            }
-            else
+
+            if ((files != null) || contentType.Contains("multipart/form-data"))
             {
                 setUpload(data, files);
                 statusCode = upload(query);
             }
-            return statusCode ? getResponse() : null;
+            else
+            {
+                setPost(data, query);
+                statusCode = send();
+            }
+            return statusCode;
         }
 
         /*
@@ -186,7 +182,8 @@ namespace ZapLib
             if (data != null)
                 using (var streamWriter = new StreamWriter(req.GetRequestStream()))
                 {
-                    current_data = isRaw ? data.ToString() : JsonConvert.SerializeObject(data);
+                    current_data = isRaw ? data.ToString() :
+                        contentType.Contains("x-www-form-urlencoded") ? QueryString.Parse(data) : JsonConvert.SerializeObject(data);
                     streamWriter.Write(current_data);
                     streamWriter.Flush();
                 }
@@ -257,32 +254,62 @@ namespace ZapLib
             // add text data to form
             if (data != null)
             {
-                foreach (var prop in data.GetType().GetProperties())
+                if (data.GetType() == typeof(Dictionary<string, string>))
                 {
-                    if (prop.GetValue(data, null) == null) continue;
-                    StringContent content = new StringContent(prop.GetValue(data, null).ToString());
-                    formData.Add(content, prop.Name);
+                    foreach (KeyValuePair<string, string> prop in (Dictionary<string, string>)data)
+                    {
+                        if (string.IsNullOrWhiteSpace(prop.Value)) continue;
+                        StringContent content = new StringContent(prop.Value);
+                        formData.Add(content, prop.Key);
+                    }
                 }
+                else
+                {
+                    foreach (var prop in data.GetType().GetProperties())
+                    {
+                        if (prop.GetValue(data, null) == null) continue;
+                        StringContent content = new StringContent(prop.GetValue(data, null).ToString());
+                        formData.Add(content, prop.Name);
+                    }
+                }
+
             }
             // add file data to form      
             if (files != null)
             {
                 streams = new List<FileStream>();
-                foreach (var prop in files.GetType().GetProperties())
+                if (files.GetType() == typeof(Dictionary<string, string>))
                 {
-                    string filePath = prop.GetValue(files, null).ToString();
-
-                    if (!File.Exists(filePath)) continue;
-
-                    FileStream fileStream = File.OpenRead(filePath);
-                    streams.Add(fileStream);
-
-                    HttpContent fileStreamContent = new StreamContent(fileStream);
-                    formData.Add(fileStreamContent, prop.Name, filePath);
+                    foreach (KeyValuePair<string, string> prop in (Dictionary<string, string>)files)
+                    {
+                        string filePath = prop.Value;
+                        if(filePath==null) continue;
+                        filePath = filePath.Trim();
+                        if (!File.Exists(filePath)) continue;
+                        FileStream fileStream = File.OpenRead(filePath);
+                        streams.Add(fileStream);
+                        HttpContent fileStreamContent = new StreamContent(fileStream);
+                        formData.Add(fileStreamContent, prop.Key, filePath);
+                    }
+                }
+                else
+                {
+                    foreach (var prop in files.GetType().GetProperties())
+                    {
+                        string filePath = prop.GetValue(files, null).ToString();
+                        if (filePath == null) continue;
+                        filePath = filePath.Trim();
+                        if (!File.Exists(filePath)) continue;
+                        FileStream fileStream = File.OpenRead(filePath);
+                        streams.Add(fileStream);
+                        HttpContent fileStreamContent = new StreamContent(fileStream);
+                        formData.Add(fileStreamContent, prop.Name, filePath);
+                    }
                 }
             }
             if (validPlatform) procValidPlatform(formData.ReadAsStringAsync().Result);
         }
+
 
         public void procValidPlatform(string content)
         {
@@ -410,7 +437,7 @@ namespace ZapLib
             {
                 return webResponse != null ? webResponse.Headers[key] : null;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.write(e.ToString());
                 return null;
