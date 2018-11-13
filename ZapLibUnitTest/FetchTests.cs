@@ -39,7 +39,7 @@ namespace ZapLib.Tests
             data.Add("test", "123");
             data.Add("GG", "wefewfhnwoefoew");
             Fetch f = new Fetch("https://httpbin.org/post");
-            f.contentType = "application/x-www-form-urlencoded";
+            //f.contentType = "application/x-www-form-urlencoded";
             var res = f.post(data, new { test = "123" });
             Trace.WriteLine(res);
         }

@@ -7,7 +7,7 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.20.0
+PM> Install-Package ZapLib -Version 1.21.0
 ```
 
 ## System requirement

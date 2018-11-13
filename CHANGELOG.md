@@ -2,6 +2,49 @@
 
 改版紀錄
 
+
+## `v1.21.0`
+
+### Fetch API 新增功能
+
+**Form Data**
+
+Fetch 預設會以 json 編碼傳送資料，如果需要傳統的 From 編碼格式，可以在 `contentType` 中指定
+
+```csharp
+Fetch f = new Fetch("https://httpbin.org/post");
+
+// 預設
+f.contentType = "application/json";
+
+// 使用 URL 編碼傳送資料 x-www-form-urlencoded
+f.contentType = "application/x-www-form-urlencoded";
+
+// 使用傳統 Form 傳送資料
+f.contentType = "multipart/form-data"
+```
+  
+**Fetch 現在可以傳送 `Dictionary` 物件**
+
+``csharp
+Dictionary<string, string> data = new Dictionary<string, string>();
+data.Add("test", "123");
+```
+
+> 只能是 `Dictionary<string, string>` 不可為其他型態
+
+
+**示範：**
+
+```csharp
+Dictionary<string, string> data = new Dictionary<string, string>();
+data.Add("test", "123");
+```
+> 只能是 `Dictionary<string, string>` 不可為其他型態
+
+
+### SQL API 新增功能
+
 ## `v1.20.0`
 
 ### SQL API 新增功能
