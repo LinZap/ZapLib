@@ -2,7 +2,6 @@
 
 改版紀錄
 
-
 ## `v1.21.0`
 
 ### Fetch API 新增功能
@@ -26,7 +25,7 @@ f.contentType = "multipart/form-data"
   
 **Fetch 現在可以傳送 `Dictionary` 物件**
 
-``csharp
+```csharp
 Dictionary<string, string> data = new Dictionary<string, string>();
 data.Add("test", "123");
 ```
