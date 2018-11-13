@@ -25,13 +25,6 @@ f.contentType = "multipart/form-data"
   
 **Fetch 現在可以傳送 `Dictionary` 物件**
 
-```csharp
-Dictionary<string, string> data = new Dictionary<string, string>();
-data.Add("test", "123");
-```
-
-> 只能是 `Dictionary<string, string>` 不可為其他型態
-
 
 **示範：**
 
