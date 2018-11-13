@@ -31,6 +31,10 @@ f.contentType = "multipart/form-data"
 ```csharp
 Dictionary<string, string> data = new Dictionary<string, string>();
 data.Add("test", "123");
+
+Fetch f = new Fetch("https://httpbin.org/post");
+f.contentType = "application/x-www-form-urlencoded";
+f.post(data);
 ```
 > 只能是 `Dictionary<string, string>` 不可為其他型態
 
