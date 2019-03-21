@@ -1,20 +1,20 @@
 # [ZapLib](https://www.nuget.org/packages/ZapLib/)
 
-ZapLib ¨ü¨ì jQuery, Node.js ªºÆF·P±Òµo¡A¦b C# ¤]´£¨Ñ¤@®M«D±`»´¥©ªº¨ç¦¡®w¡A¶}µo¤H­û¯à°÷§Ö³t§¹¦¨½ÆÂøªº¥\¯à¡CµL½×±z»İ­n Http ½Ğ¨D¡BSQL Server ªº¬d¸ß¡B.NET Web Api ªºÂX¥R¨ç¦¡¡BSMTP ±H«H¡BRegular Expression... µ¥¡A³£¯à¥ÎÂ²³æªºµ{¦¡½X¨Ó§¹¦¨¥¦¡I
+ZapLib å—åˆ° jQuery, Node.js çš„éˆæ„Ÿå•Ÿç™¼ï¼Œåœ¨ C# ä¹Ÿæä¾›ä¸€å¥—éå¸¸è¼•å·§çš„å‡½å¼åº«ï¼Œé–‹ç™¼äººå“¡èƒ½å¤ å¿«é€Ÿå®Œæˆè¤‡é›œçš„åŠŸèƒ½ã€‚ç„¡è«–æ‚¨éœ€è¦ Http è«‹æ±‚ã€SQL Server çš„æŸ¥è©¢ã€.NET Web Api çš„æ“´å……å‡½å¼ã€SMTP å¯„ä¿¡ã€Regular Expression... ç­‰ï¼Œéƒ½èƒ½ç”¨ç°¡å–®çš„ç¨‹å¼ç¢¼ä¾†å®Œæˆå®ƒï¼
 
 ## Installation
 
 **Package Manager**
 
 ```
-PM> Install-Package ZapLib -Version 1.21.0
+PM> Install-Package ZapLib -Version 1.22.0
 ```
 
 ## System requirement
 
-* `v1.10.0` ¥H«eªºª©¥»¤ä´© .NET Framework 4.0 ¥H¤W
-* `v1.12.0` ¶}©lªºª©¥»¶È¤ä´© .NET Framework 4.5 ¥H¤W
-* `v1.16.0` ¶}©lªºª©¥»¥]§t SignalR
+* `v1.10.0` ä»¥å‰çš„ç‰ˆæœ¬æ”¯æ´ .NET Framework 4.0 ä»¥ä¸Š
+* `v1.12.0` é–‹å§‹çš„ç‰ˆæœ¬åƒ…æ”¯æ´ .NET Framework 4.5 ä»¥ä¸Š
+* `v1.16.0` é–‹å§‹çš„ç‰ˆæœ¬åŒ…å« SignalR
 
 ## [Documentation](https://linzap.gitbooks.io/zaplib/content/)
 
@@ -30,8 +30,8 @@ PM> Install-Package ZapLib -Version 1.21.0
 * [QueryString API](https://linzap.gitbooks.io/zaplib/content/querystring-api/querystring-api.md)
 * [Config API](https://linzap.gitbooks.io/zaplib/content/config-api/config-api.md)
 * [MyLog API](https://linzap.gitbooks.io/zaplib/content/mylog-api/mylog-api.md)
-* [¹ê°È®×¨Ò(¤@)¡GFSX ¤p«¬ÀÉ®×Àx¦s¨t²Î](http://192.168.1.136/SideProject/FSX)
-* [¹ê°È®×¨Ò(¤G)¡G¨Ï¥Î SignalR ±À¼½§Ş³Nªº²á¤Ñ«Ç](http://192.168.1.136/zap/signalr-server)
+* [å¯¦å‹™æ¡ˆä¾‹(ä¸€)ï¼šFSX å°å‹æª”æ¡ˆå„²å­˜ç³»çµ±](http://192.168.1.136/SideProject/FSX)
+* [å¯¦å‹™æ¡ˆä¾‹(äºŒ)ï¼šä½¿ç”¨ SignalR æ¨æ’­æŠ€è¡“çš„èŠå¤©å®¤](http://192.168.1.136/zap/signalr-server)
 
 ## [ChangeLog](http://192.168.1.136/SideProject/ZapLib/blob/master/CHANGELOG.md)
 

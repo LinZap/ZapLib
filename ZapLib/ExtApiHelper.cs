@@ -298,6 +298,7 @@ namespace ZapLib
             string dest = Config.get("Storage");
             long maxSize = long.TryParse(Config.get("MaxUploadFileSize"), out maxSize) ? maxSize : 5242880;
             MyLog log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             HttpFileCollection files = HttpContext.Current.Request.Files;
 
             if (files.Count < 1) return null;

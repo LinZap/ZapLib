@@ -1,32 +1,62 @@
 # ChangeLog
 
-§ïª©¬ö¿ı
+æ”¹ç‰ˆç´€éŒ„
+
+
+## `v1.22.0`
+
+
+### MyLog æ·»åŠ æ–°çš„æ©Ÿåˆ¶
+
+MyLog å¾é€™å€‹ç‰ˆæœ¬é–‹å§‹ï¼Œ**å°‡æœƒå¿½ç•¥å› ç‚º Log æª”æ¡ˆç„¡æ³•å¯«å…¥çš„éŒ¯èª¤** (e.g. å¤šåŸ·è¡ŒçºŒå…±å¯«ä¸€å€‹ Log æª”æ¡ˆ)ï¼Œä¸¦ä¸”å…è¨±å…¨å±€é—œé–‰ ZapLib å…§å»ºçš„ Log è¨Šæ¯ã€‚
+
+**Force Log**
+
+å¦‚æœä½ ä»éœ€è¦åœ¨ç„¡æ³•å¯«å…¥ Log æª”æ¡ˆæ™‚ï¼Œå®Œæ•´ä¿ç•™ Log è³‡è¨Šï¼Œå¯ä»¥åœ¨ `App.config` æˆ–æ˜¯ `Web.config` ä¸­æ·»åŠ  `ForceLog`ï¼ŒZapLib å°‡è‡ªå‹•æŠŠè³‡è¨Šå¯«åœ¨å¦ä¸€å€‹æª”æ¡ˆä¸­ï¼Œå®ƒçœ‹èµ·ä¾†åƒæ˜¯é€™æ¨£ **`åŸæœ¬ Log æª”å-0f8fad5b-d9cb-469f-a165-70867728950e.txt`**ï¼Œå®ƒæœƒæœ‰åŠ©æ–¼ä½ é€²è¡Œ debug ä½œæ¥­
+
+```xml
+<add key="ForceLog" value="True"/>
+```
+  
+**Silent Mode**
+
+å¦‚æœä½ éœ€è¦å…¨å±€é—œé–‰ ZapLib å…§å»ºçš„ Log è¨Šæ¯ï¼Œå¯ä»¥åœ¨ `App.config` æˆ–æ˜¯ `Web.config` ä¸­æ·»åŠ  `SilentMode`ï¼Œä¸€æ—¦è¨­ç½®äº†é€™å€‹é¸é …ï¼ŒZapLib å°‡é—œé–‰æ‰€æœ‰å…§å»ºçš„ Log è¨Šæ¯ï¼Œä½†æ‚¨é‚„æ˜¯å¯ä»¥å‘¼å« `MyLog` åŠŸèƒ½é€²è¡Œç´€éŒ„ï¼Œä¸æœƒæœ‰æ‰€å½±éŸ¿ã€‚
+
+```xml
+<add key="SilentMode" value="True"/>
+```
+
+**æ›´æ–°æŒ‡å—**
+
+1. å¦‚æœä½ éœ€è¦åœ¨ Log æª”ç„¡æ³•å¯«å…¥å¼·ç ´ç´€éŒ„è¨Šæ¯ï¼Œå¯ä»¥é–‹å•Ÿ Force Log çš„åŠŸèƒ½
+2. å¦‚æœä½ éœ€è¦é—œé–‰æ‰€æœ‰ ZapLib çš„å…§å»º logï¼Œå¯ä»¥é–‹å•Ÿ Silent Mode çš„åŠŸèƒ½
+3. å¦‚æœä½ æ²’æœ‰ä»¥ä¸Šéœ€æ±‚ï¼Œå¯ä»¥ç„¡éœ€åšä»»ä½•ä¿®æ”¹ï¼Œç›´æ¥æ›´æ–°
 
 ## `v1.21.0`
 
-### Fetch API ·s¼W¥\¯à
+### Fetch API æ–°å¢åŠŸèƒ½
 
 **Form Data**
 
-Fetch ¹w³]·|¥H json ½s½X¶Ç°e¸ê®Æ¡A¦pªG»İ­n¶Ç²Îªº From ½s½X®æ¦¡¡A¥i¥H¦b `contentType` ¤¤«ü©w
+Fetch é è¨­æœƒä»¥ json ç·¨ç¢¼å‚³é€è³‡æ–™ï¼Œå¦‚æœéœ€è¦å‚³çµ±çš„ From ç·¨ç¢¼æ ¼å¼ï¼Œå¯ä»¥åœ¨ `contentType` ä¸­æŒ‡å®š
 
 ```csharp
 Fetch f = new Fetch("https://httpbin.org/post");
 
-// ¹w³]
+// é è¨­
 f.contentType = "application/json";
 
-// ¨Ï¥Î URL ½s½X¶Ç°e¸ê®Æ x-www-form-urlencoded
+// ä½¿ç”¨ URL ç·¨ç¢¼å‚³é€è³‡æ–™ x-www-form-urlencoded
 f.contentType = "application/x-www-form-urlencoded";
 
-// ¨Ï¥Î¶Ç²Î Form ¶Ç°e¸ê®Æ
+// ä½¿ç”¨å‚³çµ± Form å‚³é€è³‡æ–™
 f.contentType = "multipart/form-data"
 ```
   
-**Fetch ²{¦b¥i¥H¶Ç°e `Dictionary` ª«¥ó**
+**Fetch ç¾åœ¨å¯ä»¥å‚³é€ `Dictionary` ç‰©ä»¶**
 
 
-**¥Ü½d¡G**
+**ç¤ºç¯„ï¼š**
 
 ```csharp
 Dictionary<string, string> data = new Dictionary<string, string>();
@@ -36,27 +66,27 @@ Fetch f = new Fetch("https://httpbin.org/post");
 f.contentType = "application/x-www-form-urlencoded";
 f.post(data);
 ```
-> ¥u¯à¬O `Dictionary<string, string>` ¤£¥i¬°¨ä¥L«¬ºA
+> åªèƒ½æ˜¯ `Dictionary<string, string>` ä¸å¯ç‚ºå…¶ä»–å‹æ…‹
 
 
-### SQL API ·s¼W¥\¯à
+### SQL API æ–°å¢åŠŸèƒ½
 
 ## `v1.20.0`
 
-### SQL API ·s¼W¥\¯à
+### SQL API æ–°å¢åŠŸèƒ½
 
 
-**¨Ï¥Î³s½u¦r¦ê³s½u**
+**ä½¿ç”¨é€£ç·šå­—ä¸²é€£ç·š**
 
-SQL API ¥i¥H¨Ï¥Î¦Û­qªº Connection String ¶i¦æ³s½u  
+SQL API å¯ä»¥ä½¿ç”¨è‡ªè¨‚çš„ Connection String é€²è¡Œé€£ç·š  
 
 ```csharp
-SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // ¨Ï¥Î¦Û­q Connection String ³s½u
+SQL db = new SQL("Data Source=(LocalDb)\MSSQLLocalDB;Initial ..."); // ä½¿ç”¨è‡ªè¨‚ Connection String é€£ç·š
 ```
 
 **`getConnection()`** 
 
-¨Ã¥B·s¼W¤F `getConnection()` ¤èªk¨ú¥N­ì¥ı¥u¯à¥Î `connet()` ¤èªk¨ú±o¥Ø«e³s½uª«¥óªº¤è¦¡  
+ä¸¦ä¸”æ–°å¢äº† `getConnection()` æ–¹æ³•å–ä»£åŸå…ˆåªèƒ½ç”¨ `connet()` æ–¹æ³•å–å¾—ç›®å‰é€£ç·šç‰©ä»¶çš„æ–¹å¼  
 
 ```csharp
 SQL db = new SQL(); 
@@ -65,9 +95,9 @@ SqlConnection myConn = db.getConnection();
 ```
 
 
-**`quickDynamicQuery()` »P `dynamicFetch()`**
+**`quickDynamicQuery()` èˆ‡ `dynamicFetch()`**
 
-·s¼W¤F°ÊºA§Ö³t¬d¸ß API¡A±Nªğ¦^ `dynamic[]` «¬ºAªº¸ê®Æ¡A¬d¸ß¥¢±Ñ¤@¼Ë¦^¶Ç `null`  
+æ–°å¢äº†å‹•æ…‹å¿«é€ŸæŸ¥è©¢ APIï¼Œå°‡è¿”å› `dynamic[]` å‹æ…‹çš„è³‡æ–™ï¼ŒæŸ¥è©¢å¤±æ•—ä¸€æ¨£å›å‚³ `null`  
 
 ```csharp
 SQL db = new SQL();
@@ -79,7 +109,7 @@ for(int i = 0; i < data.Length; i++)
 }
 ```
 
-¦pªG»İ­n¤â°Ê³s½u¡A¶i¦æ²Ó¸`¾Ş§@
+å¦‚æœéœ€è¦æ‰‹å‹•é€£ç·šï¼Œé€²è¡Œç´°ç¯€æ“ä½œ
 
 ```csharp
 SQL db = new SQL(); 
@@ -90,9 +120,9 @@ stmt.Close();
 db.close();
 ```
 
-**`quickDynamicQuery()` »P `dynamicExec()`**
+**`quickDynamicQuery()` èˆ‡ `dynamicExec()`**
 
-·s¼W¤F§Ö³t°õ¦æ stored procedure¡A±Nªğ¦^ `dynamic` «¬ºAªº¸ê®Æ¡A¬d¸ß¥¢±Ñ¤@¼Ë¦^¶Ç `null`  
+æ–°å¢äº†å¿«é€ŸåŸ·è¡Œ stored procedureï¼Œå°‡è¿”å› `dynamic` å‹æ…‹çš„è³‡æ–™ï¼ŒæŸ¥è©¢å¤±æ•—ä¸€æ¨£å›å‚³ `null`  
 
 ```csharp
 SQL db = new SQL();
@@ -112,7 +142,7 @@ dynamic data = db.quickDynamicExec("xp_checklogin", input_para, output_para);
 Trace.WriteLine((int)data.res);
 ```
 
-¦pªG»İ­n¤â°Ê³s½u¡A¶i¦æ²Ó¸`¾Ş§@
+å¦‚æœéœ€è¦æ‰‹å‹•é€£ç·šï¼Œé€²è¡Œç´°ç¯€æ“ä½œ
 
 ```csharp
 SQL db = new SQL();
@@ -125,106 +155,106 @@ db.close();
 
 ## `v1.19.1`
 
-·s¼W¤F¥ş·sªº**¥­¥xÅçÃÒ**¥\¯à©ó `using ZapLib.Security`  
+æ–°å¢äº†å…¨æ–°çš„**å¹³å°é©—è­‰**åŠŸèƒ½æ–¼ `using ZapLib.Security`  
 
-**Controller ¦Û°ÊÅçÃÒ**
+**Controller è‡ªå‹•é©—è­‰**
 
-´£¨Ñ WebApi Controller ·sªº¼ĞÅÒ `[ValidPlatform]` ¥Î©óÅçÃÒ¬O§_¬°«H¥ôªº½Ğ¨D¡A¨Ï¥Î¤è¦¡¦p¤U¡G
+æä¾› WebApi Controller æ–°çš„æ¨™ç±¤ `[ValidPlatform]` ç”¨æ–¼é©—è­‰æ˜¯å¦ç‚ºä¿¡ä»»çš„è«‹æ±‚ï¼Œä½¿ç”¨æ–¹å¼å¦‚ä¸‹ï¼š
 
 ```csharp
-// ¦b¬Y¤@­Ó Controller ªº Action ¤¤
+// åœ¨æŸä¸€å€‹ Controller çš„ Action ä¸­
 [ValidPlatform]
 [Route("test")]
 public HttpResponseMessage test_file()
 {
-    // ¦pªGÅçÃÒ³q¹L¤~·|¶i¤J³o­Ó Action    
+    // å¦‚æœé©—è­‰é€šéæ‰æœƒé€²å…¥é€™å€‹ Action    
 }
 ```  
     
-**`Fetch` ªş¥[ÅçÃÒ**  
+**`Fetch` é™„åŠ é©—è­‰**  
 
-¦pªG¨Ï¥Î `Fetch` ©I¥s¨ã¦³ `[ValidPlatform]` ÅçÃÒªº API¡A¥i¥H±Ò¥Î `validPlatform` §ï¬° `true` «K·|¦Û°Êªş¥[ÅçÃÒªº¸ê°T  
+å¦‚æœä½¿ç”¨ `Fetch` å‘¼å«å…·æœ‰ `[ValidPlatform]` é©—è­‰çš„ APIï¼Œå¯ä»¥å•Ÿç”¨ `validPlatform` æ”¹ç‚º `true` ä¾¿æœƒè‡ªå‹•é™„åŠ é©—è­‰çš„è³‡è¨Š  
 
 ```csharp
 Fetch2 f = new Fetch2("https://httpbin.org/post");
-// ªş¥[¥­¥xÅçÃÒ¸ê°T
+// é™„åŠ å¹³å°é©—è­‰è³‡è¨Š
 f.validPlatform = true;
 object res = f.post<object>(new { data = "123", result = true, number = 123 });
 ``` 
 
-**`¨t²Îª÷Æ_` »P `¤W«ÒÆ_°Í`**
+**`ç³»çµ±é‡‘é‘°` èˆ‡ `ä¸Šå¸é‘°åŒ™`**
 
-­n³q¹L¥­¥xÅçÃÒ¡A¨â­Ó¥­¥x¥²¶·­n¦³¬Û¦Pªº **`¨t²Îª÷Æ_`**¡A¦pªG­n§ïÅÜ¹w³]ªº **`¨t²Îª÷Æ_`**¡A¥i¥H¦b¨t²Î¶i¤JÂI²K¼W³]©w
-
-`WebApiConfig.cs`  
-```csharp
-ZapLib.Security.Const.Key = "·sªºª÷Æ_";
-``` 
-
-¬°¤F¶}µo¤H­û¤è«K¡AÅçÃÒ¯d¦³¤@­Ó«áªù **`¤W«ÒÆ_°Í`** ¥i¥Hª½±µ³q¹LÅçÃÒ¡A¹w³]¬° `nvOcQMfERrASHCIuE797`¡A¤]¥i¥H¦b¨t²Î¶i¤JÂI­×§ï¥¦
+è¦é€šéå¹³å°é©—è­‰ï¼Œå…©å€‹å¹³å°å¿…é ˆè¦æœ‰ç›¸åŒçš„ **`ç³»çµ±é‡‘é‘°`**ï¼Œå¦‚æœè¦æ”¹è®Šé è¨­çš„ **`ç³»çµ±é‡‘é‘°`**ï¼Œå¯ä»¥åœ¨ç³»çµ±é€²å…¥é»æ·»å¢è¨­å®š
 
 `WebApiConfig.cs`  
 ```csharp
-ZapLib.Security.Const.GodKey = "¤W«ÒÆ_°Í";
+ZapLib.Security.Const.Key = "æ–°çš„é‡‘é‘°";
+``` 
+
+ç‚ºäº†é–‹ç™¼äººå“¡æ–¹ä¾¿ï¼Œé©—è­‰ç•™æœ‰ä¸€å€‹å¾Œé–€ **`ä¸Šå¸é‘°åŒ™`** å¯ä»¥ç›´æ¥é€šéé©—è­‰ï¼Œé è¨­ç‚º `nvOcQMfERrASHCIuE797`ï¼Œä¹Ÿå¯ä»¥åœ¨ç³»çµ±é€²å…¥é»ä¿®æ”¹å®ƒ
+
+`WebApiConfig.cs`  
+```csharp
+ZapLib.Security.Const.GodKey = "ä¸Šå¸é‘°åŒ™";
 ``` 
 
 
-**ÅçÃÒ¤è¦¡»P³W®æ**
+**é©—è­‰æ–¹å¼èˆ‡è¦æ ¼**
 
-¥­¥xÅçÃÒ¹ê§@¤F [DES](https://zh.wikipedia.org/wiki/%E8%B3%87%E6%96%99%E5%8A%A0%E5%AF%86%E6%A8%99%E6%BA%96) ¤èªk¡A¦ı¬Oµy§@§ï¨}¡A½Ğ¨Dºİ·|¦A HTTP Header ªş¥[ 3 ­ÓÄæ¦ì¸ê®Æ  
+å¹³å°é©—è­‰å¯¦ä½œäº† [DES](https://zh.wikipedia.org/wiki/%E8%B3%87%E6%96%99%E5%8A%A0%E5%AF%86%E6%A8%99%E6%BA%96) æ–¹æ³•ï¼Œä½†æ˜¯ç¨ä½œæ”¹è‰¯ï¼Œè«‹æ±‚ç«¯æœƒå† HTTP Header é™„åŠ  3 å€‹æ¬„ä½è³‡æ–™  
 
 | key  |  description |
 | --------  | -------- | 
-| `Channel-Signature` | ±N¶Ç°eªº¸ê®Æ¥H MD5 ¥[±K«áªº¦r¦ê¡A§@¬°½Ğ¨DªºÃ±³¹ |  
-| `Channel-Iv` | ¤@²Õ¨C¦¸³£·|¶Ã¼Æ²£¥Íªº¥[±KºØ¤l |  
-| `Channel-Authorization` | ¥H `Channel-Signature` + `Channel-Iv` + `¨t²Îª÷Æ_` ¨Ï¥Î DES Âø´ê«áªºµ²ªG |
+| `Channel-Signature` | å°‡å‚³é€çš„è³‡æ–™ä»¥ MD5 åŠ å¯†å¾Œçš„å­—ä¸²ï¼Œä½œç‚ºè«‹æ±‚çš„ç°½ç«  |  
+| `Channel-Iv` | ä¸€çµ„æ¯æ¬¡éƒ½æœƒäº‚æ•¸ç”¢ç”Ÿçš„åŠ å¯†ç¨®å­ |  
+| `Channel-Authorization` | ä»¥ `Channel-Signature` + `Channel-Iv` + `ç³»çµ±é‡‘é‘°` ä½¿ç”¨ DES é›œæ¹Šå¾Œçš„çµæœ |
 
-¦pªG¦b Controller ªş¥[¤F `[ValidPlatform]` «h·|¦b¶i¤J Action ¤§«e¡A¥ı±N `Channel-Signature` + `Channel-Iv` + `¨t²Îª÷Æ_` ¦b¶i¦æ¤@¦¸ DES Âø´ê¡A¤ñ¹ï `Channel-Authorization` ¼Æ­È¬O§_¬Û¦P¡A¦pªG¬Û¦P´N·|ÅçÃÒ³q¹L¡C   
-ÅçÃÒ¤£³q¹L®É¡A·|ª½±µ¦^¶Ç `401 Unauthorized` ¥¼±ÂÅv¦^À³¡C
+å¦‚æœåœ¨ Controller é™„åŠ äº† `[ValidPlatform]` å‰‡æœƒåœ¨é€²å…¥ Action ä¹‹å‰ï¼Œå…ˆå°‡ `Channel-Signature` + `Channel-Iv` + `ç³»çµ±é‡‘é‘°` åœ¨é€²è¡Œä¸€æ¬¡ DES é›œæ¹Šï¼Œæ¯”å° `Channel-Authorization` æ•¸å€¼æ˜¯å¦ç›¸åŒï¼Œå¦‚æœç›¸åŒå°±æœƒé©—è­‰é€šéã€‚   
+é©—è­‰ä¸é€šéæ™‚ï¼Œæœƒç›´æ¥å›å‚³ `401 Unauthorized` æœªæˆæ¬Šå›æ‡‰ã€‚
 
 
 
 
 ## `v1.18.2`
 
-·s¼W¤F `ExtApiHelper.getStreamResponse` ¥Î±q¦øªA¾¹¤¤§ì¨úÀÉ®×¨Ã¥H¦ê¬y¤è¦¡¦^À³¡A¨Ï¥Î½d¨Ò¦p¤U¡G
+æ–°å¢äº† `ExtApiHelper.getStreamResponse` ç”¨å¾ä¼ºæœå™¨ä¸­æŠ“å–æª”æ¡ˆä¸¦ä»¥ä¸²æµæ–¹å¼å›æ‡‰ï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š
    
 **`getStreamResponse`**  
   
 | arg  |  type | required | description |
 | --------  | -------- | -------- |  -------- |
-| file         |   string ©Î byte[]   | Y | ÀÉ®×¹êÅé¸ô®| ©Î ¦s©ñ©ó°O¾ĞÅé¤¤ªºÀÉ®× |
-| name         |   string     | N | ÀÉ®×¦WºÙ¡A¦pªG¨S¦³µ¹¤©¡A«h·|¥H¶Ã¼Æ©R¦W |
-| type         |   string     | N | ÀÉ®× MIME TYPE¡A¦pªG¨S¦³µ¹¤©¡A«h·|¥H¹w³] `application/octet-stream` |
-| disposition  |   string     | N | ¦ê¬y¤è¦¡¡A¹w³]¬° `attachment` ·|ª½±µ¤U¸üÀÉ®×¡A¦pªG­n¦bÂsÄı¾¹¤¤Åã¥Ü¡A¨Ò¦p¹Ï¤ù¡A¥i¥H³]©w¦¨ `inline` |
+| file         |   string æˆ– byte[]   | Y | æª”æ¡ˆå¯¦é«”è·¯å¾‘ æˆ– å­˜æ”¾æ–¼è¨˜æ†¶é«”ä¸­çš„æª”æ¡ˆ |
+| name         |   string     | N | æª”æ¡ˆåç¨±ï¼Œå¦‚æœæ²’æœ‰çµ¦äºˆï¼Œå‰‡æœƒä»¥äº‚æ•¸å‘½å |
+| type         |   string     | N | æª”æ¡ˆ MIME TYPEï¼Œå¦‚æœæ²’æœ‰çµ¦äºˆï¼Œå‰‡æœƒä»¥é è¨­ `application/octet-stream` |
+| disposition  |   string     | N | ä¸²æµæ–¹å¼ï¼Œé è¨­ç‚º `attachment` æœƒç›´æ¥ä¸‹è¼‰æª”æ¡ˆï¼Œå¦‚æœè¦åœ¨ç€è¦½å™¨ä¸­é¡¯ç¤ºï¼Œä¾‹å¦‚åœ–ç‰‡ï¼Œå¯ä»¥è¨­å®šæˆ `inline` |
   
-> ª`·N¡G`disposition` ¦pªG³]¸m¬° `inline`¡A`type` ¤]¥²¶·³]©w¦¨¥i¥H¤ä´©ª½±µÅã¥ÜªºÃş«¬ e.g. `image/jpeg`, `image/png` ...
+> æ³¨æ„ï¼š`disposition` å¦‚æœè¨­ç½®ç‚º `inline`ï¼Œ`type` ä¹Ÿå¿…é ˆè¨­å®šæˆå¯ä»¥æ”¯æ´ç›´æ¥é¡¯ç¤ºçš„é¡å‹ e.g. `image/jpeg`, `image/png` ...
   
 ```csharp
-// ¦b¬Y¤@­Ó Controller ªº Action ¤¤
+// åœ¨æŸä¸€å€‹ Controller çš„ Action ä¸­
 ExtApiHelper api = new ExtApiHelper(this);
-// ±N·|ª½±µ¤U¸ü¡A¨Ã¥H¶Ã¼Æ©R¦WÀÉ®×¦WºÙ
+// å°‡æœƒç›´æ¥ä¸‹è¼‰ï¼Œä¸¦ä»¥äº‚æ•¸å‘½åæª”æ¡ˆåç¨±
 return api.getStreamResponse(@"D:\a.txt");
 ```  
   
 ## `v1.17.0`
-·s¼W¤F `ExtApiHelper` ÂX¥R¥\¯à `addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)`  
-¥i¥H¨Ï¥Î ID ¨Ó°µ¬°¤À­¶°ò·Ç¡A²Ó¸`¥i¥H°Ñ¾\ [Identity Paging
-](http://192.168.1.136/SideProject/ZapLib/issues/7) ¤¤ªº´y­z¡A¨Ï¥Î½d¨Ò¦p¤U¡G
+æ–°å¢äº† `ExtApiHelper` æ“´å……åŠŸèƒ½ `addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)`  
+å¯ä»¥ä½¿ç”¨ ID ä¾†åšç‚ºåˆ†é åŸºæº–ï¼Œç´°ç¯€å¯ä»¥åƒé–± [Identity Paging
+](http://192.168.1.136/SideProject/ZapLib/issues/7) ä¸­çš„æè¿°ï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š
 
-* ²Ä¤@­¶(²Ä¤@¦¸§ì¨ú)¡A`nextId` ¬° `null`¡G
+* ç¬¬ä¸€é (ç¬¬ä¸€æ¬¡æŠ“å–)ï¼Œ`nextId` ç‚º `null`ï¼š
 
 ```csharp
-// ¦b¬Y¤@­Ó Controller ªº Action ¤¤
+// åœ¨æŸä¸€å€‹ Controller çš„ Action ä¸­
 ExtApiHelper api = new ExtApiHelper(this);
 string sql = "select * from entity where eid>10";
 string nextId = null;
 api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
 
-// ¦¹®É sql ¬O¡Gselect top(51) * from entity where eid>2 order by eid desc
+// æ­¤æ™‚ sql æ˜¯ï¼šselect top(51) * from entity where eid>2 order by eid desc
 ```
 
-* ¦¹®É½Ğª`·N¡AAPI ¹w³]§ì¨ú n µ§¸ê®Æ(¦b `Web.config` ¤¤³]©w `APIDataLimit` )¡A¦ı `addIdentityPaging` ·|§ì¨ú n+1 µ§¸ê®Æ¡A¥Øªº¬O¬°¤F§PÂ_¬O§_ÁÙ¯àÂ½¤U¤@­¶¡A½Ğ¦Û¦æ§R°£³Ì«á¤@µ§¸ê®Æ¨Ã¨ú±o³Ì«á¤@µ§¸ê®Æªº ID¡A§@¬°¤U¤@¦¸Â½­¶ªº°ò·Ç
+* æ­¤æ™‚è«‹æ³¨æ„ï¼ŒAPI é è¨­æŠ“å– n ç­†è³‡æ–™(åœ¨ `Web.config` ä¸­è¨­å®š `APIDataLimit` )ï¼Œä½† `addIdentityPaging` æœƒæŠ“å– n+1 ç­†è³‡æ–™ï¼Œç›®çš„æ˜¯ç‚ºäº†åˆ¤æ–·æ˜¯å¦é‚„èƒ½ç¿»ä¸‹ä¸€é ï¼Œè«‹è‡ªè¡Œåˆªé™¤æœ€å¾Œä¸€ç­†è³‡æ–™ä¸¦å–å¾—æœ€å¾Œä¸€ç­†è³‡æ–™çš„ IDï¼Œä½œç‚ºä¸‹ä¸€æ¬¡ç¿»é çš„åŸºæº–
 
 ```csharp
 SQL db = new SQL();
@@ -232,27 +262,27 @@ ModelEntity[] data = db.quickQuery<ModelEntity>(sql);
 
 if(data.Length > int.Parse(Config.get("APIDataLimit")))
 {
-	// ¨ú¥X³Ì«á¤@µ§ªº ID
+	// å–å‡ºæœ€å¾Œä¸€ç­†çš„ ID
 	string nextId = data[data.Length - 1].eid.ToString();
-	// §R°£³Ì«á¤@µ§¸ê®Æ
+	// åˆªé™¤æœ€å¾Œä¸€ç­†è³‡æ–™
 	Array.Resize(ref data, data.Length - 1);
 }
 ```
   
-* ²Ä¤G­¶(²Ä¤G¦¸§ì¨ú)¡A`nextId` ¬° `100`¡G
+* ç¬¬äºŒé (ç¬¬äºŒæ¬¡æŠ“å–)ï¼Œ`nextId` ç‚º `100`ï¼š
   
 ```csharp
 string sql = "select * from entity where eid>10";
 api.addIdentityPaging(ref sql, "eid desc", "eid", nextId);
 
-// ¦¹®É sql ¬O¡Gwith tb as(select ROW_NUMBER() over(order by eid desc) as _seq,* from entity where eid>2) select top(51) * from tb where _seq>=(select _seq from tb where eid='100') order by eid desc
+// æ­¤æ™‚ sql æ˜¯ï¼šwith tb as(select ROW_NUMBER() over(order by eid desc) as _seq,* from entity where eid>2) select top(51) * from tb where _seq>=(select _seq from tb where eid='100') order by eid desc
 ```
 
 
 ## `v1.16.1`
-·s¼W¤F `ApiController` ÂX¥R¤F SignalR ¥\¯àªº `ApiControllerSignalR` Ãş§O¡A¨Ï¥Î½d¨Ò¦p¤U¡G  
+æ–°å¢äº† `ApiController` æ“´å……äº† SignalR åŠŸèƒ½çš„ `ApiControllerSignalR` é¡åˆ¥ï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š  
   
-­º¥ı¦b Web API ±M®×®Ú¥Ø¿ı¤U·s¼W `Startup.cs` ¨Ã¼¶¼g¥H¤Uµ{¦¡½X (³o¸Ìªº³]©w¥i¥H¨Ì·Ó»İ¨D½Õ¾ã)
+é¦–å…ˆåœ¨ Web API å°ˆæ¡ˆæ ¹ç›®éŒ„ä¸‹æ–°å¢ `Startup.cs` ä¸¦æ’°å¯«ä»¥ä¸‹ç¨‹å¼ç¢¼ (é€™è£¡çš„è¨­å®šå¯ä»¥ä¾ç…§éœ€æ±‚èª¿æ•´)
 ```csharp
 public class Startup
 {
@@ -265,13 +295,13 @@ public class Startup
 }
 ``` 
   
-±µ¤U¨Ó¦b®Ú¥Ø¿ı¤Uªº `Global.asax` ¤¤¥[¤J¥H¤Uµ{¦¡½X (³o¸Ìªº `TimeSpan.FromSeconds(10)` ¥i¨Ì·Ó»İ¨D½Õ¾ã)
+æ¥ä¸‹ä¾†åœ¨æ ¹ç›®éŒ„ä¸‹çš„ `Global.asax` ä¸­åŠ å…¥ä»¥ä¸‹ç¨‹å¼ç¢¼ (é€™è£¡çš„ `TimeSpan.FromSeconds(10)` å¯ä¾ç…§éœ€æ±‚èª¿æ•´)
 
 ```csharp
 GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(10);
 ```
   
-±µ¤U¨Ó·s¼W¤@­Ó `Hubs` ¥Ø¿ı¡A¨Ã¦b¨ä¤¤·s¼W¤@­Ó `MsgHub.cs` Ãş§O
+æ¥ä¸‹ä¾†æ–°å¢ä¸€å€‹ `Hubs` ç›®éŒ„ï¼Œä¸¦åœ¨å…¶ä¸­æ–°å¢ä¸€å€‹ `MsgHub.cs` é¡åˆ¥
 
 ```csharp
 [HubName("messaging")]
@@ -281,7 +311,7 @@ public class MsgHub : Hub
 }
 ```
   
-³Ì«á¡A¶}±Ò±ı¨Ï¥Î SignalR ªº Controller¡A±N­ì¥ıªº `ApiController` §ï¬° ZapLib ´£¨Ñªº `ApiControllerSignalR`¡A¦p¦¹¤@¨Ó«K¯à¨Ï¥Î¤U¤è®i¥ÜªºÂX¥R¥\¯à
+æœ€å¾Œï¼Œé–‹å•Ÿæ¬²ä½¿ç”¨ SignalR çš„ Controllerï¼Œå°‡åŸå…ˆçš„ `ApiController` æ”¹ç‚º ZapLib æä¾›çš„ `ApiControllerSignalR`ï¼Œå¦‚æ­¤ä¸€ä¾†ä¾¿èƒ½ä½¿ç”¨ä¸‹æ–¹å±•ç¤ºçš„æ“´å……åŠŸèƒ½
   
 `___Controller.cs`  
 
@@ -293,81 +323,81 @@ public class MsgController : ApiControllerSignalR<MsgHub>
     [Route("msg/send")]
     public HttpResponseMessage sendMsg([FromBody]ModelMsg msg)
     {
-		// ¼s¼½µ¹¬Y­Ó¹ï¶H
+		// å»£æ’­çµ¦æŸå€‹å°è±¡
 		Hub.Clients.Client( id ).pushMsg("...");
-		// ÀË¬d¯S©w ID ³s½uª¬ºA
+		// æª¢æŸ¥ç‰¹å®š ID é€£ç·šç‹€æ…‹
 		bool isAlive = IsConnectionIdAlive("Connection ID");
 
 		string[] connectionIds = new string[]{   };
 
-		// ¼s¼½µ¹¬Y¸s¤H
+		// å»£æ’­çµ¦æŸç¾¤äºº
 		Hub.Clients.Clients(connectionIds).receiveMsg("...");
 		
-		// ¸ÑªR¤@¸s ID ªº³s½uª¬ºA
+		// è§£æä¸€ç¾¤ ID çš„é€£ç·šç‹€æ…‹
 		IList<string> Alive, Dead;
         ResolveConnectionIds(connectionIds, out Alive, out Dead);
 
 		foreach(var id in Dead)
 		{
-			// µL®Äªº³s½u ID
+			// ç„¡æ•ˆçš„é€£ç·š ID
 		}
 	}
 }
 ```
 
-> ¨ä¤¤ `Hub` ¬O `GlobalHost.ConnectionManager.GetHubContext` ¨ú¥Xªº `HubContext` ¥i¥Hª½±µ¨Ï¥Î­ì¥Íªº¥\¯à 
-> ¥t¥~ `ResolveConnectionIds(IList<string> connectionIds, out IList<string> Alive, out IList<string> Dead)` »P `IsConnectionIdAlive(string connectionId)` ´£¨Ñªº¥\¯à¹ê§@­ì²z¡A¥i¥H°Ñ¾\[§Ş³N»¡©ú](https://www.facebook.com/groups/1634561570101701/permalink/2516506991907150/)
+> å…¶ä¸­ `Hub` æ˜¯ `GlobalHost.ConnectionManager.GetHubContext` å–å‡ºçš„ `HubContext` å¯ä»¥ç›´æ¥ä½¿ç”¨åŸç”Ÿçš„åŠŸèƒ½ 
+> å¦å¤– `ResolveConnectionIds(IList<string> connectionIds, out IList<string> Alive, out IList<string> Dead)` èˆ‡ `IsConnectionIdAlive(string connectionId)` æä¾›çš„åŠŸèƒ½å¯¦ä½œåŸç†ï¼Œå¯ä»¥åƒé–±[æŠ€è¡“èªªæ˜](https://www.facebook.com/groups/1634561570101701/permalink/2516506991907150/)
 
 
 ## `v1.15.0`
 
-* ¥i¥H¨ú±o SQL ³Ì«á¿ù»~¸ê°T¡A¤£¤@©w­n¼g¤J Log Æ[¹î¡A¨Ï¥Î½d¨Ò¦p¤U¡G  
+* å¯ä»¥å–å¾— SQL æœ€å¾ŒéŒ¯èª¤è³‡è¨Šï¼Œä¸ä¸€å®šè¦å¯«å…¥ Log è§€å¯Ÿï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š  
 ```csharp
 SQL db = new SQL("localhost", "dbname", "account", "password");
 object[] o = db.quickQuery<object>("select * from class");
-string error = db.getErrorMessage(); // ¿é¥X¿ù»~¸ê°T
+string error = db.getErrorMessage(); // è¼¸å‡ºéŒ¯èª¤è³‡è¨Š
 ```
   
-* ­×´_ `ExtApiHelper.getAttachemntResponse` µLªk«ü©w°ÆÀÉ¦Wªº°İÃD¡A¡A¨Ï¥Î½d¨Ò¦p¤U¡G  
+* ä¿®å¾© `ExtApiHelper.getAttachemntResponse` ç„¡æ³•æŒ‡å®šå‰¯æª”åçš„å•é¡Œï¼Œï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š  
 ```csharp
 ExtApiHelper api = new ExtApiHelper(this);
-api.getAttachemntResponse("¤º®e","file_name.txt"); // ¥i¥Hª½±µ«ü©w°ÆÀÉ¦W¡A¦pªG¨S¦³«ü©w«hµLªşÀÉ¦W
+api.getAttachemntResponse("å…§å®¹","file_name.txt"); // å¯ä»¥ç›´æ¥æŒ‡å®šå‰¯æª”åï¼Œå¦‚æœæ²’æœ‰æŒ‡å®šå‰‡ç„¡é™„æª”å
 ```  
   
-* ·s¼W MyLog ¥i¥H«ü©wÀx¦s¦ì¸m»P Log ªºÀÉ®×¦WºÙ
+* æ–°å¢ MyLog å¯ä»¥æŒ‡å®šå„²å­˜ä½ç½®èˆ‡ Log çš„æª”æ¡ˆåç¨±
 ```csharp
 MyLog log = new MyLog();
-log.path = "D:\\Log"; // «ü©wÀx¦s¸ô®|¡A¹w³]¬°§ì¨ú config ¤¤ªº Storage ³]©w¡A¦pªG³£¨S¦³«ü©w«h¤£·|¶i¦æ Log ¼g¤J
-log.name = "mylog"; // «ü©w log ÀÉ®×¦WºÙ¡A¹w³]¬° yyyyMMdd
+log.path = "D:\\Log"; // æŒ‡å®šå„²å­˜è·¯å¾‘ï¼Œé è¨­ç‚ºæŠ“å– config ä¸­çš„ Storage è¨­å®šï¼Œå¦‚æœéƒ½æ²’æœ‰æŒ‡å®šå‰‡ä¸æœƒé€²è¡Œ Log å¯«å…¥
+log.name = "mylog"; // æŒ‡å®š log æª”æ¡ˆåç¨±ï¼Œé è¨­ç‚º yyyyMMdd
 log.write("wewfewfewfewfewf"); 
 log.write("safawfqafw");
 ```
   
-* ·s¼W Fetch ¥i¥H¨ú±o Response ªº Header ¸ê°T (¦pªGµLªk¨ú±o Header «h·|¦^¶Ç NULL)
+* æ–°å¢ Fetch å¯ä»¥å–å¾— Response çš„ Header è³‡è¨Š (å¦‚æœç„¡æ³•å–å¾— Header å‰‡æœƒå›å‚³ NULL)
 ```csharp
 Fetch fetch = new Fetch("http://localhost");
 fetch.get(null);
-string header_value = fetch.getResponseHeader("key"); // ¨ú±o«ü©w Header 
-WebHeaderCollection all_headers = fetch.getResponseHeaders();  // ¨ú±o¥ş³¡ Headers
+string header_value = fetch.getResponseHeader("key"); // å–å¾—æŒ‡å®š Header 
+WebHeaderCollection all_headers = fetch.getResponseHeaders();  // å–å¾—å…¨éƒ¨ Headers
 ```
   
 
 ## `v1.14.0`
-  * ·s¼W¤F SQL BCP ªº¥\¯à¡A¥i¥H§Ö³t¼g¤J¤j¶q¸ê®Æ¡A¨Ï¥Î½d¨Ò¦p¤U¡G  
+  * æ–°å¢äº† SQL BCP çš„åŠŸèƒ½ï¼Œå¯ä»¥å¿«é€Ÿå¯«å…¥å¤§é‡è³‡æ–™ï¼Œä½¿ç”¨ç¯„ä¾‹å¦‚ä¸‹ï¼š  
 
 ```csharp
-// «Ø¥ß DataTable ª«¥ó
+// å»ºç«‹ DataTable ç‰©ä»¶
 var dt = new DataTable();
 dt.Columns.Add("words", typeof(string));
 
-// ±N¸ê®Æ¶ë¶i DataTable ¤¤
+// å°‡è³‡æ–™å¡é€² DataTable ä¸­
 foreach (string word in words)
 {
     var row = dt.NewRow();
     row["words"] = new_word;
     dt.Rows.Add(row);
 }
-// ¥ş³¡¤@¦¸©Ê¼g¤J
+// å…¨éƒ¨ä¸€æ¬¡æ€§å¯«å…¥
 SQL db = new SQL();
 result = db.quickBulkCopy(dt, "dbo.UD");
 ```

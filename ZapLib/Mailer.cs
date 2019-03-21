@@ -19,6 +19,7 @@ namespace ZapLib
         public Mailer(string MAIL_HOST, string MAIL_ACT, string MAIL_PWD, int MAIL_PORT = 587, bool MAIL_SSL = true, int MAIL_RETRY = 1)
         {
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             this.MAIL_HOST = MAIL_HOST;
             this.MAIL_ACT = MAIL_ACT;
             this.MAIL_PWD = MAIL_PWD;
@@ -45,6 +46,7 @@ namespace ZapLib
             catch (Exception e)
             {
                 MyLog log = new MyLog();
+                log.silentMode = Config.get("SilentMode");
                 log.write(e.ToString());
             }
         }

@@ -38,6 +38,7 @@ namespace ZapLib
             isTran = transaction;
             connString = buildconnString(basestring);
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             errormessage = new List<string>();
         }
 
@@ -49,6 +50,7 @@ namespace ZapLib
             isTran = transaction;
             connString = buildconnString(basestring);
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             errormessage = new List<string>();
         }
 
@@ -57,6 +59,7 @@ namespace ZapLib
         {
             connString = connectionString;
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             errormessage = new List<string>();
         }
 

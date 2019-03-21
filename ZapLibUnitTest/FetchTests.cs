@@ -38,7 +38,7 @@ namespace ZapLib.Tests
             Dictionary<string, string> data = new Dictionary<string, string>();
             data.Add("test", "123");
             data.Add("GG", "wefewfhnwoefoew");
-            Fetch f = new Fetch("https://httpbin.org/post");
+            Fetch f = new Fetch("https://httpbin.org/get");
             //f.contentType = "application/x-www-form-urlencoded";
             var res = f.post(data, new { test = "123" });
             Trace.WriteLine(res);

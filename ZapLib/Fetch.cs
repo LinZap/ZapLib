@@ -37,6 +37,7 @@ namespace ZapLib
         public Fetch()
         {
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             proxy = Config.get("Proxy");
         }
 
@@ -44,6 +45,7 @@ namespace ZapLib
         {
             uri = url;
             log = new MyLog();
+            log.silentMode = Config.get("SilentMode");
             proxy = Config.get("Proxy");
         }
 

@@ -39,6 +39,7 @@ namespace ZapLib
                 catch (Exception)
                 {
                     MyLog log = new MyLog();
+                    log.silentMode = Config.get("SilentMode");
                     log.write("can not parse object to query string: " + JsonConvert.SerializeObject(data));
                 }
             }
