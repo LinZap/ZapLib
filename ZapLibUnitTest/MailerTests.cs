@@ -26,7 +26,7 @@ namespace ZapLib.Tests
             string SUBJECT = "This is a test mail";
             string BODY = "<h1>Test Mail by ZapLib Mailer</h1>";
 
-            m.send(TO, SUBJECT, BODY);
+            m.Send(TO, SUBJECT, BODY);
 
             Assert.IsNotNull(m);
 

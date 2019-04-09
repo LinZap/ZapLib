@@ -35,10 +35,10 @@ namespace ZapLib.Tests
             db.TrustServerCertificate = false;
 
 
-            object[] o = db.quickQuery<object>("select * from class");
+            object[] o = db.QuickQuery<object>("select * from class");
 
 
-            string error = db.getErrorMessage();
+            string error = db.GetErrorMessage();
             Trace.WriteLine("------------------------");
             Trace.WriteLine(error);
             Trace.WriteLine("------------------------");
@@ -70,10 +70,10 @@ namespace ZapLib.Tests
                 res = SqlDbType.Int
             };
 
-            ModelOutput result = db.quickExec<ModelOutput>("xp_checklogin", input_para, output_para);
+            ModelOutput result = db.QuickExec<ModelOutput>("xp_checklogin", input_para, output_para);
 
             if (result == null)
-                Console.WriteLine(db.getErrorMessage());
+                Console.WriteLine(db.GetErrorMessage());
             else
                 Console.WriteLine(result.res);
         }
@@ -94,15 +94,15 @@ namespace ZapLib.Tests
             SQL db1 = new SQL(Host1, DBName1, User1, Password1);
             SQL db2 = new SQL(Host2, DBName2, User2, Password2);
 
-            db1.connet();
-            db2.connet();
+            db1.Connet();
+            db2.Connet();
 
-            if (db1.isConn && db2.isConn)
+            if (db1.IsConn && db2.IsConn)
             {
                 string sql_1 = "select oid from object";
                 string sql_2 = "insert into TestTable(oid) values(@oid)";
 
-                SqlDataReader reader1 = db1.query(sql_1);
+                SqlDataReader reader1 = db1.Query(sql_1);
                 ModelObject[] data1 = db1.fetch<ModelObject>(reader1, false);
                 while (data1 != null && data1.Length > 0)
                 {
@@ -111,7 +111,7 @@ namespace ZapLib.Tests
                     {
                         oid = id
                     };
-                    SqlDataReader reader2 = db2.query(sql_2, para);
+                    SqlDataReader reader2 = db2.Query(sql_2, para);
                     var data2 = db2.fetch<ModelObject>(reader2, false);
                     if (data2 == null)
                         Console.WriteLine("inserted fail");
@@ -120,8 +120,8 @@ namespace ZapLib.Tests
                 }
                 reader1.Close();
             }
-            db1.close();
-            db2.close();
+            db1.Close();
+            db2.Close();
 
         }
 
@@ -147,7 +147,7 @@ namespace ZapLib.Tests
             bool result = db.quickBulkCopy(dt, "dbo.TestTable");
 
             if (!result)
-                Console.WriteLine(db.getErrorMessage());
+                Console.WriteLine(db.GetErrorMessage());
 
         }
 
@@ -165,26 +165,26 @@ namespace ZapLib.Tests
 
             SQL db = new SQL(Host, DBName, User, Password, true);
 
-            db.connet();
+            db.Connet();
 
-            if (db.isConn)
+            if (db.IsConn)
             {
                 try
                 {
-                    var reader = db.query(sql_1, new { oid = 10 });
+                    var reader = db.Query(sql_1, new { oid = 10 });
                     reader.Close();
-                    reader = db.query(sql_2, new { oid = 20 });
+                    reader = db.Query(sql_2, new { oid = 20 });
                     reader.Close();
-                    db.tran.Commit();
+                    db.Tran.Commit();
                 }
                 catch (Exception e)
                 {
-                    db.tran.Rollback();
+                    db.Tran.Rollback();
                     Console.WriteLine(e.ToString());
                 }
             }
 
-            db.close();
+            db.Close();
         }
 
         [TestMethod()]
@@ -195,7 +195,7 @@ namespace ZapLib.Tests
             string User = "sa";
             string Password = "1qaz@WSX";
             SQL db = new SQL(Host, DBName, User, Password);
-            dynamic[] data = db.quickDynamicQuery("select * from entity");
+            dynamic[] data = db.QuickDynamicQuery("select * from entity");
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -221,7 +221,7 @@ namespace ZapLib.Tests
             {
                 res = SqlDbType.Int
             };
-            dynamic data = db.quickDynamicExec("xp_checklogin", input_para, output_para);
+            dynamic data = db.QuickDynamicExec("xp_checklogin", input_para, output_para);
             Trace.WriteLine((int)data.res);
             Assert.IsNotNull(data);
         }

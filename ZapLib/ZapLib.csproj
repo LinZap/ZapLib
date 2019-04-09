@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllerSignalR.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Utility\Config.cs" />
     <Compile Include="ExtApiHelper.cs" />
     <Compile Include="Fetch.cs" />
     <Compile Include="Mailer.cs" />
@@ -81,12 +81,14 @@
     <Compile Include="Model\ModelMultiPart.cs" />
     <Compile Include="MyLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryString.cs" />
     <Compile Include="RegExp.cs" />
     <Compile Include="Security\Const.cs" />
     <Compile Include="Security\Crypto.cs" />
     <Compile Include="Security\ValidPlatformAttribute.cs" />
     <Compile Include="SQL.cs" />
+    <Compile Include="Utility\Cast.cs" />
+    <Compile Include="Utility\Mirror.cs" />
+    <Compile Include="Utility\QueryString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -95,12 +97,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.3.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.3.min.js" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

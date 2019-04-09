@@ -7,10 +7,12 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Net;
 using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace ZapLib.Security
 {
+    /// <summary>
+    /// 平台驗證標籤，加上該標籤的 Action 都會進行平台驗證檢查，檢查失敗將回傳 401 Unauthorized，且不會進入 Action
+    /// </summary>
     public class ValidPlatformAttribute : AuthorizeAttribute
     {
         public override void OnAuthorization(HttpActionContext actionContext)

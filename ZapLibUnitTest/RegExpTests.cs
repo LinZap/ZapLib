@@ -24,7 +24,7 @@ namespace ZapLib.Tests
 
 
             RegExp reg = new RegExp(@"Name: (\w+) Age: (\d+)");
-            string[] result =  reg.exec(contnet);
+            string[] result =  reg.Exec(contnet);
 
             foreach(string s in result)
             {

@@ -17,10 +17,10 @@ namespace ZapLib.Tests
         public void write()
         {
             MyLog log = new MyLog();
-            log.silentMode = Config.get("SilentMode");
-            log.path = "D:\\Log";
-            log.write("wewfewfewfewfewf");
-            log.write("safawfqafw");
+            log.SilentMode = Config.get("SilentMode");
+            log.Path = "D:\\Log";
+            log.Write("wewfewfewfewfewf");
+            log.Write("safawfqafw");
             Assert.IsNotNull(log);
         }
 
@@ -28,13 +28,13 @@ namespace ZapLib.Tests
         public void write2()
         {
             MyLog log = new MyLog();
-            log.silentMode = Config.get("SilentMode");
-            log.path = "D:\\Log";
-            log.name = "MyProcessLogFile";
+            log.SilentMode = Config.get("SilentMode");
+            log.Path = "D:\\Log";
+            log.Name = "MyProcessLogFile";
 
-            log.write("程式開始...");
+            log.Write("程式開始...");
             Thread.Sleep(3000);
-            log.write("程式結束...");
+            log.Write("程式結束...");
 
             Assert.IsNotNull(log);
         }
@@ -46,9 +46,9 @@ namespace ZapLib.Tests
             FileInfo file = new FileInfo(@"D:\Storage\20190321.txt");
             var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
             MyLog log = new MyLog();
-            log.name = "20190321";
-            log.write("程式開始...");
-            log.write("程式結束...");
+            log.Name = "20190321";
+            log.Write("程式開始...");
+            log.Write("程式結束...");
             if (stream != null) stream.Close();
             Assert.IsNotNull(log);
         }
@@ -65,8 +65,8 @@ namespace ZapLib.Tests
             catch(Exception e)
             {
                 MyLog log = new MyLog();
-                log.silentMode = Config.get("SilentMode");
-                log.write(e.ToString());
+                log.SilentMode = Config.get("SilentMode");
+                log.Write(e.ToString());
             }
         }
 

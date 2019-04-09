@@ -12,9 +12,13 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using ZapLib.Model;
+using ZapLib.Utility;
 
 namespace ZapLib
 {
+    /// <summary>
+    /// Web API 控制存取輔助工具
+    /// </summary>
     public class ExtApiHelper
     {
         private ApiController api;
@@ -23,7 +27,10 @@ namespace ZapLib
         private List<CookieHeaderValue> cookies;
         private Dictionary<string, string> queries;
 
-
+        /// <summary>
+        /// 建構子，請傳入目前的 ApiController (this) 實體
+        /// </summary>
+        /// <param name="api">目前這個 Controller 物件</param>
         public ExtApiHelper(ApiController api)
         {
             this.api = api;
@@ -32,10 +39,12 @@ namespace ZapLib
             resp = request == null ? new HttpResponseMessage() : request.CreateResponse();
         }
 
-        /*
-            get header from Http Request
-        */
-        public string getHeader(string key)
+        /// <summary>
+        /// 從客戶的請求中取出指定名稱的 Header 數值
+        /// </summary>
+        /// <param name="key">指定名稱</param>
+        /// <returns>Header 數值，取不到時回傳 NULL</returns>
+        public string GetHeader(string key)
         {
             try
             {
@@ -47,19 +56,22 @@ namespace ZapLib
             }
         }
 
-        /*
-            set header 
-        */
-        public void setHeader(string key, string value)
+        /// <summary>
+        /// 設定回應內容的 Header 數值
+        /// </summary>
+        /// <param name="key">名稱</param>
+        /// <param name="value">數值</param>
+        public void SetHeader(string key, string value)
         {
             resp.Headers.Add(key, value);
         }
 
 
-        /*
-            get ip from Http Request 
-        */
-        public string getIP()
+        /// <summary>
+        /// 取得客戶請求的來源 IP
+        /// </summary>
+        /// <returns>IP 字串</returns>
+        public string GetIP()
         {
             if (request.Properties.ContainsKey("MS_HttpContext"))
             {
@@ -76,10 +88,11 @@ namespace ZapLib
         }
 
 
-        /*
-            get user agent from HTTP Request 
-        */
-        public string getUserAgent()
+        /// <summary>
+        /// 取得客戶請求的瀏覽器版本
+        /// </summary>
+        /// <returns>瀏覽器版本字串</returns>
+        public string GetUserAgent()
         {
             try
             {
@@ -91,19 +104,24 @@ namespace ZapLib
             }
         }
 
-        /*
-            get urlprifix  scheme://hostname:port
-        */
-        public string getMyHost()
+        /// <summary>
+        /// 取得客戶請求的 URL 字串
+        /// </summary>
+        /// <returns>URL 字串</returns>
+        public string GetMyHost()
         {
             return string.Format("{0}://{1}:{2}", request.RequestUri.Scheme, request.RequestUri.Host, request.RequestUri.Port);
         }
 
 
-        /*
-            create cookie object
-        */
-        public CookieHeaderValue addCookie(string key, string value, DateTime expired)
+        /// <summary>
+        /// 設定回應內容的 Cookie 數值
+        /// </summary>
+        /// <param name="key">名稱</param>
+        /// <param name="value">數值</param>
+        /// <param name="expired">過期時間</param>
+        /// <returns>設定好的 Cookie 物件</returns>
+        public CookieHeaderValue AddCookie(string key, string value, DateTime expired)
         {
             var cookie = new CookieHeaderValue(key, value);
             DateTimeOffset expiredOffset = DateTime.SpecifyKind(expired, DateTimeKind.Utc);
@@ -115,20 +133,24 @@ namespace ZapLib
             return cookie;
         }
 
-        /*
-            get cookie
-            reurn value or null
-        */
-        public string getCookie(string key)
+        /// <summary>
+        /// 取得客戶請求中特定名稱的 Cookie 數值
+        /// </summary>
+        /// <param name="key">特定名稱</param>
+        /// <returns>Cookie 數值，取不到時為 NULL</returns>
+        public string GetCookie(string key)
         {
             CookieHeaderValue c = request.Headers.GetCookies(key).FirstOrDefault();
             return c == null ? null : c[key].Value;
         }
 
-        /*
-            response custom response   
-        */
-        public HttpResponseMessage getResponse(object content = null, HttpStatusCode code = HttpStatusCode.OK)
+        /// <summary>
+        /// 取得 API 回應物件，並將內容物件邊碼成 JSON 格式
+        /// </summary>
+        /// <param name="content">內容物件</param>
+        /// <param name="code">回應的 HTTP 狀態碼，預設 200</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetResponse(object content = null, HttpStatusCode code = HttpStatusCode.OK)
         {
             resp.StatusCode = code;
             resp.Headers.AddCookies(cookies.ToArray());
@@ -137,10 +159,13 @@ namespace ZapLib
             return resp;
         }
 
-        /*
-            response custom response   
-        */
-        public HttpResponseMessage getTextResponse(string content = null, HttpStatusCode code = HttpStatusCode.OK)
+        /// <summary>
+        /// 取得 API 回應物件，並將內容保持純文字格式
+        /// </summary>
+        /// <param name="content">內容物件</param>
+        /// <param name="code">回應的 HTTP 狀態碼，預設 200</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetTextResponse(string content = null, HttpStatusCode code = HttpStatusCode.OK)
         {
             resp.StatusCode = code;
             resp.Headers.AddCookies(cookies.ToArray());
@@ -149,10 +174,14 @@ namespace ZapLib
             return resp;
         }
 
-        /*
-           set redirect URL 
-       */
-        public HttpResponseMessage getRedirectResponse(string url, int second = 1, string wording = "跳轉中，請稍候...")
+        /// <summary>
+        /// 取得 API 回應物件，並將使用者導向到新的 URL 位置
+        /// </summary>
+        /// <param name="url">導向到新的 URL</param>
+        /// <param name="second">延遲秒數，預設 1 秒</param>
+        /// <param name="wording">顯示文字，預設為 "跳轉中，請稍候..."</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetRedirectResponse(string url, int second = 1, string wording = "跳轉中，請稍候...")
         {
             resp.Headers.AddCookies(cookies.ToArray());
             resp.Headers.Location = new Uri(url);
@@ -161,10 +190,14 @@ namespace ZapLib
             return resp;
         }
 
-        /*
-            response text using attachment (download)
-        */
-        public HttpResponseMessage getAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK)
+        /// <summary>
+        /// 取得 API 回應物件，並將內容字串以串流方式回應 (客戶將以下載檔案方式取得文字)
+        /// </summary>
+        /// <param name="content">內容字串</param>
+        /// <param name="filename">檔案名稱</param>
+        /// <param name="code">回應的 HTTP 狀態碼，預設 200</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetAttachmentResponse(string content, string filename = null, HttpStatusCode code = HttpStatusCode.OK)
         {
             resp.StatusCode = code;
             string fn = (filename ?? Guid.NewGuid().ToString());
@@ -181,11 +214,16 @@ namespace ZapLib
         }
 
 
-        /*
-            response file stream using attachment (download)
-        */
-        public HttpResponseMessage getStreamResponse(string file, string name = null, string type = "application/octet-stream", string disposition= "attachment")
-        {       
+        /// <summary>
+        /// 取得 API 回應物件，並將指定路徑的檔案以串流方式回應 (客戶將以下載檔案方式取得檔案)
+        /// </summary>
+        /// <param name="file">檔案路徑，當檔案不存在時將回傳 404 Not Found 的 Status Code</param>
+        /// <param name="name">檔案名稱，預設為隨機產生亂碼</param>
+        /// <param name="type">回應的內容格式，預設為 application/octet-stream</param>
+        /// <param name="disposition">下載模式，預設為 attachment ，強迫以下載方式取得檔案</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetStreamResponse(string file, string name = null, string type = "application/octet-stream", string disposition = "attachment")
+        {
             string fn = (name ?? Guid.NewGuid().ToString());
             if (File.Exists(file))
             {
@@ -205,10 +243,15 @@ namespace ZapLib
             return resp;
         }
 
-        /*
-           response file stream using attachment (download)
-       */
-        public HttpResponseMessage getStreamResponse(byte[] file, string name = null, string type = "application/octet-stream", string disposition = "attachment")
+        /// <summary>
+        /// 取得 API 回應物件，並將指定byte[] 二進位資料以串流方式回應 (客戶將以下載檔案方式取得資料)
+        /// </summary>
+        /// <param name="file">二進位資料</param>
+        /// <param name="name">檔案名稱，預設為隨機產生亂碼</param>
+        /// <param name="type">回應的內容格式，預設為 application/octet-stream</param>
+        /// <param name="disposition">下載模式，預設為 attachment ，強迫以下載方式取得檔案</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetStreamResponse(byte[] file, string name = null, string type = "application/octet-stream", string disposition = "attachment")
         {
             string fn = (name ?? Guid.NewGuid().ToString());
             resp.StatusCode = HttpStatusCode.OK;
@@ -217,15 +260,16 @@ namespace ZapLib
             resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
             {
                 FileName = fn
-            };          
+            };
             return resp;
         }
 
-        /*
-           get query value by key from request query string 
-           if can not get value, return null
-        */
-        public string getQuery(string key)
+        /// <summary>
+        /// 取得客戶請求查詢字串中指定的名稱數值
+        /// </summary>
+        /// <param name="key">指定名稱</param>
+        /// <returns>指定名稱的數值</returns>
+        public string GetQuery(string key)
         {
             if (queries == null)
             {
@@ -239,17 +283,20 @@ namespace ZapLib
             return queries.TryGetValue(key, out val) ? val : null;
         }
 
-        /*
-            add paging sql
-        */
-        public void addPaging(ref string sql, string orderby = "asc")
+        /// <summary>
+        /// 增加 SQL 翻頁語法
+        /// </summary>
+        /// <param name="sql">SQL 語法</param>
+        /// <param name="orderby">欄位名稱</param>
+        [Obsolete("這個方法可能在下個版本中棄用")]
+        public void AddPaging(ref string sql, string orderby = "asc")
         {
-            int sysLimit = int.TryParse(Config.get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
-            int ilimit = int.TryParse(getQuery("limit"), out ilimit) ? ilimit : 50;
+            int sysLimit = int.TryParse(Config.Get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
+            int ilimit = int.TryParse(GetQuery("limit"), out ilimit) ? ilimit : 50;
 
             ilimit = Math.Min(sysLimit, ilimit);
 
-            int ipage = int.TryParse(getQuery("page"), out ipage) ? ipage : 1;
+            int ipage = int.TryParse(GetQuery("page"), out ipage) ? ipage : 1;
             ipage = Math.Max(1, ipage);
 
             /*
@@ -267,20 +314,24 @@ namespace ZapLib
             sql = string.Format("with tb as({0})select * from tb where rownumber between {1} and {2}", new_sql, start, end);
         }
 
-        /*
-            add Identity Paging to SQL stament
-        */
-        public void addIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)
+        /// <summary>
+        /// 增加 SQL 以某個具備識別的欄位數值為基準進行翻頁的語法
+        /// </summary>
+        /// <param name="sql">SQL 語法</param>
+        /// <param name="orderby">欄位名稱</param>
+        /// <param name="idcolumn">具備識別的欄位名稱</param>
+        /// <param name="nextId">翻頁 ID</param>
+        public void AddIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)
         {
             bool isFirstPage = (String.IsNullOrEmpty(idcolumn) || String.IsNullOrEmpty(nextId));
-            int sysLimit = int.TryParse(Config.get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
-            int ilimit = int.TryParse(getQuery("limit"), out ilimit) ? ilimit : 50;
+            int sysLimit = int.TryParse(Config.Get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
+            int ilimit = int.TryParse(GetQuery("limit"), out ilimit) ? ilimit : 50;
             ilimit = Math.Min(sysLimit, ilimit) + 1;
             Regex reg = new Regex("^select ");
             string replacement = isFirstPage ? string.Format("select top({0}) ", ilimit) :
                                                string.Format("select ROW_NUMBER() over(order by {0}) as _seq,", orderby),
                   new_sql = reg.Replace(sql, replacement);
-            sql = isFirstPage ? string.Format("{0} order by {1}", new_sql, orderby):
+            sql = isFirstPage ? string.Format("{0} order by {1}", new_sql, orderby) :
                                 string.Format("with tb as({0}) select top({1}) * from tb where _seq>=(select _seq from tb where {2}='{3}') order by {4}", new_sql, ilimit, idcolumn, nextId, orderby);
         }
 
@@ -293,12 +344,16 @@ namespace ZapLib
                 @size: file size (byte)
                 @type: file's mime type
         */
-        public List<ModelFile> uploadFile()
+        /// <summary>
+        /// 將客戶請求中的 multi-part form 檔案部分儲存到 .config 中設定的 Storage 路徑下，並回傳該檔案的基本資訊模型物件
+        /// </summary>
+        /// <returns>檔案基本資訊資料模型</returns>
+        public List<ModelFile> UploadFile()
         {
-            string dest = Config.get("Storage");
-            long maxSize = long.TryParse(Config.get("MaxUploadFileSize"), out maxSize) ? maxSize : 5242880;
+            string dest = Config.Get("Storage");
+            long maxSize = long.TryParse(Config.Get("MaxUploadFileSize"), out maxSize) ? maxSize : 5242880;
             MyLog log = new MyLog();
-            log.silentMode = Config.get("SilentMode");
+            log.SilentMode = Config.Get("SilentMode");
             HttpFileCollection files = HttpContext.Current.Request.Files;
 
             if (files.Count < 1) return null;
@@ -317,7 +372,7 @@ namespace ZapLib
                 // size filter
                 if (info.Length > maxSize)
                 {
-                    log.write("file " + fileName + " is too large: " + info.Length + ". be deleted!");
+                    log.Write("file " + fileName + " is too large: " + info.Length + ". be deleted!");
                     File.Delete(path);
                     continue;
                 }
@@ -334,10 +389,13 @@ namespace ZapLib
             return filelist.Count < 1 ? null : filelist;
         }
 
-        /*
-            get body from form and map it to Object params 
-        */
-        public T getFormBody<T>()
+
+        /// <summary>
+        /// 取得客戶請求中的 multi-part form 資料部分，並反序列化綁定到指定的資料模型中
+        /// </summary>
+        /// <typeparam name="T">指定的資料模型型態 T</typeparam>
+        /// <returns>綁定好資料的資料模型</returns>
+        public T GetFormBody<T>()
         {
             NameValueCollection form = HttpContext.Current.Request.Form;
             T obj = (T)Activator.CreateInstance(typeof(T));
@@ -355,10 +413,12 @@ namespace ZapLib
             return obj;
         }
 
-        /*
-            get body from raw json and map it to Object params 
-        */
-        public T getJsonBody<T>()
+        /// <summary>
+        /// 取得客戶請求中的 JSON 資料部分，並反序列化綁定到指定的資料模型中
+        /// </summary>
+        /// <typeparam name="T">指定的資料模型型態</typeparam>
+        /// <returns>綁定好資料的資料模型</returns>
+        public T GetJsonBody<T>()
         {
             string s = null;
             HttpRequest Request = HttpContext.Current.Request;
