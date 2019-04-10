@@ -13,10 +13,21 @@ namespace ZapLib
         /// <summary>
         /// 建構子，指定欄位在 SQL 的資料型態
         /// </summary>
-        /// <param name="SQLType"></param>
+        /// <param name="SQLType">資料庫資料型態</param>
         public SQLTypeAttribute(SqlDbType SQLType)
         {
             this.SQLType = SQLType;
+        }
+
+        /// <summary>
+        /// 建構子，指定欄位在 SQL 的資料型態與長度
+        /// </summary>
+        /// <param name="SQLType">資料庫資料型態</param>
+        /// <param name="size">資料長度</param>
+        public SQLTypeAttribute(SqlDbType SQLType, int size)
+        {
+            this.SQLType = SQLType;
+            Size = size;
         }
 
         /// <summary>
