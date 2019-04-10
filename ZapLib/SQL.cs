@@ -469,10 +469,14 @@ namespace ZapLib
             if (param != null)
                 foreach (var prop in param.GetType().GetProperties())
                 {
+                    object attr = Array.Find(prop.GetCustomAttributes(true), (t => Cast.IsType<SQLTypeAttribute>(t)));
                     var value = prop.GetValue(param, null) ?? DBNull.Value;
-                    if (value.GetType().IsArray && !Cast.IsType<byte[]>(value)) expandParams(cmd, value, prop.Name);
+                    if (Cast.IsType<IExpParam>(value)) expandParams(cmd, value, prop.Name, attr);
                     else if (cmd.CommandText.Contains($"@{prop.Name}"))
-                        cmd.Parameters.AddWithValue($"@{prop.Name}", value);
+                    {
+                        var p = cmd.Parameters.AddWithValue($"@{prop.Name}", value);
+                        if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
+                    }
                     else continue;
                 }
         }
@@ -480,23 +484,30 @@ namespace ZapLib
         /*
             expend array data and assign to params one by one 
         */
-        private void expandParams(SqlCommand cmd, object value, string key)
+        private void expandParams(SqlCommand cmd, object value, string key, object attr = null)
         {
-            IEnumerable arr = (IEnumerable)value;
+            IExpParam param = (IExpParam)value;
+            object[] arr = param.GetData();
             List<string> expandParamNames = new List<string>();
             int idx = 0;
-            foreach (object ele in arr)
-            {
-                string new_name = $"@{key}{idx}";
-                cmd.Parameters.AddWithValue(new_name, ele ?? DBNull.Value);
-                expandParamNames.Add(new_name);
-                idx++;
-            }
+
+            if (arr != null)
+                foreach (object ele in arr)
+                {
+                    string new_name = $"@{key}{idx}";
+                    var p = cmd.Parameters.AddWithValue(new_name, ele ?? DBNull.Value);
+                    if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
+                    expandParamNames.Add(new_name);
+                    idx++;
+                }
 
             if (idx == 0)
-                cmd.Parameters.AddWithValue($"@{key}", DBNull.Value);  
+            {
+                var p = cmd.Parameters.AddWithValue($"@{key}", DBNull.Value);
+                if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
+            }
             else
-                cmd.CommandText = cmd.CommandText.Replace($"@{key}", string.Join(",", expandParamNames));        
+                cmd.CommandText = cmd.CommandText.Replace($"@{key}", string.Join(",", expandParamNames));
         }
 
 
