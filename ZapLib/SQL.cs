@@ -470,7 +470,7 @@ namespace ZapLib
                 foreach (var prop in param.GetType().GetProperties())
                 {
                     var value = prop.GetValue(param, null) ?? DBNull.Value;
-                    if (value.GetType().IsArray) expandParams(cmd, value, prop.Name);
+                    if (value.GetType().IsArray && !Cast.IsType<byte[]>(value)) expandParams(cmd, value, prop.Name);
                     else if (cmd.CommandText.Contains($"@{prop.Name}"))
                         cmd.Parameters.AddWithValue($"@{prop.Name}", value);
                     else continue;
