@@ -162,6 +162,9 @@ namespace ZapLib
             Url = uri;
         }
 
+        /// <summary>
+        /// 解構子，釋放物件記憶體
+        /// </summary>
         ~Fetch()
         {
             if (Response != null) Response.Dispose();

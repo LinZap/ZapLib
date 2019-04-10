@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Dynamic;
 using System.Reflection;
+using System.Linq;
 using ZapLib.Utility;
+
 
 namespace ZapLib
 {
@@ -170,27 +171,27 @@ namespace ZapLib
         /// <typeparam name="T">將返回資料綁定到指定類型 T</typeparam>
         /// <param name="sql">預存程序名稱</param>
         /// <param name="param">語法中的參數化資料</param>
-        /// <param name="output">指定綁定欄位的 SQL 對應型態</param>
         /// <returns>綁定預存程序輸出數值的資料模型</returns>
-        public T Exec<T>(string sql, object param = null, object output = null)
+        public T Exec<T>(string sql, object param = null)
         {
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.Clear();
             setParaInput(Cmd, param);
-            Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(Cmd, output);
+            Dictionary<string, SqlParameter> tmpOutputParams = SetParaOutput<T>(Cmd);
+            //Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(Cmd, output);
             Cmd.ExecuteNonQuery();
             return getParaOutput<T>(tmpOutputParams);
         }
 
+        /*
         /// <summary>
         /// [有風險] 手動開啟連線並執行預存程序，需自行控制可能發生的錯誤
         /// </summary>
         /// <param name="sql">預存程序名稱</param>
         /// <param name="param">語法中的參數化資料</param>
-        /// <param name="output">指定綁定欄位的 SQL 對應型態</param>
         /// <returns>綁定預存程序輸出數值的動態資料</returns>
-        public dynamic DynamicExec(string sql, object param = null, object output = null)
+        public dynamic DynamicExec(string sql, object param = null)
         {
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
@@ -200,6 +201,7 @@ namespace ZapLib
             Cmd.ExecuteNonQuery();
             return getDynamicParaOutput(tmpOutputParams);
         }
+        */
 
         /// <summary>
         /// 自動開啟連線並執行查詢語法，執行完畢後自動關閉連線
@@ -299,17 +301,16 @@ namespace ZapLib
         /// <typeparam name="T">將返回資料綁定到指定類型</typeparam>
         /// <param name="sql">預存程序名稱</param>
         /// <param name="param">語法中的參數化資料</param>
-        /// <param name="output">指定綁定欄位的 SQL 對應型態</param>
         /// <returns>綁定預存程序輸出數值的資料模型</returns>
-        public T QuickExec<T>(string sql, object param = null, object output = null)
+        public T QuickExec<T>(string sql, object param = null)
         {
-            T obj = default(T);
+            T obj = default;
             Connet();
             if (IsConn)
             {
                 try
                 {
-                    obj = Exec<T>(sql, param, output);
+                    obj = Exec<T>(sql, param);
                     if (isTran) Tran.Commit();
                 }
                 catch (Exception e)
@@ -334,6 +335,7 @@ namespace ZapLib
             return obj;
         }
 
+        /*
         /// <summary>
         /// [有風險] 自動開啟連線並執行預存程序，執行完畢後自動關閉連線
         /// </summary>
@@ -373,6 +375,7 @@ namespace ZapLib
             }
             return obj;
         }
+        */
 
         /// <summary>
         /// 自動開啟連線並執行大量資料寫入作業，執行完畢後自動關閉連線
@@ -469,52 +472,27 @@ namespace ZapLib
             if (param != null)
                 foreach (var prop in param.GetType().GetProperties())
                 {
-                    object attr = Array.Find(prop.GetCustomAttributes(true), (t => Cast.IsType<SQLTypeAttribute>(t)));
+                    ISQLTypeAttribute custom_type_attr = Mirror.GetCustomAttributes<ISQLTypeAttribute>(prop).FirstOrDefault();
                     var value = prop.GetValue(param, null) ?? DBNull.Value;
-                    if (Cast.IsType<IExpParam>(value)) expandParams(cmd, value, prop.Name, attr);
+
+                    if (Cast.IsType<ISQLParam>(value))
+                    {
+                        ((ISQLParam)value).CustomParamProcessing(cmd, prop.Name, custom_type_attr);
+                    }
                     else if (cmd.CommandText.Contains($"@{prop.Name}"))
                     {
                         var p = cmd.Parameters.AddWithValue($"@{prop.Name}", value);
-                        if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
+                        if (custom_type_attr == null) continue;
+                        p.SqlDbType = custom_type_attr.GetSQLType();
+                        if (custom_type_attr.Size != 0) p.Size = custom_type_attr.Size;
                     }
                     else continue;
                 }
         }
 
         /*
-            expend array data and assign to params one by one 
-        */
-        private void expandParams(SqlCommand cmd, object value, string key, object attr = null)
-        {
-            IExpParam param = (IExpParam)value;
-            object[] arr = param.GetData();
-            List<string> expandParamNames = new List<string>();
-            int idx = 0;
-
-            if (arr != null)
-                foreach (object ele in arr)
-                {
-                    string new_name = $"@{key}{idx}";
-                    var p = cmd.Parameters.AddWithValue(new_name, ele ?? DBNull.Value);
-                    if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
-                    expandParamNames.Add(new_name);
-                    idx++;
-                }
-
-            if (idx == 0)
-            {
-                var p = cmd.Parameters.AddWithValue($"@{key}", DBNull.Value);
-                if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).SQLType;
-            }
-            else
-                cmd.CommandText = cmd.CommandText.Replace($"@{key}", string.Join(",", expandParamNames));
-        }
-
-
-        /*
             set output paras
-            return output paras set 
-        */
+            return output paras set   
         private Dictionary<string, SqlParameter> setParaOutput(SqlCommand cmd, object output)
         {
             if (output == null) return null;
@@ -531,7 +509,26 @@ namespace ZapLib
                 tmpOutputParams.Add(key, outputIdParam);
             }
             return tmpOutputParams;
+        }*/
+
+        private Dictionary<string, SqlParameter> SetParaOutput<T>(SqlCommand cmd)
+        {
+            Dictionary<string, SqlParameter> tmpOutputParams = new Dictionary<string, SqlParameter>();
+            foreach (PropertyInfo prop in typeof(T).GetProperties())
+            {
+                var defaultVal = prop.PropertyType.IsValueType ? Activator.CreateInstance(prop.PropertyType) : null;
+                var param = cmd.Parameters.AddWithValue($"@{prop.Name}", defaultVal);
+                param.Direction = ParameterDirection.Output;
+                tmpOutputParams.Add(prop.Name, param);
+                ISQLTypeAttribute custom_type_attr = Mirror.GetCustomAttributes<ISQLTypeAttribute>(prop).FirstOrDefault();
+                if (custom_type_attr == null) continue;
+                param.SqlDbType = custom_type_attr.GetSQLType();
+                if (custom_type_attr.Size != 0) param.Size = custom_type_attr.Size;
+            }
+            return tmpOutputParams;
         }
+
+
 
         /*
             get output paras values 

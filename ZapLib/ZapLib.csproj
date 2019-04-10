@@ -75,7 +75,8 @@
   <ItemGroup>
     <Compile Include="ApiControllerSignalR.cs" />
     <Compile Include="ExpParam.cs" />
-    <Compile Include="IExpParam.cs" />
+    <Compile Include="ISQLParam.cs" />
+    <Compile Include="ISQLTypeAttribute.cs" />
     <Compile Include="SQLTypeAttribute.cs" />
     <Compile Include="Utility\Config.cs" />
     <Compile Include="ExtApiHelper.cs" />

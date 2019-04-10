@@ -15,6 +15,10 @@ namespace ZapLib.Security
     /// </summary>
     public class ValidPlatformAttribute : AuthorizeAttribute
     {
+        /// <summary>
+        /// Web API 進入 Action 會執行這個方法驗證
+        /// </summary>
+        /// <param name="actionContext"></param>
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             var header = actionContext.Request.Headers;

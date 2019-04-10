@@ -70,7 +70,7 @@ namespace ZapLib
             }
         }
 
-        protected void send_mail()
+        private void send_mail()
         {
             if (retry > 0)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace ZapLib.Utility
 {
@@ -83,11 +84,28 @@ namespace ZapLib.Utility
                     }
                 }
             }
-            catch 
+            catch
             {
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// 從 PropertyInfo 中取得指定類型的 Attributes
+        /// </summary>
+        /// <typeparam name="T">定類型的 Attributes</typeparam>
+        /// <param name="prop">成員</param>
+        /// <returns>迭代器，反覆返回指定類型的 T</returns>
+        public static IEnumerable<T> GetCustomAttributes<T>(PropertyInfo prop) 
+        {
+            foreach (var atr in prop.GetCustomAttributes(true))
+            {
+                if (Cast.IsType<T>(atr))
+                {
+                    yield return (T)atr;
+                }
+            }
         }
 
     }

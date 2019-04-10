@@ -26,9 +26,5 @@
         /// </summary>
         public long size { get; set; }
 
-        public ModelFile()
-        {
-            size = 0;
-        }
     }
 }
