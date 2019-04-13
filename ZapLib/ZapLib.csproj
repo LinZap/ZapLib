@@ -77,6 +77,11 @@
     <Compile Include="ExpParam.cs" />
     <Compile Include="ISQLParam.cs" />
     <Compile Include="ISQLTypeAttribute.cs" />
+    <Compile Include="Json\ArrayTuple.cs" />
+    <Compile Include="Json\IJsonTuple.cs" />
+    <Compile Include="Json\JsonReader.cs" />
+    <Compile Include="Json\ObjectTuple.cs" />
+    <Compile Include="Json\ValueTuple.cs" />
     <Compile Include="SQLTypeAttribute.cs" />
     <Compile Include="Utility\Config.cs" />
     <Compile Include="ExtApiHelper.cs" />

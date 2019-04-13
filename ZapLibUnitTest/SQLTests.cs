@@ -1,11 +1,8 @@
-﻿using ZapLib;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using Microsoft.CSharp;
-using Newtonsoft.Json;
 
 namespace ZapLib.Tests
 {
@@ -70,7 +67,7 @@ namespace ZapLib.Tests
                 res = SqlDbType.Int
             };
 
-            ModelOutput result = db.QuickExec<ModelOutput>("xp_checklogin", input_para, output_para);
+            ModelOutput result = db.QuickExec<ModelOutput>("xp_checklogin", input_para);
 
             if (result == null)
                 Console.WriteLine(db.GetErrorMessage());
@@ -204,27 +201,7 @@ namespace ZapLib.Tests
             Assert.IsNotNull(data);
         }
 
-        [TestMethod()]
-        public void quickDynamicExec()
-        {
-            string Host = "192.168.1.190";
-            string DBName = "TestFpage";
-            string User = "sa";
-            string Password = "1qaz@WSX";
-            SQL db = new SQL(Host, DBName, User, Password);
-            var input_para = new
-            {
-                act = "admin",
-                passportcode = "1234567890"
-            };
-            var output_para = new
-            {
-                res = SqlDbType.Int
-            };
-            dynamic data = db.QuickDynamicExec("xp_checklogin", input_para, output_para);
-            Trace.WriteLine((int)data.res);
-            Assert.IsNotNull(data);
-        }
+      
     }
     class ModelObject
     {

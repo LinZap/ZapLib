@@ -24,8 +24,8 @@ namespace ZapLib.Tests
             data.Add("test", "123");
 
             Fetch f = new Fetch("https://httpbin.org/post");
-            f.userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
-            var res = f.post(data,new { test = "123"},file);
+            //f.userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
+            var res = f.Post(data,new { test = "123"},file);
 
             
             Trace.WriteLine(res);
@@ -40,7 +40,7 @@ namespace ZapLib.Tests
             data.Add("GG", "wefewfhnwoefoew");
             Fetch f = new Fetch("https://httpbin.org/get");
             //f.contentType = "application/x-www-form-urlencoded";
-            var res = f.post(data, new { test = "123" });
+            var res = f.Post(data, new { test = "123" });
             Trace.WriteLine(res);
         }
     }

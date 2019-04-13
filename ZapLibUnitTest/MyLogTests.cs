@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
+using ZapLib.Utility;
 
 namespace ZapLib.Tests
 {
@@ -17,7 +18,7 @@ namespace ZapLib.Tests
         public void write()
         {
             MyLog log = new MyLog();
-            log.SilentMode = Config.get("SilentMode");
+            log.SilentMode = Config.Get("SilentMode");
             log.Path = "D:\\Log";
             log.Write("wewfewfewfewfewf");
             log.Write("safawfqafw");
@@ -28,7 +29,7 @@ namespace ZapLib.Tests
         public void write2()
         {
             MyLog log = new MyLog();
-            log.SilentMode = Config.get("SilentMode");
+            log.SilentMode = Config.Get("SilentMode");
             log.Path = "D:\\Log";
             log.Name = "MyProcessLogFile";
 
@@ -65,7 +66,7 @@ namespace ZapLib.Tests
             catch(Exception e)
             {
                 MyLog log = new MyLog();
-                log.SilentMode = Config.get("SilentMode");
+                log.SilentMode = Config.Get("SilentMode");
                 log.Write(e.ToString());
             }
         }
