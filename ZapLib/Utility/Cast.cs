@@ -74,8 +74,50 @@ namespace ZapLib.Utility
         public static object To(object obj, Type targetType)
         {
             try
-            {
+            {               
                 return Convert.ChangeType(obj, targetType);
+            }
+            catch
+            {
+                return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+            }
+        }
+
+
+        /// <summary>
+        /// 將參數中的物件轉換成特定枚舉類型，轉換不過或枚舉中不存在則回傳預設值
+        /// </summary>
+        /// <typeparam name="T">特定枚舉類型 T</typeparam>
+        /// <param name="obj">要轉換的物件</param>
+        /// <param name="def_val">枚舉的預設值</param>
+        /// <returns>轉換過後的數值，轉換不過或枚舉中不存在則回傳預設值</returns>
+        public static T ToEnum<T>(object obj, T def_val = default) where T:Enum
+        {
+            Type t = typeof(T);
+            try
+            {
+                obj = Enum.Parse(t, obj.ToString());
+                return Enum.IsDefined(t, obj) ? (T)obj : def_val;
+            }
+            catch(Exception e)
+            {
+                return def_val;
+            }
+        }
+
+        /// <summary>
+        /// 將參數中的物件轉換成指定枚舉型態，轉換不過或枚舉中不存在則回傳預設值
+        /// </summary>
+        /// <param name="obj">要轉換的物件</param>
+        /// <param name="targetType">特定枚舉類型</param>
+        /// <returns>轉換過後的數值，轉換不過或枚舉中不存在則回傳預設值</returns>
+        public static object ToEnum(object obj, Type targetType)
+        {          
+            try
+            {
+                if (!targetType.IsEnum) return obj;
+                obj = Enum.Parse(targetType, obj.ToString());
+                return Enum.IsDefined(targetType, obj) ? obj : targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
             }
             catch
             {

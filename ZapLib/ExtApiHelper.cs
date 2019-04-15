@@ -40,11 +40,12 @@ namespace ZapLib
         }
 
         /// <summary>
-        /// 從客戶的請求中取出指定名稱的 Header 數值
+        /// 從客戶的請求中取出指定名稱的 Header 數值，如果取不到則回傳預設值
         /// </summary>
         /// <param name="key">指定名稱</param>
+        /// <param name="def_val">預設數值</param>
         /// <returns>Header 數值，取不到時回傳 NULL</returns>
-        public string GetHeader(string key)
+        public string GetHeader(string key, string def_val = null)
         {
             try
             {
@@ -52,7 +53,27 @@ namespace ZapLib
             }
             catch (Exception)
             {
-                return null;
+                return def_val;
+            }
+        }
+
+
+        /// <summary>
+        /// 從客戶的請求中取出指定名稱的 Header 數值，並嘗試轉換成指定型態 T，如果取不到或轉換不過則回傳預設值
+        /// </summary>
+        /// <typeparam name="T">指定轉換的型態</typeparam>
+        /// <param name="key">指定名稱</param>
+        /// <param name="def_val">預設數值</param>
+        /// <returns></returns>
+        public T GetHeader<T>(string key, T def_val = default)
+        {
+            try
+            {
+                return Cast.To(request.Headers.GetValues(key).FirstOrDefault(), def_val);
+            }
+            catch (Exception)
+            {
+                return def_val;
             }
         }
 

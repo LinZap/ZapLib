@@ -10,10 +10,10 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕�
 PM> Install-Package ZapLib -Version 1.22.0
 ```
   
-**Package Manager (v2.0.5 stable)**
+**Package Manager (v2.0.6 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.0.5
+PM> Install-Package ZapLib -Version 2.0.6
 ```
 
 ## System requirement
