@@ -100,9 +100,11 @@ namespace ZapLib
         /// 初始化 SQL 連線物件，嘗試從 .config 中抓取指定名稱的連線字串或 直接給與連線字串 進行連線
         /// </summary>
         /// <param name="connectionString">指定的連線字串名稱 或 連線字串</param>
-        public SQL(string connectionString)
+        /// <param name="transaction">是否開啟 transaction</param>
+        public SQL(string connectionString, bool transaction = false)
         {
             connString = Config.GetConnectionString(connectionString) ?? connectionString;
+            isTran = transaction;
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();

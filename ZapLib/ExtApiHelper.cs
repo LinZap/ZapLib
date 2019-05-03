@@ -21,7 +21,6 @@ namespace ZapLib
     /// </summary>
     public class ExtApiHelper
     {
-        private ApiController api;
         private HttpRequestMessage request;
         private HttpResponseMessage resp;
         private List<CookieHeaderValue> cookies;
@@ -31,12 +30,30 @@ namespace ZapLib
         /// 建構子，請傳入目前的 ApiController (this) 實體
         /// </summary>
         /// <param name="api">目前這個 Controller 物件</param>
-        public ExtApiHelper(ApiController api)
+        public ExtApiHelper(ApiController api = null)
         {
-            this.api = api;
-            request = api.Request ?? new HttpRequestMessage();
+            if (api == null) return;
+            request = api?.Request ?? new HttpRequestMessage();
             cookies = new List<CookieHeaderValue>();
             resp = request == null ? new HttpResponseMessage() : request.CreateResponse();
+        }
+
+        /// <summary>
+        /// 從客戶的請求中取出所有 Headers
+        /// </summary>
+        /// <returns>所有 Header 的字典集合</returns>
+        public Dictionary<string, IEnumerable<string>> GetHeaders()
+        {
+            Dictionary<string, IEnumerable<string>> headers = new Dictionary<string, IEnumerable<string>>();
+            try
+            {
+                foreach (var header in request.Headers)
+                {
+                    headers.Add(header.Key, header.Value);
+                }
+            }
+            catch { }
+            return headers;
         }
 
         /// <summary>
