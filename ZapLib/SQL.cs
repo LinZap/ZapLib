@@ -481,7 +481,7 @@ namespace ZapLib
                     {
                         ((ISQLParam)value).CustomParamProcessing(cmd, prop.Name, custom_type_attr);
                     }
-                    else if (cmd.CommandText.Contains($"@{prop.Name}"))
+                    else if ((cmd.CommandText.Contains($"@{prop.Name}") && cmd.CommandType==CommandType.Text) || cmd.CommandType == CommandType.StoredProcedure)
                     {
                         var p = cmd.Parameters.AddWithValue($"@{prop.Name}", value);
                         if (custom_type_attr == null) continue;

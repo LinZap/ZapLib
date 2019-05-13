@@ -51,9 +51,6 @@ namespace ZapLib.Tests
             string User = "sa";
             string Password = "1qaz@WSX";
 
-
-
-
             SQL db = new SQL(Host, DBName, User, Password);
 
             var input_para = new
@@ -72,7 +69,7 @@ namespace ZapLib.Tests
             if (result == null)
                 Console.WriteLine(db.GetErrorMessage());
             else
-                Console.WriteLine(result.res);
+                Console.WriteLine(db.GetErrorMessage());
         }
 
         [TestMethod()]
