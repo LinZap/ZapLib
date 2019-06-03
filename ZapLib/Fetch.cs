@@ -15,12 +15,17 @@ namespace ZapLib
     /// <summary>
     /// HTTP 網路請求與接收回應工具
     /// </summary>
-    public class Fetch
+    public class Fetch : IDisposable
     {
         /// <summary>
         /// HTTP 連線主要物件
         /// </summary>
         public HttpClient Client { get; set; }
+
+        /// <summary>
+        /// HTTP 連線資訊控制器
+        /// </summary>
+        public HttpClientHandler ClientHandler { get; set; }
 
         /// <summary>
         /// HTTP 請求主要物件
@@ -132,7 +137,7 @@ namespace ZapLib
                 WebProxy.Address = value == null ? null : new Uri(value);
                 WebProxy.BypassProxyOnLocal = value != null;
             }
-            get => WebProxy?.Address.ToString();
+            get => WebProxy?.Address?.ToString();
         }
 
         /// <summary>
@@ -152,24 +157,16 @@ namespace ZapLib
         /// <summary>
         /// 建構子，初始化必要物件
         /// </summary>
-        /// <param name="uri"></param>
+        /// <param name="uri">連線的 URL</param>
         public Fetch(string uri = null)
         {
             CookieContainer = new CookieContainer();
             WebProxy = new WebProxy();
-            Client = new HttpClient(new HttpClientHandler() { CookieContainer = CookieContainer });
+            ClientHandler = new HttpClientHandler();
+            ClientHandler.CookieContainer = CookieContainer;
+            Client = new HttpClient(ClientHandler);
             Request = new HttpRequestMessage();
             Url = uri;
-        }
-
-        /// <summary>
-        /// 解構子，釋放物件記憶體
-        /// </summary>
-        ~Fetch()
-        {
-            if (Response != null) Response.Dispose();
-            if (Request != null) Request.Dispose();
-            if (Client != null) Client.Dispose();
         }
 
         /// <summary>
@@ -330,7 +327,7 @@ namespace ZapLib
         /// 以純文字方式取得發送請求後的回應結果，尚未發送請求前預設為 NULL
         /// </summary>
         /// <returns>HTTP 回應的資料</returns>
-        public string GetResponse() => Response.Content?.ReadAsStringAsync().Result;
+        public string GetResponse() => Response?.Content?.ReadAsStringAsync().Result;
 
         /// <summary>
         /// 以 byte[] 方式取得發送請求後的回應結果，尚未發送請求前預設為 NULL
@@ -455,18 +452,37 @@ namespace ZapLib
         /// <returns></returns>
         public bool Send()
         {
-            if (StatusCode != 0)
-                throw new Exception("Every Fetch instance only send request once!");
+            if (StatusCode != 0) throw new Exception("Every Fetch instance only send request once!");
             if (ValidPlatform) ProcValidPlatform();
-            Response = Client.SendAsync(Request).Result;
-            if (!Response.IsSuccessStatusCode)
+            if (!string.IsNullOrWhiteSpace(Proxy)) ClientHandler.Proxy = WebProxy;
+            MyLog log = new MyLog();
+            log.SilentMode = Config.Get("SilentMode");
+            try
             {
-                MyLog log = new MyLog();
-                log.SilentMode = Config.Get("SilentMode");
-                log.Write("Fail WebRequest URL: " + Url);
-                log.Write("Fail WebRequest Data: " + Request.Content == null ? "" : Request.Content.ReadAsStringAsync().Result);
+                Response = Client.SendAsync(Request).Result;
+                if (!Response.IsSuccessStatusCode)
+                {
+                    log.Write("Fail WebRequest URL: " + Url);
+                    log.Write($"Fail WebRequest Data: {GetResponse()}");
+                }
+                return Response.IsSuccessStatusCode;
             }
-            return Response.IsSuccessStatusCode;
+            catch(Exception e)
+            {
+                log.Write("Fail WebRequest URL: " + Url);
+                log.Write($"Fail WebRequest Data: {e.ToString()}");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 釋放 Fetch 所有使用的物件
+        /// </summary>
+        public void Dispose()
+        {
+            if (Response != null) Response.Dispose();
+            if (Request != null) Request.Dispose();
+            if (Client != null) Client.Dispose();
         }
     }
 }
