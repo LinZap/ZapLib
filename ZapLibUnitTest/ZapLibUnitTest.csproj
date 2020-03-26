@@ -79,6 +79,8 @@
     <Compile Include="UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\CastTests.cs" />
+    <Compile Include="Utility\ConfigTests.cs" />
+    <Compile Include="Utility\QueryStringTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

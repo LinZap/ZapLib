@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace ZapLib.Utility
@@ -48,8 +45,12 @@ namespace ZapLib.Utility
             {
                 if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(val)) return;
                 query[key] = val;
+                Trace.WriteLine("val: " + val);
             });
-            return query.ToString();
+
+            string useEncode = Config.Get("aspnet:DontUsePercentUUrlEncoding");
+            bool.TryParse(useEncode, out bool result);
+            return result? query.ToString(): Uri.EscapeUriString(HttpUtility.UrlDecode(query.ToString()));
         }
     }
 }

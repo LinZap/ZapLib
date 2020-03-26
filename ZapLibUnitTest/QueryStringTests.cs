@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ZapLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZapLib.Utility;
 
 namespace ZapLib.Tests
@@ -26,7 +21,8 @@ namespace ZapLib.Tests
         {
             public string name { get; set; }
             public int age { get; set; }
-            public string phone { get; set; }
+            public string[] phone { get; set; }
+            public double temp { get; set; }
         }
 
         [TestMethod()]
@@ -34,14 +30,13 @@ namespace ZapLib.Tests
         {
             ModelData data = new ModelData()
             {
-                name = "Peter",
+                name = "真的是太扯",
                 age = 18,
-                phone = "0987654321"
+                phone = new string[] { "0987654321", "0912345678"},
+                temp = 0.33333
             };
-
             string qs = QueryString.Parse(data);
             Console.WriteLine(qs);
-
         }
 
     }
