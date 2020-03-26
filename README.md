@@ -10,10 +10,10 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕�
 PM> Install-Package ZapLib -Version 1.22.0
 ```
   
-**Package Manager (v2.0.6 stable)**
+**Package Manager (v2.0.9 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.0.6
+PM> Install-Package ZapLib -Version 2.0.9
 ```
 
 ## System requirement
@@ -36,10 +36,10 @@ PM> Install-Package ZapLib -Version 2.0.6
 * [QueryString API](https://linzap.gitbooks.io/zaplib/content/querystring-api/querystring-api.md)
 * [Config API](https://linzap.gitbooks.io/zaplib/content/config-api/config-api.md)
 * [MyLog API](https://linzap.gitbooks.io/zaplib/content/mylog-api/mylog-api.md)
-* [實務案例(一)：FSX 小型檔案儲存系統](http://192.168.1.136/SideProject/FSX)
-* [實務案例(二)：使用 SignalR 推播技術的聊天室](http://192.168.1.136/zap/signalr-server)
+* [實務案例(一)：FSX 小型檔案儲存系統](http://10.9.173.136/SideProject/FSX)
+* [實務案例(二)：使用 SignalR 推播技術的聊天室](http://10.9.173.136/zap/signalr-server)
 
-## [ChangeLog](http://192.168.1.136/SideProject/ZapLib/blob/master/CHANGELOG.md)
+## [ChangeLog](http://w136/SideProject/ZapLib/blob/master/CHANGELOG.md)
 
 ## License MIT
 
