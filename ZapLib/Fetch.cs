@@ -355,6 +355,24 @@ namespace ZapLib
         }
 
         /// <summary>
+        /// 取得發送請求後指定 key 名稱的 HTTP Header 資料，並自動轉型成指定型態，如果找不到該資料將回傳第二個參數 default
+        /// </summary>
+        /// <param name="key">Header 名稱</param>
+        /// <param name="defaultVal">預設的數值</param>
+        /// <returns>HTTP 回應的特定標頭數值</returns>
+        public T GetResponseHeader<T>(string key, T defaultVal = default)
+        {
+            try
+            {
+                return (T)Convert.ChangeType(GetResponseHeader(key), typeof(T));
+            }
+            catch
+            {
+                return defaultVal;
+            }
+        }
+
+        /// <summary>
         /// 將資料邊碼成 Multipart Form
         /// </summary>
         /// <param name="data">資料</param>
