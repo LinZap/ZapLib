@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace ZapLib
 {
@@ -47,8 +48,22 @@ namespace ZapLib
                 if (attr != null) p.SqlDbType = ((SQLTypeAttribute)attr).GetSQLType();
             }
             else
-                cmd.CommandText = cmd.CommandText.Replace($"@{name}", string.Join(",", expandParamNames));
+                cmd.CommandText = ReplaceSql(cmd.CommandText, name, expandParamNames);
         }
+
+        /// <summary>
+        /// 將包含指定參數名稱的 SQL 轉換成展開型態的 SQL 
+        /// </summary>
+        /// <param name="sql">包含參數的 SQL</param>
+        /// <param name="paramName">參數名稱</param>
+        /// <param name="expandParamNames">需要展開的新參數，例如: [@name1, @name2, ...]</param>
+        /// <returns>展開後的 SQL 語法</returns>
+        public string ReplaceSql(string sql, string paramName, List<string> expandParamNames)
+        {
+            //return sql.Replace($"@{paramName}", string.Join(",", expandParamNames));
+            return Regex.Replace(sql, @"\( *@"+ paramName + @" *\){1}", $"({string.Join(",", expandParamNames)}) ");
+        }
+
 
     }
 }

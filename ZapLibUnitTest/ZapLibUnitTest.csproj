@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicObjectTests.cs" />
+    <Compile Include="ExpParamTests.cs" />
     <Compile Include="ExtApiHelperTests.cs" />
     <Compile Include="FetchTests.cs" />
     <Compile Include="MailerTests.cs" />
