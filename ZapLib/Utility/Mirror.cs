@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace ZapLib.Utility
@@ -23,7 +24,18 @@ namespace ZapLib.Utility
                     yield return member;
             else
                 foreach (var prop in obj.GetType().GetProperties())
-                    yield return new DictionaryEntry(prop.Name, prop.GetValue(obj, null));
+                {
+                    object value = null;
+                    try
+                    {
+                        value = prop.GetValue(obj, null);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e.ToString());
+                    }
+                    yield return new DictionaryEntry(prop.Name, value);
+                }
         }
 
         /// <summary>
@@ -97,7 +109,7 @@ namespace ZapLib.Utility
         /// <typeparam name="T">定類型的 Attributes</typeparam>
         /// <param name="prop">成員</param>
         /// <returns>迭代器，反覆返回指定類型的 T</returns>
-        public static IEnumerable<T> GetCustomAttributes<T>(PropertyInfo prop) 
+        public static IEnumerable<T> GetCustomAttributes<T>(PropertyInfo prop)
         {
             foreach (var atr in prop.GetCustomAttributes(true))
             {
