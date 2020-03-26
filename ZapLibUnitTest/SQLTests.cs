@@ -148,7 +148,7 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void transaction()
         {
-            string Host = "192.168.1.190";
+            string Host = "10.9.173.190";
             string DBName = "TestFpage";
             string User = "sa";
             string Password = "1qaz@WSX";
@@ -174,10 +174,9 @@ namespace ZapLib.Tests
                 catch (Exception e)
                 {
                     db.Tran.Rollback();
-                    Console.WriteLine(e.ToString());
+                    Trace.WriteLine(e.ToString());
                 }
             }
-
             db.Close();
         }
 

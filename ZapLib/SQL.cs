@@ -233,6 +233,7 @@ namespace ZapLib
                 {
                     log.Write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
                     errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add(e.ToString());
                     log.Write(e.ToString());
 
                     try
@@ -244,6 +245,7 @@ namespace ZapLib
                     {
                         log.Write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
                         errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add(x.ToString());
                         log.Write(x.ToString());
                     }
                 }
@@ -279,6 +281,7 @@ namespace ZapLib
                 {
                     log.Write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
                     errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add(e.ToString());
                     log.Write(e.ToString());
                     try
                     {
@@ -289,6 +292,7 @@ namespace ZapLib
                     {
                         log.Write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
                         errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add(x.ToString());
                         log.Write(x.ToString());
                     }
                 }
@@ -319,6 +323,7 @@ namespace ZapLib
                 {
                     log.Write("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
                     errormessage.Add("SQL Error:" + sql + " para:" + JsonConvert.SerializeObject(param));
+                    errormessage.Add(e.ToString());
                     log.Write(e.ToString());
                     try
                     {
@@ -329,6 +334,7 @@ namespace ZapLib
                     {
                         log.Write("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
                         errormessage.Add("SQL Error: Can not rollback, " + sql + " para:" + JsonConvert.SerializeObject(param));
+                        errormessage.Add(x.ToString());
                         log.Write(x.ToString());
                     }
                 }
@@ -405,6 +411,7 @@ namespace ZapLib
                 {
                     log.Write("SQL BCP Error: " + tableName);
                     errormessage.Add("SQL BCP Error: " + tableName);
+                    errormessage.Add(e.ToString());
                     log.Write(e.ToString());
                     if (isTran) Tran.Rollback();
                 }
@@ -556,6 +563,7 @@ namespace ZapLib
                         {
                             log.Write("can not covert type mapping to Model: " + e.ToString());
                             errormessage.Add("can not covert type mapping to Model: " + e.ToString());
+                            errormessage.Add(e.ToString());
                         }
                     }
                 }
