@@ -99,6 +99,7 @@
     <Compile Include="Utility\Cast.cs" />
     <Compile Include="Utility\Mirror.cs" />
     <Compile Include="Utility\QueryString.cs" />
+    <Compile Include="Utility\SQLString\OrderBy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -81,6 +81,7 @@
     <Compile Include="Utility\CastTests.cs" />
     <Compile Include="Utility\ConfigTests.cs" />
     <Compile Include="Utility\QueryStringTests.cs" />
+    <Compile Include="Utility\SQLString\OrderByTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
