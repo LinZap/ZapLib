@@ -20,7 +20,7 @@ namespace ZapLib.Tests
             Dictionary<string, string> file = new Dictionary<string, string>();
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            file.Add("file", @"C:\Users\zaplin\Downloads\caret-down.png");
+            file.Add("file", @"D:\123.txt");
             data.Add("test", "123");
 
             Fetch f = new Fetch("https://httpbin.org/post");

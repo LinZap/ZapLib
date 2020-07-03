@@ -389,7 +389,7 @@ namespace ZapLib
                     form.Add(new StringContent(val), key);
                 });
             if (files != null)
-                Mirror.EachMembers(data, (string key, string val) =>
+                Mirror.EachMembers(files, (string key, string val) =>
                 {
                     if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(val)) return;
                     val = val.Trim();

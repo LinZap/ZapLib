@@ -196,8 +196,25 @@ namespace ZapLib.Tests
             }
             Assert.IsNotNull(data);
         }
+        [TestMethod()]
+        public void quickDynamicQuery2()
+        {
+            string Host = "192.168.1.190";
+            string DBName = "TestFpage";
+            string User = "sa";
+            string Password = "1qaz@WSX";
+            SQL db = new SQL(Host, DBName, User, Password);
+            dynamic[] data = db.QuickDynamicQuery("select * from entity");
 
-      
+            for (int i = 0; i < data.Length; i++)
+            {
+                Trace.WriteLine((string)data[i].cname);
+            }
+            Assert.IsNotNull(data);
+        }
+
+
+
     }
     class ModelObject
     {
@@ -208,6 +225,12 @@ namespace ZapLib.Tests
     {
         public int res { get; set; }
     };
+
+public class ModelBook{
+    public int id { get; set; }
+    public string name { get; set; }
+    public DateTime since { get; set; }
+};
 
 
 }
