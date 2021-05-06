@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ZapLib.Utility;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using System;
 
 namespace ZapLib.Utility.Tests
 {
@@ -27,6 +29,39 @@ namespace ZapLib.Utility.Tests
             Trace.WriteLine(Cast.ToEnum("2", typeof(IntEnum)));
             Trace.WriteLine(Cast.ToEnum(3, typeof(IntEnum)));
             Trace.WriteLine(Cast.ToEnum("GGG", typeof(IntEnum)));
+        }
+
+        [TestMethod()]
+        public void ToTest()
+        {
+            DateTime d = DateTime.Now;
+            Trace.WriteLine(d);
+
+            DateTime? res = Cast.To<DateTime?>(d);
+            Trace.WriteLine(res);
+
+            Assert.IsNotNull(res);
+
+        }
+
+        [TestMethod()]
+        public void ToTest1()
+        {
+            DateTime d = DateTime.Now;
+            var type = typeof(DateTime?);
+            object dd = Cast.To(d, type);
+            Trace.WriteLine(dd);
+            Assert.IsNotNull(dd);
+        }
+
+        [TestMethod()]
+        public void ToTest2()
+        {
+            DateTime? d = DateTime.Now;
+            var type = typeof(DateTime);
+            object dd = Cast.To(d, type);
+            Trace.WriteLine(dd);
+            Assert.IsNotNull(dd);
         }
     }
 

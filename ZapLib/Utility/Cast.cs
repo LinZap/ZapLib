@@ -74,7 +74,11 @@ namespace ZapLib.Utility
         public static object To(object obj, Type targetType)
         {
             try
-            {               
+            {
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    targetType = Nullable.GetUnderlyingType(targetType);    
+                }
                 return Convert.ChangeType(obj, targetType);
             }
             catch
