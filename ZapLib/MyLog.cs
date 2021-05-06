@@ -33,13 +33,14 @@ namespace ZapLib
         {
             if (SilentMode != null)
             {
-                bool _silentMode = false;
-                bool.TryParse(SilentMode, out _silentMode);
+                bool.TryParse(SilentMode, out bool _silentMode);
                 if (_silentMode) return;
             }
 
             string logfile = Path ?? Config.Get("Storage");
+
             if (logfile == null) return;
+            if (!Directory.Exists(logfile)) return;
 
             DateTime now = DateTime.Now;
             string name = this.Name ?? now.ToString("yyyyMMdd"),
@@ -99,7 +100,7 @@ namespace ZapLib
             _Event(msg, type, ProjectName, CodePath, LineNumber);
         }
 
-        private void _Event(string Message, EventLogEntryType type = EventLogEntryType.Error,string ProjectName = "",string CodePath = "",int LineNumber = 0)
+        private void _Event(string Message, EventLogEntryType type = EventLogEntryType.Error, string ProjectName = "", string CodePath = "", int LineNumber = 0)
         {
             try
             {

@@ -63,7 +63,7 @@ namespace ZapLib.Tests
                 int i = 100 / x;
                 Console.WriteLine(i);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MyLog log = new MyLog();
                 log.SilentMode = Config.Get("SilentMode");
@@ -71,6 +71,12 @@ namespace ZapLib.Tests
             }
         }
 
-
+        [TestMethod()]
+        public void WriteTest()
+        {
+            MyLog log = new MyLog();
+            log.Path = "D:\\QQQ";
+            log.Write("123");
+        }
     }
 }
