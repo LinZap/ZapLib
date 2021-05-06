@@ -6,7 +6,7 @@
 
 1. 增加 標註棄用說明 `SQL.Exec` 已標註棄用，將在下一個版本刪除
 2. 修正 `ExtApiHelper` 呼叫 `GetJsonBody<T>` 無法正常取得資料的問題
-3. 修正 執行 `MyLog.write` 時，如果 `Storage` 目錄不存在會造成 stackoverflow 崩潰的問題 
+3. 修正 執行 `MyLog.write` 時，如果 `Storage` 目錄不存在會造成 stackoverflow 崩潰的問題，目錄不存在時，將完全不執行
 4. 修正 使用 `Fetch` 傳入不合法的 URL 時會直接崩潰的問題，並且會自動 Log 提示
 5. 優化 執行 `Mirror.Assign` 或 `Cast.To` 時，如果目標 Type 為 `Nullable<T>` 將會嘗試使用 `T` 底層類別 (under type) 重新嘗試轉換
 
