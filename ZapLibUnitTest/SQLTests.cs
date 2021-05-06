@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ZapLib;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -213,8 +214,12 @@ namespace ZapLib.Tests
             Assert.IsNotNull(data);
         }
 
-
-
+        [TestMethod()]
+        public void ExecTest()
+        {
+            SQL db = new SQL();
+            db.Exec<object>(null);
+        }
     }
     class ModelObject
     {

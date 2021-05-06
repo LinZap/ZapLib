@@ -174,7 +174,28 @@ namespace ZapLib
         /// <param name="sql">預存程序名稱</param>
         /// <param name="param">語法中的參數化資料</param>
         /// <returns>綁定預存程序輸出數值的資料模型</returns>
+        [Obsolete("Exec<T> 即將棄用，請改用 QuickExec<T> 取代，詳情：http://10.190.173.136/SideProject/ZapLib/issues/30")]
         public T Exec<T>(string sql, object param = null)
+        {
+            Cmd.CommandText = sql;
+            Cmd.CommandType = CommandType.StoredProcedure;
+            Cmd.Parameters.Clear();
+            setParaInput(Cmd, param);
+            Dictionary<string, SqlParameter> tmpOutputParams = SetParaOutput<T>(Cmd);
+            //Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(Cmd, output);
+            Cmd.ExecuteNonQuery();
+            return getParaOutput<T>(tmpOutputParams);
+        }
+
+
+        /// <summary>
+        /// 取代公開的 Exec : 手動執行預存程序，需自行控制可能發生的錯誤
+        /// </summary>
+        /// <typeparam name="T">將返回資料綁定到指定類型 T</typeparam>
+        /// <param name="sql">預存程序名稱</param>
+        /// <param name="param">語法中的參數化資料</param>
+        /// <returns>綁定預存程序輸出數值的資料模型</returns>
+        private T _Exec<T>(string sql, object param = null)
         {
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
@@ -316,7 +337,7 @@ namespace ZapLib
             {
                 try
                 {
-                    obj = Exec<T>(sql, param);
+                    obj = _Exec<T>(sql, param);
                     if (isTran) Tran.Commit();
                 }
                 catch (Exception e)
