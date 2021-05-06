@@ -460,8 +460,12 @@ namespace ZapLib
         {
             string s = null;
             HttpRequest Request = HttpContext.Current.Request;
+
             if (Request.TotalBytes > 0)
-                s = Encoding.GetEncoding("utf-8").GetString(Request.BinaryRead(Request.TotalBytes));
+            {
+                //s = Encoding.GetEncoding("utf-8").GetString(Request.BinaryRead(Request.TotalBytes));
+                s = request.Content.ReadAsStringAsync().Result;
+            }
             return JsonConvert.DeserializeObject<T>(s);
         }
     }

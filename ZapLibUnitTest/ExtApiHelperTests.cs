@@ -19,15 +19,16 @@ namespace ZapLib.Tests
             TestController test_controller = new TestController();
             ExtApiHelper api = new ExtApiHelper(test_controller);
             string sql = "select * from entity where eid>10";
-            api.AddIdentityPaging(ref sql,"eid desc","eid",null);
+            api.AddIdentityPaging(ref sql, "eid desc", "eid", null);
 
             string sql2 = "select * from entity where eid>10";
             api.AddIdentityPaging(ref sql2, "eid desc", "eid", "2");
 
             Trace.WriteLine(sql);
             Trace.WriteLine(sql2);
-            
+
         }
+
     }
 
     public class TestController : ApiController { }
