@@ -10,10 +10,10 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕�
 PM> Install-Package ZapLib -Version 1.22.0
 ```
   
-**Package Manager (v2.0.10 stable)**
+**Package Manager (v2.0.11 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.0.10
+PM> Install-Package ZapLib -Version 2.0.11
 ```
 
 ## System requirement
@@ -36,14 +36,14 @@ PM> Install-Package ZapLib -Version 2.0.10
 * [QueryString API](https://linzap.gitbooks.io/zaplib/content/querystring-api/querystring-api.md)
 * [Config API](https://linzap.gitbooks.io/zaplib/content/config-api/config-api.md)
 * [MyLog API](https://linzap.gitbooks.io/zaplib/content/mylog-api/mylog-api.md)
-* [實務案例(一)：FSX 小型檔案儲存系統](http://10.9.173.136/SideProject/FSX)
-* [實務案例(二)：使用 SignalR 推播技術的聊天室](http://10.9.173.136/zap/signalr-server)
+* [實務案例(一)：FSX 小型檔案儲存系統](http://10.190.173.136/SideProject/FSX)
+* [實務案例(二)：使用 SignalR 推播技術的聊天室](http://10.190.173.136/zap/signalr-server)
 
-## [ChangeLog](http://w136/SideProject/ZapLib/blob/master/CHANGELOG.md)
+## [ChangeLog](http://10.190.173.136/SideProject/ZapLib/blob/master/CHANGELOG.md)
 
 ## License MIT
 
-	Copyright (C) 2020 ZapLin
+	Copyright (C) 2021 ZapLin
 	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

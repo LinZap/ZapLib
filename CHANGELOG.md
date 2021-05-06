@@ -2,6 +2,65 @@
 
 改版紀錄
 
+## `2.0.11`
+
+1. 增加 標註棄用說明 `SQL.Exec` 已標註棄用，將在下一個版本刪除
+2. 修正 `ExtApiHelper` 呼叫 `GetJsonBody<T>` 無法正常取得資料的問題
+3. 修正 執行 `MyLog.write` 時，如果 `Storage` 目錄不存在會造成 stackoverflow 崩潰的問題 
+4. 修正 使用 `Fetch` 傳入不合法的 URL 時會直接崩潰的問題，並且會自動 Log 提示
+5. 優化 執行 `Mirror.Assign` 或 `Cast.To` 時，如果目標 Type 為 `Nullable<T>` 將會嘗試使用 `T` 底層類別 (under type) 重新嘗試轉換
+
+## `2.0.10`
+
+* 修正上傳檔案參數撰寫錯誤(#32)的 bug
+
+## `2.0.9`
+
+
+1. 修正 query string 中文變亂碼的問題
+2. 增加 sql order by 白名單過濾
+3. 修正 ValidPlatform 少做一次內容驗證問題
+4. 增加 fetch 取得 header 自動轉型
+5. 修正 Mirror.Member 可能會噴錯的問題
+6. 新增 DynamicObject 動態實體物件
+7. 修正 ExpParam 在遇到變數名稱相似的時候 ，會取代錯誤的問題
+8. 修正 SQL getErrorMessage 有時候無法取得完整的 Exception 資訊的問題
+
+## `2.0.8`
+
+* Fixed Fetch Oject Disposed Exception
+* Fixed Proxy setting.
+
+## `2.0.7`
+
+* Add transaction options in SQL
+* Add get headers in ExtApiHelper
+
+## `2.0.6`
+
+1. `ZapLib/ExtApiHelper.cs` Add `GetHeader` and `GetHeader<T>` function
+2. `ZapLib/Utility/Cast.cs` Add `ToEnum` and `ToEnum<T>` function
+
+## `2.0.5`
+
+* Add New Feature JsonReader
+
+## `2.0.4`
+
+1. implement interface  `ISQLParam` can custom function to run way of your process
+2. add `SQLTypeAttribute ` defined SQL output model for mapping data type
+3. implement interface  `ISQLTypeAttribute` can custom function to run way of your process
+4. `ZapLib/Utility/Mirror.cs` Add `GetCustomAttributes<T>`
+
+
+## `2.0.3`
+
+* New Feature  SQL 參數擴展 ，允許使用  `ExpParam<T>` 以陣列當作資料，並自動生成 Prepare statement args
+
+
+## `2.0.0 ~ 2.0.2`
+
+* beta
 
 ## `v1.22.0`
 
