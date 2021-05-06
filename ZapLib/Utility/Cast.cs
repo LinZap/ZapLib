@@ -55,14 +55,32 @@ namespace ZapLib.Utility
         /// <returns>轉換過後的數值，如果轉換不過則回傳預設值</returns>
         public static T To<T>(object obj, T def_val = default)
         {
+            Type targetType = typeof(T);
+            Type fallbackType = null;
+            T result = default(T);
+
             try
             {
-                return (T)Convert.ChangeType(obj, typeof(T));
+                result = (T)Convert.ChangeType(obj, targetType);
             }
             catch
             {
-                return def_val;
+                // try to use nullable under type to convert
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    fallbackType = Nullable.GetUnderlyingType(targetType);
+                }
             }
+
+            if (fallbackType != null)
+            {
+                try
+                {
+                    result = (T)Convert.ChangeType(obj, fallbackType);
+                }
+                catch { }
+            }
+            return result;
         }
 
         /// <summary>
@@ -73,18 +91,35 @@ namespace ZapLib.Utility
         /// <returns>轉換過後的數值，如果轉換不過則回傳預設值</returns>
         public static object To(object obj, Type targetType)
         {
+            Type fallbackType = null;
+            object result = null;
             try
             {
-                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    targetType = Nullable.GetUnderlyingType(targetType);    
-                }
-                return Convert.ChangeType(obj, targetType);
+                result = Convert.ChangeType(obj, targetType);
             }
             catch
             {
-                return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+                // try to use nullable under type to convert
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    fallbackType = Nullable.GetUnderlyingType(targetType);
+                }
+                else
+                {
+                    result = targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+                }
             }
+
+
+            if (fallbackType != null)
+            {
+                try
+                {
+                    result = Convert.ChangeType(obj, fallbackType);
+                }
+                catch { }
+            }
+            return result;
         }
 
 
@@ -95,7 +130,7 @@ namespace ZapLib.Utility
         /// <param name="obj">要轉換的物件</param>
         /// <param name="def_val">枚舉的預設值</param>
         /// <returns>轉換過後的數值，轉換不過或枚舉中不存在則回傳預設值</returns>
-        public static T ToEnum<T>(object obj, T def_val = default) where T:Enum
+        public static T ToEnum<T>(object obj, T def_val = default) where T : Enum
         {
             Type t = typeof(T);
             try
@@ -103,7 +138,7 @@ namespace ZapLib.Utility
                 obj = Enum.Parse(t, obj.ToString());
                 return Enum.IsDefined(t, obj) ? (T)obj : def_val;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return def_val;
             }
@@ -116,7 +151,7 @@ namespace ZapLib.Utility
         /// <param name="targetType">特定枚舉類型</param>
         /// <returns>轉換過後的數值，轉換不過或枚舉中不存在則回傳預設值</returns>
         public static object ToEnum(object obj, Type targetType)
-        {          
+        {
             try
             {
                 if (!targetType.IsEnum) return obj;
