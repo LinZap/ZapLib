@@ -43,7 +43,18 @@ namespace ZapLib
         public string Url
         {
             get => Client.BaseAddress?.ToString();
-            set => Client.BaseAddress = new Uri(value ?? "http://localhost");
+            set
+            {
+                try
+                {
+                    Client.BaseAddress = new Uri(value);
+                }
+                catch (Exception e)
+                {
+                    log.Write("URL is invalid : " + (value ?? "null"));
+                    log.Write(e.ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -55,10 +66,10 @@ namespace ZapLib
             set
             {
                 Url = string.Format("{0}{1}{2}{3}{4}",
-                    Client.BaseAddress.Scheme,
+                    Client.BaseAddress?.Scheme,
                     Uri.SchemeDelimiter,
-                    Client.BaseAddress.Authority,
-                    Client.BaseAddress.AbsolutePath,
+                    Client.BaseAddress?.Authority,
+                    Client.BaseAddress?.AbsolutePath,
                     value == null ? "" : "?" + QueryString.Parse(value));
             }
         }
@@ -153,6 +164,7 @@ namespace ZapLib
 
         private CookieContainer CookieContainer;
         private WebProxy WebProxy;
+        private MyLog log;
 
         /// <summary>
         /// 建構子，初始化必要物件
@@ -166,6 +178,8 @@ namespace ZapLib
             ClientHandler.CookieContainer = CookieContainer;
             Client = new HttpClient(ClientHandler);
             Request = new HttpRequestMessage();
+            log = new MyLog();
+            log.SilentMode = Config.Get("SilentMode");
             Url = uri;
         }
 
@@ -392,8 +406,9 @@ namespace ZapLib
                 Mirror.EachMembers(files, (string key, string val) =>
                 {
                     if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(val)) return;
-                    val = val.Trim();
-                    if (!File.Exists(val)) return;
+                    //val = val.Trim();
+                    var exists = File.Exists(val);
+                    if (!exists) return;
                     form.Add(new StreamContent(File.OpenRead(val)), key, Path.GetFileName(val));
                 });
             return form;
@@ -473,8 +488,8 @@ namespace ZapLib
             if (StatusCode != 0) throw new Exception("Every Fetch instance only send request once!");
             if (ValidPlatform) ProcValidPlatform();
             if (!string.IsNullOrWhiteSpace(Proxy)) ClientHandler.Proxy = WebProxy;
-            MyLog log = new MyLog();
-            log.SilentMode = Config.Get("SilentMode");
+
+
             try
             {
                 Response = Client.SendAsync(Request).Result;
@@ -485,7 +500,7 @@ namespace ZapLib
                 }
                 return Response.IsSuccessStatusCode;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.Write("Fail WebRequest URL: " + Url);
                 log.Write($"Fail WebRequest Data: {e.ToString()}");

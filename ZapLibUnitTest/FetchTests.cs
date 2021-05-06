@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace ZapLib.Tests
 {
@@ -16,19 +18,14 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void post()
         {
-
-            Dictionary<string, string> file = new Dictionary<string, string>();
-            Dictionary<string, string> data = new Dictionary<string, string>();
-
-            file.Add("file", @"D:\123.txt");
-            data.Add("test", "123");
-
-            Fetch f = new Fetch("https://httpbin.org/post");
-            //f.userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
-            var res = f.Post(data, new { test = "123" }, file);
-
-
-            Trace.WriteLine(res);
+            //Fetch f = new Fetch("https://httpbin.org/post");
+            Fetch f = new Fetch("http://10.9.173.102:8888/api/upload");
+            f.ValidPlatform = true;
+            object res = f.Post<object>(null, null, new
+            {
+                files = "D:\\123.txt"
+            });
+            Trace.WriteLine(JsonConvert.SerializeObject(res));
         }
 
 
@@ -38,10 +35,25 @@ namespace ZapLib.Tests
             Dictionary<string, string> data = new Dictionary<string, string>();
             data.Add("test", "123");
             data.Add("GG", "wefewfhnwoefoew");
-            Fetch f = new Fetch("https://httpbin.org/get");
+            Fetch f = new Fetch("htts://httpbin.org/get");
             //f.contentType = "application/x-www-form-urlencoded";
             var res = f.Post(data, new { test = "123" });
             Trace.WriteLine(res);
+        }
+
+        [TestMethod()]
+        public void post3()
+        {
+            Fetch f = new Fetch("http://10.9.173.102:8888/api/upload");
+            f.ValidPlatform = true;
+            object res = f.Post<object>(new
+            {
+                name = "123.txt",
+                file = File.ReadAllBytes("D:\\123.txt")
+            });
+
+            Trace.WriteLine(JsonConvert.SerializeObject(res));
+            
         }
 
         [TestMethod()]
@@ -96,7 +108,10 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void Post1()
         {
-            Assert.Fail();
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            Fetch f = new Fetch("https://miro.medium.com/max/676/1*XEgA1TTwXa5AvAdw40GFow.png");
+            var res = f.GetBinary();
+            Assert.IsNotNull(res);
         }
 
         [TestMethod()]
@@ -176,5 +191,11 @@ namespace ZapLib.Tests
         {
             Assert.Fail();
         }
+    }
+
+    public class ModelUpload
+    {
+        public string name { get; set; }
+        public byte[] file { get; set; }
     }
 }
