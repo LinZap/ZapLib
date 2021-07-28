@@ -76,7 +76,8 @@ namespace ZapLib.Utility
             {
                 try
                 {
-                    result = (T)Convert.ChangeType(obj, fallbackType);
+                    result = fallbackType.IsEnum ? (T)ToEnum(obj, typeof(T)) : (T)Convert.ChangeType(obj, fallbackType);
+                    //result = (T)Convert.ChangeType(obj, fallbackType);
                 }
                 catch { }
             }
@@ -115,7 +116,7 @@ namespace ZapLib.Utility
             {
                 try
                 {
-                    result = Convert.ChangeType(obj, fallbackType);
+                    result = fallbackType.IsEnum ? ToEnum(obj, fallbackType) : Convert.ChangeType(obj, fallbackType);
                 }
                 catch { }
             }

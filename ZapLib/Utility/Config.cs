@@ -8,7 +8,23 @@ namespace ZapLib.Utility
     /// </summary>
     public static class Config
     {
+        /// <summary>
+        /// 刷新 .config 設定檔到記憶體中，預設刷新 appSettings 與 DriveConnectionString 兩個區域
+        /// </summary>
+        /// <param name="section">指定區域，可以不給</param>
+        public static void Refresh(string section = null)
+        {
+            if (string.IsNullOrWhiteSpace(section))
+            {
+                ConfigurationManager.RefreshSection("appSettings");
+                ConfigurationManager.RefreshSection("DriveConnectionString");
+            }
+            else
+            {
+                ConfigurationManager.RefreshSection(section);
+            }
 
+        }
         /// <summary>
         /// 取得 App.config 或 Web.config 的 appSetting 中指定名稱的數值，取不到時將回傳 NULL
         /// </summary>

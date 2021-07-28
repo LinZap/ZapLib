@@ -282,6 +282,35 @@ namespace ZapLib
         }
 
         /// <summary>
+        /// 取得 API 回應物件，並將指定路徑的檔案以串流方式回應 (客戶將以下載檔案方式取得檔案)
+        /// </summary>
+        /// <param name="stream">檔案串流，當串流無法讀取時 404 Not Found 的 Status Code</param>
+        /// <param name="name">檔案名稱，預設為隨機產生亂碼</param>
+        /// <param name="type">回應的內容格式，預設為 application/octet-stream</param>
+        /// <param name="disposition">下載模式，預設為 attachment ，強迫以下載方式取得檔案</param>
+        /// <returns>Web API 回應物件</returns>
+        public HttpResponseMessage GetStreamResponse(Stream stream, string name = null, string type = "application/octet-stream", string disposition = "attachment")
+        {
+            string fn = (name ?? Guid.NewGuid().ToString());
+            if (stream.CanRead)
+            {
+                resp.StatusCode = HttpStatusCode.OK;
+                resp.Content = new StreamContent(stream);
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                {
+                    FileName = fn
+                };
+            }
+            else
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+                resp.Content = new StringContent("Stream can not read!");
+            }
+            return resp;
+        }
+
+        /// <summary>
         /// 取得 API 回應物件，並將指定byte[] 二進位資料以串流方式回應 (客戶將以下載檔案方式取得資料)
         /// </summary>
         /// <param name="file">二進位資料</param>

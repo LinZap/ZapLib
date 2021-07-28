@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace ZapLib.Tests
 {
@@ -20,7 +21,7 @@ namespace ZapLib.Tests
         public bool MultiSubnetFailover { get; set; } = false;
         public bool TrustServerCertificate { get; set; } = false;
              */
-            string Host = "192.168.1.190";
+            string Host = "10.190.173.190";
             string DBName = "Fpage";
             string User = "sa";
             string Password = "1qaz@WSX";
@@ -220,7 +221,33 @@ namespace ZapLib.Tests
             SQL db = new SQL();
             db.Exec<object>(null);
         }
+
+
+        
+
+        [TestMethod()]
+        public void QuickQueryTest()
+        {
+            SQL db = new SQL("DriveConnectionString");
+            ModelNullAbleEnumObject[] res = db.QuickQuery<ModelNullAbleEnumObject>("select top 1 oid , uuid from object");
+            Trace.WriteLine(JsonConvert.SerializeObject(res));
+            if (res == null) db.GetErrorMessage();
+            Assert.IsNotNull(res);
+        }
     }
+
+    enum MyID
+    {
+        Ok = 0,
+        No = 1
+    }
+
+    class ModelNullAbleEnumObject
+    {
+        public MyID? oid { get; set; }
+        public string uuid { get; set; }
+    }
+
     class ModelObject
     {
         public int oid { get; set; }

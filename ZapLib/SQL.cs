@@ -458,10 +458,19 @@ namespace ZapLib
                 obj = (T)Activator.CreateInstance(typeof(T));
                 for (int i = 0; i < r.FieldCount; i++)
                 {
-                    var value = r.GetValue(i);
+                    object value = r.GetValue(i);
                     var prop = obj.GetType().GetProperty(r.GetName(i), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if ((prop != null) && prop.CanWrite)
-                        prop.SetValue(obj, Convert.IsDBNull(value) ? null : value, null);
+                    {
+                        value = Convert.IsDBNull(value) ? null : value;
+
+                        if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            value = Cast.To(value, prop.PropertyType);
+                        }
+                        prop.SetValue(obj, value, null);
+                    }
+
                 }
                 data.Add(obj);
                 if (!fetchAll) break;
@@ -509,7 +518,7 @@ namespace ZapLib
                     {
                         ((ISQLParam)value).CustomParamProcessing(cmd, prop.Name, custom_type_attr);
                     }
-                    else if ((cmd.CommandText.Contains($"@{prop.Name}") && cmd.CommandType==CommandType.Text) || cmd.CommandType == CommandType.StoredProcedure)
+                    else if ((cmd.CommandText.Contains($"@{prop.Name}") && cmd.CommandType == CommandType.Text) || cmd.CommandType == CommandType.StoredProcedure)
                     {
                         var p = cmd.Parameters.AddWithValue($"@{prop.Name}", value);
                         if (custom_type_attr == null) continue;
