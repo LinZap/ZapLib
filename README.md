@@ -16,6 +16,12 @@ PM> Install-Package ZapLib -Version 1.22.0
 PM> Install-Package ZapLib -Version 2.0.11
 ```
 
+**Package Manager (v2.0.12-beta 早期預覽版)**
+
+```
+PM> Install-Package ZapLib -Version 2.0.12-beta
+```
+
 ## System requirement
 
 * `v1.10.0` 以前的版本支援 .NET Framework 4.0 以上

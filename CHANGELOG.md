@@ -2,6 +2,14 @@
 
 改版紀錄
 
+## `2.0.12`
+
+1. 新增以 Stream 作為輸入參數的 API Response 函數 `GetStreamResponse`
+2. SQL 支援類別的成員是 Nullable Enum 資料類型的 property  (資料會嘗試轉換到 Enum，如果失敗則會容錯成 Enum 的預設值，不會變成 null)
+3. `Cast.To` 如果嘗試轉換成 Enum 類別，則會自動容錯成呼叫 Enum.To 函數
+4. Config 新增 `Config.Refresh` 方法，如果應用程式運行過程中可能會改變 `.config` 檔案，可以自行決定何時刷新 Config 中的快取 (cache)
+
+
 ## `2.0.11`
 
 1. 增加 標註棄用說明 `SQL.Exec` 已標註棄用，將在下一個版本刪除
