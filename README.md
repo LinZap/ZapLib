@@ -16,10 +16,10 @@ PM> Install-Package ZapLib -Version 1.22.0
 PM> Install-Package ZapLib -Version 2.0.11
 ```
 
-**Package Manager (v2.0.12-beta 早期預覽版)**
+**Package Manager (v2.0.12-gamma 早期預覽版)**
 
 ```
-PM> Install-Package ZapLib -Version 2.0.12-beta
+PM> Install-Package ZapLib -Version 2.0.12-gamma
 ```
 
 ## System requirement
