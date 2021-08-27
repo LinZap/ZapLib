@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace ZapLib.Utility
         /// <param name="json">JSON 字串</param>
         /// <param name="xpath">xpath 路徑</param>
         /// <returns>數值</returns>
-        public static string GetValue(string json, string xpath)
+        public static object GetValue(string json, string xpath)
         {
             dynamic data = JObject.Parse(json);
             return GetValue(data, xpath);
@@ -31,7 +32,7 @@ namespace ZapLib.Utility
         /// <param name="d">dynamic 物件</param>
         /// <param name="xpath">xpath 路徑</param>
         /// <returns>數值</returns>
-        public static string GetValue(dynamic d, string xpath)
+        public static object GetValue(dynamic d, string xpath)
         {
             List<(string, int)> plist = ParseXPath(xpath);
 
@@ -46,7 +47,7 @@ namespace ZapLib.Utility
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Trace.WriteLine(e.ToString());
                 return null;
             }
 
