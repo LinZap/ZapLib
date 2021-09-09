@@ -215,13 +215,6 @@ namespace ZapLib.Tests
             Assert.IsNotNull(data);
         }
 
-        [TestMethod()]
-        public void ExecTest()
-        {
-            SQL db = new SQL();
-            db.Exec<object>(null);
-        }
-
 
         
 

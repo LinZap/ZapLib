@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace ZapLib.Utility
@@ -11,6 +12,31 @@ namespace ZapLib.Utility
     /// </summary>
     public static class Mirror
     {
+        /// <summary>
+        /// 反射全系統公開類別，並取得指定類型或繼承指定類型的類別
+        /// </summary>
+        /// <typeparam name="T">指定類型</typeparam>
+        /// <param name="include_self">是否包含指定的類型的類別</param>
+        /// <returns>迭代器，反覆返回該類別</returns>
+        public static IEnumerable<Type> GetClasses<T>(bool include_self = false)
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            if (assemblies != null)
+                foreach (Assembly asm in assemblies)
+                {
+                    if (include_self)
+                        foreach (var t in asm.GetTypes())
+                        {
+                            if (typeof(T).Equals(t) || typeof(T).IsAssignableFrom(t)) yield return t;
+                        }
+                    else
+                        foreach (var t in asm.GetTypes())
+                        {
+                            if (!typeof(T).Equals(t) && typeof(T).IsAssignableFrom(t)) yield return t;
+                        }
+                }
+        }
+
         /// <summary>
         /// 反射指定物件的成員，並以迭代方式回傳成員的名稱與數值
         /// </summary>
