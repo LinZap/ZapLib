@@ -115,13 +115,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.3.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.3.min.js" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ZapLib\ZapLib.csproj">
       <Project>{c54f5f87-a622-40b6-8df8-259d9d88a6ae}</Project>
       <Name>ZapLib</Name>
