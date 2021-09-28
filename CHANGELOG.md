@@ -2,6 +2,10 @@
 
 改版紀錄
 
+## `2.1.0`
+
+1. 將 ExtApiHelper 的 Response 與 Request 改為 public 存取
+
 ## `2.0.12`
 
 1. 新增以 Stream 作為輸入參數的 API Response 函數 `GetStreamResponse`
