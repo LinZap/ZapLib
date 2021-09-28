@@ -11,6 +11,8 @@
 5. 新增 `JXPath.GetValue` Utility 類別方法，允許指定 XPath 來取出特定 `dynamic` 或 JSON 字串中指定路徑位置的數值
 6. 新增  `Mirror.GetClasses` 可以掃描全系統 class 取得特定 class 或取得有繼承 class 的 classes
 7. 新增全新功能 `ClassMirror` 可以輸入指定的 Type 並建立實體
+8. 新增全新 `DllLoader` Utility 類別方法，允許指定 dll 檔案路徑並建立 assembly 組件
+
 ## `2.0.11`
 
 1. 增加 標註棄用說明 `SQL.Exec` 已標註棄用，將在下一個版本刪除
