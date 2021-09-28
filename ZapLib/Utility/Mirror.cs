@@ -37,6 +37,28 @@ namespace ZapLib.Utility
                 }
         }
 
+
+        /// <summary>
+        /// 從指定組件中反射公開類別，並取得指定類型或繼承指定類型的類別
+        /// </summary>
+        /// <typeparam name="T">指定類型</typeparam>
+        /// <param name="asm">指定組件</param>
+        /// <param name="include_self">是否包含指定的類型的類別</param>
+        /// <returns>迭代器，反覆返回該類別</returns>
+        public static IEnumerable<Type> GetClasses<T>(Assembly asm, bool include_self = false)
+        {
+            if (include_self)
+                foreach (var t in asm.GetTypes())
+                {
+                    if (typeof(T).Equals(t) || typeof(T).IsAssignableFrom(t)) yield return t;
+                }
+            else
+                foreach (var t in asm.GetTypes())
+                {
+                    if (!typeof(T).Equals(t) && typeof(T).IsAssignableFrom(t)) yield return t;
+                }
+        }
+
         /// <summary>
         /// 反射指定物件的成員，並以迭代方式回傳成員的名稱與數值
         /// </summary>

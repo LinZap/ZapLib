@@ -102,6 +102,7 @@
     <Compile Include="Security\ValidPlatformAttribute.cs" />
     <Compile Include="SQL.cs" />
     <Compile Include="Utility\Cast.cs" />
+    <Compile Include="Utility\DllLoader.cs" />
     <Compile Include="Utility\JXPath.cs" />
     <Compile Include="Utility\Mirror.cs" />
     <Compile Include="Utility\QueryString.cs" />

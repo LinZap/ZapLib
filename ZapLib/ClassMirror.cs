@@ -23,7 +23,7 @@ namespace ZapLib
         public string ErrMsg { get; private set; }
 
         /// <summary>
-        /// 建構子，產生實體物件，無法建立時 Instance 成員會為 null
+        /// 建構子，當 type 屬於專案的一部分(有被使用過) 才可呼叫，產生實體物件，無法建立時 Instance 成員會為 null
         /// </summary>
         /// <param name="type">類型</param>
         /// <param name="args">參數(多個)</param>
@@ -39,6 +39,7 @@ namespace ZapLib
                 ErrMsg = e.ToString();
             }
         }
+
 
         /// <summary>
         /// 在指定的類型中取得指定名稱的方法，無法取得時回傳 null
@@ -62,6 +63,5 @@ namespace ZapLib
             }
             return null;
         }
-
     }
 }
