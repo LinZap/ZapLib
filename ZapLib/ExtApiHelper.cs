@@ -21,8 +21,15 @@ namespace ZapLib
     /// </summary>
     public class ExtApiHelper
     {
-        private HttpRequestMessage request;
-        private HttpResponseMessage resp;
+        /// <summary>
+        /// 初始請求物件
+        /// </summary>
+        public HttpRequestMessage request { get; private set; }
+        /// <summary>
+        /// 最終回應物件
+        /// </summary>
+        public HttpResponseMessage resp { get; private set; }
+
         private List<CookieHeaderValue> cookies;
         private Dictionary<string, string> queries;
 
