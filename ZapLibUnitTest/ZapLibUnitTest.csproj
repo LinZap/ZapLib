@@ -109,6 +109,7 @@
     <Compile Include="Utility\MirrorTests.cs" />
     <Compile Include="Utility\QueryStringTests.cs" />
     <Compile Include="Utility\SQLString\OrderByTests.cs" />
+    <Compile Include="ZipHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
