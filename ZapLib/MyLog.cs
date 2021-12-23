@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
+using ZapLib.Model;
 using ZapLib.Utility;
 
 namespace ZapLib
@@ -26,6 +28,22 @@ namespace ZapLib
         public string SilentMode { get; set; }
 
         /// <summary>
+        /// 讀取 log 的批次大小，預設 1mb
+        /// </summary>
+        public int PageSize { get; set; } = 2048;
+        //public int PageSize { get; set; } = 50;
+
+        /// <summary>
+        /// 建構子，可指定 log 檔案名稱，預設將以今天 yyyyMMdd 形式命名，也可自行指定其他日期，以利讀取
+        /// </summary>
+        /// <param name="Name">日誌檔名，預設今天 yyyyMMdd</param>
+        public MyLog(string Name = null)
+        {
+
+            this.Name = Name;
+        }
+
+        /// <summary>
         /// 將訊息寫入實體日誌檔案
         /// </summary>
         /// <param name="msg">訊息</param>
@@ -37,25 +55,33 @@ namespace ZapLib
                 if (_silentMode) return;
             }
 
-            string logfile = Path ?? Config.Get("Storage");
+            var lastpath = GetLastPath();
+            if (lastpath == null) return;
 
-            if (logfile == null) return;
-            if (!Directory.Exists(logfile)) return;
-
-            DateTime now = DateTime.Now;
-            string name = this.Name ?? now.ToString("yyyyMMdd"),
-                   time = now.ToString("HH:mm:ss"),
-                   txt = string.Format("[{0}] {1}", time, msg) + Environment.NewLine,
-                   lastpath = string.Format(@"{0}\{1}", logfile, name);
+            string time = DateTime.Now.ToString("HH:mm:ss");
+            string txt = string.Format("[{0}] {1}", time, msg) + Environment.NewLine;
 
             _write(lastpath, txt);
+        }
+
+        /// <summary>
+        /// 取得最終的log檔案位置，如果無法取得則回傳 Null
+        /// </summary>
+        /// <returns>log檔案位置</returns>
+        private string GetLastPath()
+        {
+            string logfile = Path ?? Config.Get("Storage");
+            if (!Directory.Exists(logfile)) return null;
+            string name = Name ?? DateTime.Now.ToString("yyyyMMdd");
+            name += ".txt";
+            return string.Format(@"{0}\{1}", logfile, name);
         }
 
         private void _write(string path, string content)
         {
             try
             {
-                File.AppendAllText(path + ".txt", content);
+                File.AppendAllText(path, content);
             }
             catch (Exception e)
             {
@@ -128,6 +154,75 @@ namespace ZapLib
                 }
             }
             catch { }
+        }
+
+        /// <summary>
+        /// 使用翻頁的機制，從後往前讀取指定的 log 檔案
+        /// </summary>
+        /// <param name="page">頁數，預設第 1 頁</param>
+        /// <returns>Log 讀取結果資料模型</returns>
+        public ModelLog Read(int page = 1)
+        {
+            // 回傳資料模型
+            ModelLog log = new ModelLog();
+            log.PageSize = PageSize;
+
+            // 計算目前頁數
+            int pageidx = Math.Max(1, page);
+            log.Page = page;
+
+            // 計算log 檔案位置
+            string lastpath = GetLastPath();
+            if (lastpath == null)
+            {
+                log.ErrMsg = "Can not find log file";
+                return log;
+            }
+            log.Path = lastpath;
+
+            // alphabet.txt contains "abcdefghijklmnopqrstuvwxyz"
+            using (FileStream fs = new FileStream(lastpath, FileMode.Open, FileAccess.Read))
+            {
+                int fileLen = (int) fs.Length;
+                int start = Math.Min(fileLen, PageSize * pageidx);
+                int end = PageSize * (pageidx - 1);
+
+                if (end > start)
+                {
+                    log.ErrMsg = "The number of pages exceeds the access range";
+                    return log;
+                }
+
+                // 計算起始與結束位置
+                int startidx = fileLen - start;
+                int endidx = fileLen - end;
+
+                //Trace.WriteLine("startidx: " + startidx);
+                //Trace.WriteLine("endidx: " + endidx);
+
+                // 從起始位置讀檔直到結束位置
+                int cnt = endidx - startidx;
+                byte[] data = new byte[cnt];
+                fs.Seek(startidx, SeekOrigin.Begin);
+                fs.Read(data, 0, cnt);
+
+
+
+                double _maxpage = fileLen / PageSize;
+                log.Result = true;
+                log.Data = Encoding.UTF8.GetString(data);
+
+                try
+                {
+                    log.MaxPage = Convert.ToInt32(Math.Ceiling(_maxpage));
+                }
+                catch (Exception e)
+                {
+                    log.ErrMsg = e.ToString();
+                }
+
+                return log;
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ZapLib.Tests
             z.AddFile("", @"D:\Storage\123.txt", "readme.txt");
             z.AddFile("/img", @"D:\Storage\123.txt", "pig.txt");
             z.AddFile("/img/favorite", @"D:\Storage\456.txt", "apple.txt");
-            z.AddFile("/music", @"D:\Storage\789.txt", "song.txt");
+            z.AddFile("/music", @"D:\Storage\789.txt", "/");
             z.AddFile("/music/good", @"D:\Storage\AAA.txt", "good.txt");
             foreach ((string foldername, string filedist, string filename) in z.FileList)
             {

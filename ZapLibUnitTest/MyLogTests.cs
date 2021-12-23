@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using ZapLib.Utility;
+using ZapLib.Model;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace ZapLib.Tests
 {
@@ -77,6 +80,47 @@ namespace ZapLib.Tests
             MyLog log = new MyLog();
             log.Path = "D:\\QQQ";
             log.Write("123");
+        }
+
+        [TestMethod()]
+        public void ReadTest()
+        {
+            //string LogFileName = new DateTime(2021,12,23).ToString("yyyyMMdd");
+            
+            string LogFileName = new DateTime(2021, 12, 21).ToString("yyyyMMdd");
+            
+            MyLog log = new MyLog(LogFileName);
+
+            // 取得第一頁
+            ModelLog logres = log.Read(1);
+
+            if (logres.Result)
+            {
+                Trace.WriteLine("Success");
+                Trace.WriteLine(JsonConvert.SerializeObject(logres));
+            }
+           
+
+
+            // 取得第二頁
+            logres = log.Read(2);
+            if (logres.Result)
+            {
+                Trace.WriteLine("Success");
+                Trace.WriteLine(JsonConvert.SerializeObject(logres));
+            }
+            else
+            {
+                Trace.WriteLine("Fail");
+                Trace.WriteLine(JsonConvert.SerializeObject(logres));
+            }
+
+
+
+            Assert.IsTrue(logres.Result);
+
+
+
         }
     }
 }
