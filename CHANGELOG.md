@@ -6,6 +6,7 @@
 
 1. 將 ExtApiHelper 的 Response 與 Request 改為 public 存取
 2. 新增 ZipHelper 快速 Zip 壓縮的類別函式庫 
+3. 新增 MyLog.Read(page) 方法，能以翻頁的方式讀取 Log 檔案
 
 ## `2.0.12`
 
