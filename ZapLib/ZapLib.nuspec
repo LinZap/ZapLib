@@ -9,10 +9,10 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>This is a very helpful library for Web API developing</description>
     <releaseNotes>v2.1.0 (Stable); v1.22.0 (LTS)</releaseNotes>
-    <copyright>Copyright Zap Lin 2021</copyright>
+    <copyright>Copyright Zap Lin 2022</copyright>
     <tags>Zap,Lib,API</tags>
-    <projectUrl>https://linzap.gitbooks.io/zaplib/content/</projectUrl>
+    <projectUrl>https://github.com/LinZap/ZapLib</projectUrl>
     <iconUrl>https://avatars2.githubusercontent.com/u/5173346</iconUrl>
-    <licenseUrl>https://linzap.gitbooks.io/zaplib/content/</licenseUrl>
+    <licenseUrl>https://github.com/LinZap/ZapLib/blob/master/LICENSE</licenseUrl>
   </metadata>
 </package>
