@@ -34,10 +34,15 @@ namespace ZapLib
         //public int PageSize { get; set; } = 50;
 
         /// <summary>
+        /// 建構子，可指定 log 檔案名稱預設將以今天 yyyyMMdd 形式命名，也可自行指定其他日期，以利讀取
+        /// </summary>
+        public MyLog() { }
+
+        /// <summary>
         /// 建構子，可指定 log 檔案名稱，預設將以今天 yyyyMMdd 形式命名，也可自行指定其他日期，以利讀取
         /// </summary>
         /// <param name="Name">日誌檔名，預設今天 yyyyMMdd</param>
-        public MyLog(string Name = null)
+        public MyLog(string Name)
         {
 
             this.Name = Name;
@@ -183,7 +188,7 @@ namespace ZapLib
             // alphabet.txt contains "abcdefghijklmnopqrstuvwxyz"
             using (FileStream fs = new FileStream(lastpath, FileMode.Open, FileAccess.Read))
             {
-                int fileLen = (int) fs.Length;
+                int fileLen = (int)fs.Length;
                 int start = Math.Min(fileLen, PageSize * pageidx);
                 int end = PageSize * (pageidx - 1);
 

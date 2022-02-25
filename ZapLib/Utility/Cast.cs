@@ -139,7 +139,7 @@ namespace ZapLib.Utility
                 obj = Enum.Parse(t, obj.ToString());
                 return Enum.IsDefined(t, obj) ? (T)obj : def_val;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return def_val;
             }

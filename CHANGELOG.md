@@ -7,6 +7,11 @@
 1. 將 ExtApiHelper 的 Response 與 Request 改為 public 存取
 2. 新增 ZipHelper 快速 Zip 壓縮的類別函式庫 
 3. 新增 MyLog.Read(page) 方法，能以翻頁的方式讀取 Log 檔案
+4. 新增 Fetch.Patch 方法
+5. 修改 MyLog 建構子，以利向下相容
+6. 允許設置 ExtApiHelper 的 Encoding 修改後，所有 Response 都可以套用
+7. 修改所有 ExtApiHelper 中用到 Stream 物件的程式，全部加上 using 釋放資源
+
 
 ## `2.0.12`
 

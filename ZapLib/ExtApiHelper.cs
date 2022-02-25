@@ -30,7 +30,16 @@ namespace ZapLib
         /// </summary>
         public HttpResponseMessage resp { get; private set; }
 
-        private List<CookieHeaderValue> cookies;
+        /// <summary>
+        /// 設定在 response 的 cookie, 只允許在內部 AddCookie 進行設定
+        /// </summary>
+        public List<CookieHeaderValue> cookies { private set; get; }
+
+        /// <summary>
+        /// Response 的 Encoding，預設  Encoding.UTF8
+        /// </summary>
+        public Encoding encoding { get; set; } = Encoding.UTF8;
+
         private Dictionary<string, string> queries;
 
         /// <summary>
@@ -200,7 +209,7 @@ namespace ZapLib
             resp.StatusCode = code;
             resp.Headers.AddCookies(cookies.ToArray());
             if (content != null)
-                resp.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+                resp.Content = new StringContent(JsonConvert.SerializeObject(content), encoding, "application/json");
             return resp;
         }
 
@@ -215,7 +224,7 @@ namespace ZapLib
             resp.StatusCode = code;
             resp.Headers.AddCookies(cookies.ToArray());
             if (content != null)
-                resp.Content = new StringContent(content, Encoding.UTF8, "text/html");
+                resp.Content = new StringContent(content, encoding, "text/html");
             return resp;
         }
 
@@ -231,7 +240,7 @@ namespace ZapLib
             resp.Headers.AddCookies(cookies.ToArray());
             resp.Headers.Location = new Uri(url);
             string html = "<meta http-equiv=\"refresh\" content=\"{1}; URL = '{0}'\" /><body>{2}</body>";
-            resp.Content = new StringContent(string.Format(html, url, second, wording), Encoding.UTF8, "text/html");
+            resp.Content = new StringContent(string.Format(html, url, second, wording), encoding, "text/html");
             return resp;
         }
 
@@ -249,7 +258,7 @@ namespace ZapLib
             if (content != null)
             {
                 string mimeType = MimeMapping.GetMimeMapping(fn) ?? "application/octet-stream";
-                resp.Content = new StringContent(content, Encoding.UTF8, mimeType);
+                resp.Content = new StringContent(content, encoding, mimeType);
                 resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
                     FileName = fn
@@ -270,22 +279,27 @@ namespace ZapLib
         public HttpResponseMessage GetStreamResponse(string file, string name = null, string type = "application/octet-stream", string disposition = "attachment")
         {
             string fn = (name ?? Guid.NewGuid().ToString());
+
             if (File.Exists(file))
             {
-                resp.StatusCode = HttpStatusCode.OK;
-                resp.Content = new StreamContent(File.OpenRead(file));
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
-                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                using (var fs = File.OpenRead(file))
                 {
-                    FileName = fn
-                };
+                    resp.StatusCode = HttpStatusCode.OK;
+                    resp.Content = new StreamContent(fs);
+                    resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                    resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                    {
+                        FileName = fn
+                    };
+                    return resp;
+                }
             }
             else
             {
                 resp.StatusCode = HttpStatusCode.NotFound;
                 resp.Content = new StringContent("NotFound");
+                return resp;
             }
-            return resp;
         }
 
         /// <summary>
@@ -301,20 +315,25 @@ namespace ZapLib
             string fn = (name ?? Guid.NewGuid().ToString());
             if (stream.CanRead)
             {
-                resp.StatusCode = HttpStatusCode.OK;
-                resp.Content = new StreamContent(stream);
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
-                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                using (var sc = new StreamContent(stream))
                 {
-                    FileName = fn
-                };
+                    resp.StatusCode = HttpStatusCode.OK;
+                    resp.Content = sc;
+                    resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                    resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
+                    {
+                        FileName = fn
+                    };
+                    return resp;
+                }
             }
             else
             {
                 resp.StatusCode = HttpStatusCode.NotFound;
                 resp.Content = new StringContent("Stream can not read!");
+                return resp;
             }
-            return resp;
+
         }
 
         /// <summary>
@@ -397,7 +416,7 @@ namespace ZapLib
         /// <param name="nextId">翻頁 ID</param>
         public void AddIdentityPaging(ref string sql, string orderby = "since desc", string idcolumn = null, string nextId = null)
         {
-            bool isFirstPage = (String.IsNullOrEmpty(idcolumn) || String.IsNullOrEmpty(nextId));
+            bool isFirstPage = (string.IsNullOrEmpty(idcolumn) || string.IsNullOrEmpty(nextId));
             int sysLimit = int.TryParse(Config.Get("APIDataLimit"), out sysLimit) ? sysLimit : 50;
             int ilimit = int.TryParse(GetQuery("limit"), out ilimit) ? ilimit : 50;
             ilimit = Math.Min(sysLimit, ilimit) + 1;

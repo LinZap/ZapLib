@@ -90,7 +90,8 @@ namespace ZapLib.Tests
             string LogFileName = new DateTime(2021, 12, 21).ToString("yyyyMMdd");
             
             MyLog log = new MyLog(LogFileName);
-
+            // 改變每一頁的內容大小 (byte)
+            log.PageSize = 2048;
             // 取得第一頁
             ModelLog logres = log.Read(1);
 

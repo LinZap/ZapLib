@@ -338,6 +338,41 @@ namespace ZapLib
         }
 
         /// <summary>
+        /// 發送 HTTP Patch 請求，取得回傳資料後以字串回傳，請求失敗時 (200~299之外) 將回傳 NULL
+        ///  (如果有 file 傳送檔案，ContentType 將設為 multipart/form-data)
+        /// </summary>
+        /// <param name="data">資料</param>
+        /// <param name="qs">查詢字串</param>
+        /// <param name="files">檔案</param>
+        /// <returns>HTTP 回應的內容</returns>
+        public string Patch(object data = null, object qs = null, object files = null)
+        {
+            Qs = qs;
+            if (files != null) ContentType = "multipart/form-data";
+            Request.Method = new HttpMethod("PATCH");
+            SetRequestContnet(data, files);
+            return Send() ? Response.Content.ReadAsStringAsync().Result : default;
+        }
+
+        /// <summary>
+        /// 發送 HTTP Patch 請求，Accept 將設為 application/json 預期取得 JSON 資料，並將資料反序列化綁定到資料模型 T 中，請求失敗時 (200~299之外) 將回傳 NULL 
+        ///  (如果有 file 傳送檔案，ContentType 將設為 multipart/form-data)
+        /// </summary>
+        /// <typeparam name="T">指定綁定的資料型態</typeparam>
+        /// <param name="data">資料</param>
+        /// <param name="qs">查詢字串</param>
+        /// <param name="files">檔案</param>
+        /// <returns>綁定資料的資料模型</returns>
+        public T Patch<T>(object data = null, object qs = null, object files = null)
+        {
+            Qs = qs;
+            Accept = "application/json";
+            Request.Method = new HttpMethod("PATCH");
+            SetRequestContnet(data, files);
+            return Send() ? JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result) : default;
+        }
+
+        /// <summary>
         /// 以純文字方式取得發送請求後的回應結果，尚未發送請求前預設為 NULL
         /// </summary>
         /// <returns>HTTP 回應的資料</returns>
@@ -441,7 +476,12 @@ namespace ZapLib
             null :
             new StringContent(data, RequestEncoding, ContentType);
 
-        private void SetRequestContnet(object data = null, object files = null)
+        /// <summary>
+        /// 設定 Request.Content 的資料
+        /// </summary>
+        /// <param name="data">資料</param>
+        /// <param name="files">檔案</param>
+        public void SetRequestContnet(object data = null, object files = null)
         {
             if (string.IsNullOrWhiteSpace(ContentType)) ContentType = "application/json";
             if (files != null) ContentType = "multipart/form-data";
@@ -464,6 +504,7 @@ namespace ZapLib
             }
 
         }
+
         private void ProcValidPlatform()
         {
             string content = Request.Content == null ? "" : Request.Content.ReadAsStringAsync().Result;
