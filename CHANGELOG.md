@@ -12,6 +12,20 @@
 6. 允許設置 ExtApiHelper 的 Encoding 修改後，所有 Response 都可以套用
 7. 修改所有 ExtApiHelper 中用到 Stream 物件的程式，全部加上 using 釋放資源
 
+#### 更新套件
+
+* jQuery  1.6.4 → 3.6.0
+* Microsoft.AspNet.SignalR 2.2.3 → 2.4.3
+* Microsoft.AspNet.SignalR.Core 2.2.3 → 2.4.3
+* Microsoft.AspNet.SignalR.JS 2.2.3 → 2.4.3
+* Microsoft.AspNet.SignalR.SystemWeb 2.2.3 → 2.4.3
+* Microsoft.AspNet.WebApi.Client 5.2.4 → 5.2.7
+* Microsoft.AspNet.WebApi.Core 5.2.4 → 5.2.7
+* Microsoft.AspNet.WebApi.WebHost 5.2.4 → 5.2.7
+* Microsoft.Owin 2.1.0 → 4.2.0
+* Microsoft.Owin.Host.SystemWeb 2.1.0 → 4.2.0
+* Microsoft.Owin.Security 2.1.0 → 4.2.0
+* Newtonsoft.Json 11.0.2 → 12.0.1
 
 ## `2.0.12`
 
