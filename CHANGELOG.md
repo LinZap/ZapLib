@@ -2,6 +2,10 @@
 
 改版紀錄
 
+## `2.1.1`
+
+1. 修復 ExtApiHelper 中用到 Stream 物件的程式，資源不正常釋放的問題
+
 ## `2.1.0`
 
 1. 將 ExtApiHelper 的 Response 與 Request 改為 public 存取

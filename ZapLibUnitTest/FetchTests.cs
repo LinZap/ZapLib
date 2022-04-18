@@ -18,14 +18,15 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void post()
         {
-            //Fetch f = new Fetch("https://httpbin.org/post");
-            Fetch f = new Fetch("http://10.9.173.102:8888/api/upload");
-            f.ValidPlatform = true;
-            object res = f.Post<object>(null, null, new
-            {
-                files = "D:\\123.txt"
-            });
-            Trace.WriteLine(JsonConvert.SerializeObject(res));
+            string passportcode = "ukQvwRHcfHLxmIHbvBJxpO5jcJOaatlK6hpTJhfT5yd5Zfd5Tdr62vm69azrl65nh2Dnn42nr6Xyy49ytF9lj82zayf84djQDdw78vuU1wbUXuuX9flX7zgmtA7kxA7hwXOuwAJhfEOblWPuwRWeonwIRqrHRnpRBrmRMrnJJswKVvqKLaavhV0nhVKtjTLlm3MxsYNvm0YcdY9igxb6QhsM2yh6SspZ8rmNQcb46lq4XztcNA";
+            Fetch f = new Fetch("https://csweb.iqs-t.com/api/core/me");
+            f.Cookie = new { passportcode };
+            string response = f.Get();
+
+           
+            var cs = f.ClientHandler.CookieContainer.GetCookies(f.Client.BaseAddress).Cast<Cookie>();
+            foreach (var c in cs)
+                Trace.WriteLine(c.Name + ":" + c.Value);
         }
 
 

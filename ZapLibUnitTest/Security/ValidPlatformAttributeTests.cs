@@ -18,7 +18,7 @@ namespace ZapLib.Security.Tests
             string content = JsonConvert.SerializeObject(new { name="Zap"});
             Crypto crypto = new Crypto();
             string OuterSignature = crypto.Md5(content);
-            string Authorization = crypto.DESEncryption(OuterSignature);
+            string Authorization = crypto.DESEncryption(OuterSignature, "6");
             string IV = crypto.IV;
 
 

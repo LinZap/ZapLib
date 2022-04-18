@@ -282,8 +282,9 @@ namespace ZapLib
 
             if (File.Exists(file))
             {
-                using (var fs = File.OpenRead(file))
+                try
                 {
+                    var fs = File.OpenRead(file);
                     resp.StatusCode = HttpStatusCode.OK;
                     resp.Content = new StreamContent(fs);
                     resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
@@ -291,6 +292,13 @@ namespace ZapLib
                     {
                         FileName = fn
                     };
+                    return resp;
+                }
+                catch (Exception e)
+                {
+                    resp.StatusCode = HttpStatusCode.InternalServerError;
+                    resp.Content = new StringContent("can not open file, please check log");
+                    new MyLog().Write("can not open file: " + file + " " + e.ToString());
                     return resp;
                 }
             }
@@ -315,17 +323,14 @@ namespace ZapLib
             string fn = (name ?? Guid.NewGuid().ToString());
             if (stream.CanRead)
             {
-                using (var sc = new StreamContent(stream))
+                resp.StatusCode = HttpStatusCode.OK;
+                resp.Content = new StreamContent(stream);
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
                 {
-                    resp.StatusCode = HttpStatusCode.OK;
-                    resp.Content = sc;
-                    resp.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
-                    resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(disposition)
-                    {
-                        FileName = fn
-                    };
-                    return resp;
-                }
+                    FileName = fn
+                };
+                return resp;
             }
             else
             {
