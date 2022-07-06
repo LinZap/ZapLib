@@ -34,7 +34,7 @@ namespace ZapLib.Tests
             db.TrustServerCertificate = false;
 
 
-            object[] o = db.QuickQuery<object>("select * from class");
+            object[] o = db.QuickQuery<object>("select * from object where oid>@oid", new { oid = 1 });
 
 
             string error = db.GetErrorMessage();
@@ -48,7 +48,7 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void quickExec()
         {
-            string Host = "192.168.1.190";
+            string Host = "10.190.173.190";
             string DBName = "Fpage";
             string User = "sa";
             string Password = "1qaz@WSX";
@@ -216,7 +216,7 @@ namespace ZapLib.Tests
         }
 
 
-        
+
 
         [TestMethod()]
         public void QuickQueryTest()
@@ -251,11 +251,12 @@ namespace ZapLib.Tests
         public int res { get; set; }
     };
 
-public class ModelBook{
-    public int id { get; set; }
-    public string name { get; set; }
-    public DateTime since { get; set; }
-};
+    public class ModelBook
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public DateTime since { get; set; }
+    };
 
 
 }

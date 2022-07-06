@@ -2,6 +2,27 @@
 
 改版紀錄
 
+## `2.1.2`
+
+
+1. 可以設定 Config 參數 `MyLog`，來指定 Log 寫入的位置 (如果沒有設置則會採用 `Storage`)
+2. 新增全新 Config 參數 `LogExecTime`，當設為 `true`時，Log 將會自動紀錄 SQL 的執行時間
+3. 新增全新類別 `LogExecTime`，可以記錄程式的執行時間 (Config 參數 `LogExecTime` 設為 `true` 時才會生效)
+
+```csharp
+LogExecTime lxt = new LogExecTime("Unit Test");
+Thread.Sleep(1500);
+lxt.Log();
+```
+
+**Log**
+
+```
+[11:40:19] [Log Exec Time] Unit Test
+Takes 1.514 second
+```
+
+
 ## `2.1.1`
 
 1. 修復 ExtApiHelper 中用到 Stream 物件的程式，資源不正常釋放的問題
