@@ -49,7 +49,7 @@ namespace ZapLib
         }
 
         /// <summary>
-        /// 將訊息寫入實體日誌檔案
+        /// 將訊息寫入實體日誌檔案,優先採用指定路徑，第二採用 Config 設定中的 MyLog，第三採用 Config 設定中的 Storage
         /// </summary>
         /// <param name="msg">訊息</param>
         public void Write(string msg)
@@ -75,7 +75,7 @@ namespace ZapLib
         /// <returns>log檔案位置</returns>
         private string GetLastPath()
         {
-            string logfile = Path ?? Config.Get("Storage");
+            string logfile = Path ?? Config.Get("MyLog") ?? Config.Get("Storage");
             if (!Directory.Exists(logfile)) return null;
             string name = Name ?? DateTime.Now.ToString("yyyyMMdd");
             name += ".txt";

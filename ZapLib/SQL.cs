@@ -50,6 +50,8 @@ namespace ZapLib
         /// </summary>
         public bool TrustServerCertificate { get; set; } = false;
 
+        /// <summary> 追蹤馬, 同一個追蹤馬表是同一個SQL物件 </summary>
+        public string TraceCode { get; private set; }
 
         private string connString;
         private SqlConnection Conn = null;
@@ -75,6 +77,8 @@ namespace ZapLib
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
+            TraceCode = Guid.NewGuid().ToString();
+
         }
 
         /// <summary>
@@ -94,6 +98,7 @@ namespace ZapLib
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
+            TraceCode = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -108,6 +113,7 @@ namespace ZapLib
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
+            TraceCode = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -127,6 +133,7 @@ namespace ZapLib
         /// </summary>
         public void Connet()
         {
+            LogExecTime lextime = new LogExecTime($"DB Connection time\r\nTraceCode: {TraceCode}");
             try
             {
                 Conn = new SqlConnection(connString);
@@ -148,6 +155,7 @@ namespace ZapLib
                 errormessage.Add(e.ToString());
                 Conn = null;
             }
+            lextime.Log();
         }
 
         private string buildconnString(string s) => (s += $";Connect Timeout={Timeout};Encrypt={Encrypt};TrustServerCertificate={TrustServerCertificate};ApplicationIntent={ApplicationIntent};MultiSubnetFailover={MultiSubnetFailover}");
@@ -160,11 +168,14 @@ namespace ZapLib
         /// <returns>返回 SqlDataReader 物件可自行控制</returns>
         public SqlDataReader Query(string sql, object param = null)
         {
+            LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.Text;
             Cmd.Parameters.Clear();
             setParaInput(Cmd, param);
-            return Cmd.ExecuteReader();
+            SqlDataReader rd = Cmd.ExecuteReader();
+            lextime2.Log();
+            return rd;
         }
 
         /// <summary>
@@ -177,6 +188,7 @@ namespace ZapLib
         [Obsolete("Exec<T> 即將棄用，請改用 QuickExec<T> 取代，詳情：http://10.190.173.136/SideProject/ZapLib/issues/30")]
         public T Exec<T>(string sql, object param = null)
         {
+            LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.Clear();
@@ -184,6 +196,7 @@ namespace ZapLib
             Dictionary<string, SqlParameter> tmpOutputParams = SetParaOutput<T>(Cmd);
             //Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(Cmd, output);
             Cmd.ExecuteNonQuery();
+            lextime2.Log();
             return getParaOutput<T>(tmpOutputParams);
         }
 
@@ -197,6 +210,7 @@ namespace ZapLib
         /// <returns>綁定預存程序輸出數值的資料模型</returns>
         private T _Exec<T>(string sql, object param = null)
         {
+            LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.Clear();
@@ -204,6 +218,7 @@ namespace ZapLib
             Dictionary<string, SqlParameter> tmpOutputParams = SetParaOutput<T>(Cmd);
             //Dictionary<string, SqlParameter> tmpOutputParams = output == null ? null : setParaOutput(Cmd, output);
             Cmd.ExecuteNonQuery();
+            lextime2.Log();
             return getParaOutput<T>(tmpOutputParams);
         }
 
@@ -236,7 +251,7 @@ namespace ZapLib
         /// <returns>綁定查詢語法輸出表格的資料模型陣列</returns>
         public T[] QuickQuery<T>(string sql, object param = null, bool isfetchall = true)
         {
-            T[] data = null;
+            T[] data = null;        
             Connet();
             if (IsConn)
             {
@@ -334,7 +349,7 @@ namespace ZapLib
             T obj = default;
             Connet();
             if (IsConn)
-            {
+            {              
                 try
                 {
                     obj = _Exec<T>(sql, param);
@@ -359,7 +374,7 @@ namespace ZapLib
                         log.Write(x.ToString());
                     }
                 }
-                Close();
+                Close();   
             }
             return obj;
         }
@@ -418,6 +433,7 @@ namespace ZapLib
             Connet();
             if (IsConn)
             {
+                LogExecTime lextime2 = new LogExecTime($"Exec BulkCopy: {tableName}\r\nRows.Count: {data.Rows.Count}\r\nTraceCode: {TraceCode}");
                 try
                 {
                     using (var bcp = new SqlBulkCopy(Conn, SqlBulkCopyOptions.FireTriggers, null))
@@ -437,6 +453,7 @@ namespace ZapLib
                     if (isTran) Tran.Rollback();
                 }
                 Close();
+                lextime2.Log();
             }
             return result;
         }
@@ -453,6 +470,7 @@ namespace ZapLib
             if (r == null) return null;
             List<T> data = new List<T>();
             T obj = default(T);
+            LogExecTime lxt = new LogExecTime($"SQL Collect Data (fetch<T>)\r\nTraceCode: {TraceCode}");
             while (r.Read())
             {
                 obj = (T)Activator.CreateInstance(typeof(T));
@@ -475,7 +493,10 @@ namespace ZapLib
                 data.Add(obj);
                 if (!fetchAll) break;
             }
-            return data.ToArray();
+            T[] resarray =  data.ToArray();
+            lxt.Log();
+            return resarray;
+
         }
 
         /// <summary>
@@ -488,6 +509,7 @@ namespace ZapLib
         {
             if (r == null) return null;
             List<dynamic> data = new List<dynamic>();
+            LogExecTime lxt = new LogExecTime($"SQL Collect Data (fetch<T>)\r\nTraceCode: {TraceCode}");
             while (r.Read())
             {
                 IDictionary<string, object> dict = new ExpandoObject() as IDictionary<string, object>;
@@ -500,7 +522,9 @@ namespace ZapLib
                 data.Add(dict);
                 if (!fetchAll) break;
             }
-            return data.ToArray();
+            dynamic[]  resdata = data.ToArray();
+            lxt.Log();
+            return resdata;
         }
 
         /*

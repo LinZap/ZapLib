@@ -87,6 +87,7 @@
     <Compile Include="Json\JsonReader.cs" />
     <Compile Include="Json\ObjectTuple.cs" />
     <Compile Include="Json\ValueTuple.cs" />
+    <Compile Include="LogExecTime.cs" />
     <Compile Include="Model\ModelLog.cs" />
     <Compile Include="SQLTypeAttribute.cs" />
     <Compile Include="Utility\Config.cs" />
