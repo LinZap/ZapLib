@@ -1,6 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Net.Mail;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using MimeKit.Text;
+using System;
 using ZapLib.Utility;
 
 namespace ZapLib
@@ -11,7 +13,7 @@ namespace ZapLib
     public class Mailer
     {
         private SmtpClient smtp;
-        private MailMessage mail;
+        private MimeMessage mail;
         private MyLog log;
         private int retry = 1;
         private int MAIL_PORT;
@@ -19,6 +21,10 @@ namespace ZapLib
         private string MAIL_ACT;
         private bool MAIL_SSL;
         private string MAIL_HOST;
+        /// <summary>
+        /// 錯誤訊息
+        /// </summary>
+        public string ErrMsg { get; private set; }
 
         /// <summary>
         /// 建構子，初始化必要 SMTP 物件
@@ -39,6 +45,7 @@ namespace ZapLib
             this.MAIL_HOST = MAIL_HOST;
             this.MAIL_PORT = MAIL_PORT;
             this.MAIL_SSL = MAIL_SSL;
+
             retry = MAIL_RETRY;
         }
 
@@ -48,43 +55,61 @@ namespace ZapLib
         /// <param name="to">發送到指定 email 位置，多個用逗號隔開</param>
         /// <param name="subject">信件主旨</param>
         /// <param name="body">信件內文</param>
-        public void Send(string to, string subject, string body)
+        public bool Send(string to, string subject, string body)
         {
+            bool result = false;
             try
             {
-                if (string.IsNullOrEmpty(MAIL_HOST)) return;
-                smtp = new SmtpClient(MAIL_HOST, MAIL_PORT);
-                smtp.Credentials = new NetworkCredential(MAIL_ACT, MAIL_PWD);
-                smtp.EnableSsl = MAIL_SSL;
-                mail = new MailMessage(MAIL_ACT, to, subject, body);
-                mail.IsBodyHtml = true;
-                mail.Priority = MailPriority.Normal;
-                mail.BodyEncoding = System.Text.Encoding.UTF8;
-                send_mail();
+                if (string.IsNullOrEmpty(MAIL_HOST))
+                {
+                    ErrMsg = "MAIL_HOST is Empty";
+                    return false;
+                }
+
+                using (smtp = new SmtpClient())
+                {
+                    SecureSocketOptions option = MAIL_SSL? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
+                    // 連接 Mail Server (郵件伺服器網址, 連接埠, 是否使用 SSL)
+                    smtp.Connect(MAIL_HOST, MAIL_PORT, option);
+                    smtp.Authenticate(MAIL_ACT, MAIL_PWD);
+                    mail = new MimeMessage();
+                    mail.Subject = subject;
+                    mail.From.Add(MailboxAddress.Parse(MAIL_ACT));
+                    mail.To.Add(MailboxAddress.Parse(to));
+                    mail.Body = new TextPart(TextFormat.Html) { Text = body };
+                    result = send_mail();
+                    smtp.Disconnect(true);
+                }
             }
             catch (Exception e)
             {
+                ErrMsg = e.ToString();
                 MyLog log = new MyLog();
                 log.SilentMode = Config.Get("SilentMode");
                 log.Write(e.ToString());
+                return false;
             }
+            return result;
         }
 
-        private void send_mail()
+        private bool send_mail()
         {
             if (retry > 0)
             {
                 try
                 {
                     smtp.Send(mail);
+                    return true;
                 }
                 catch (Exception e)
                 {
+                    ErrMsg = e.ToString();
                     log.Write("can not send mail: " + e.ToString());
                     retry--;
                     send_mail();
                 }
             }
+            return false;
         }
 
     }

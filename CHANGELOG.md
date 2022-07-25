@@ -2,6 +2,13 @@
 
 改版紀錄
 
+
+## `2.2.0`
+
+1. 寄信功能 Mailer 改為使用 [MailKit](https://github.com/jstedfast/MailKit) 支援 TLS1.2 更安全的加密協議 (介面與之前完全相同，可向下相容)
+
+> 備註：[原先 SmtpClient 不支援 TLS 且被微軟棄用](https://developpaper.com/system-net-mail-smtpclient-failed-to-send-email-through-ssl-tls-protocol/)
+
 ## `2.1.2`
 
 
