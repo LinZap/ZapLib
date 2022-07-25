@@ -12,8 +12,14 @@ namespace ZapLib
     /// </summary>
     public class Mailer
     {
-        private SmtpClient smtp;
-        private MimeMessage mail;
+        /// <summary>
+        /// SMTP 連線物件
+        /// </summary>
+        public SmtpClient smtp {  set; get; }
+        /// <summary>
+        /// EMAIL 物件
+        /// </summary>
+        public MimeMessage mail {  set; get; }
         private MyLog log;
         private int retry = 1;
         private int MAIL_PORT;
@@ -55,7 +61,9 @@ namespace ZapLib
         /// <param name="to">發送到指定 email 位置，多個用逗號隔開</param>
         /// <param name="subject">信件主旨</param>
         /// <param name="body">信件內文</param>
-        public bool Send(string to, string subject, string body)
+        /// <param name="cc">副本 (不需要可傳 NULL)</param>
+        /// <param name="bcc">密件副本 (不需要可傳 NULL)</param>
+        public bool Send(string to, string subject, string body, string cc=null, string bcc=null)
         {
             bool result = false;
             try
@@ -76,6 +84,8 @@ namespace ZapLib
                     mail.Subject = subject;
                     mail.From.Add(MailboxAddress.Parse(MAIL_ACT));
                     mail.To.Add(MailboxAddress.Parse(to));
+                    if(!string.IsNullOrWhiteSpace(cc)) mail.Cc.Add(MailboxAddress.Parse(cc));
+                    if (!string.IsNullOrWhiteSpace(bcc)) mail.Bcc.Add(MailboxAddress.Parse(bcc));
                     mail.Body = new TextPart(TextFormat.Html) { Text = body };
                     result = send_mail();
                     smtp.Disconnect(true);
