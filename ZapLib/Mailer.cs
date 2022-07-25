@@ -82,10 +82,11 @@ namespace ZapLib
                     smtp.Authenticate(MAIL_ACT, MAIL_PWD);
                     mail = new MimeMessage();
                     mail.Subject = subject;
-                    mail.From.Add(MailboxAddress.Parse(MAIL_ACT));
-                    mail.To.Add(MailboxAddress.Parse(to));
-                    if(!string.IsNullOrWhiteSpace(cc)) mail.Cc.Add(MailboxAddress.Parse(cc));
-                    if (!string.IsNullOrWhiteSpace(bcc)) mail.Bcc.Add(MailboxAddress.Parse(bcc));
+
+                    mail.From.AddRange(InternetAddressList.Parse(MAIL_ACT));
+                    mail.To.AddRange(InternetAddressList.Parse(to));
+                    if(!string.IsNullOrWhiteSpace(cc)) mail.Cc.AddRange(InternetAddressList.Parse(cc));
+                    if (!string.IsNullOrWhiteSpace(bcc)) mail.Bcc.AddRange(InternetAddressList.Parse(bcc));
                     mail.Body = new TextPart(TextFormat.Html) { Text = body };
                     result = send_mail();
                     smtp.Disconnect(true);
@@ -122,5 +123,6 @@ namespace ZapLib
             return false;
         }
 
+       
     }
 }

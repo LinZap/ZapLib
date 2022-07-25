@@ -45,7 +45,7 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void post3()
         {
-            Fetch f = new Fetch("http://10.9.173.102:8888/api/upload");
+            Fetch f = new Fetch("https://csweb-fs.iqs-t.com/api/upload");
             f.ValidPlatform = true;
             object res = f.Post<object>(new
             {
@@ -53,7 +53,7 @@ namespace ZapLib.Tests
                 file = File.ReadAllBytes("D:\\123.txt")
             });
 
-            Trace.WriteLine(JsonConvert.SerializeObject(res));
+            Trace.WriteLine(JsonConvert.SerializeObject(res, Formatting.Indented));
             
         }
 

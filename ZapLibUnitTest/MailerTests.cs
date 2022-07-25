@@ -23,7 +23,7 @@ namespace ZapLib.Tests
 
             Mailer m = new Mailer(SMTP_HOST, MAIL_ACT, MAIL_PWD, MAIL_PORT, MAIL_SSL);
 
-            string TO = "zaplin@iqs-t.com";
+            string TO = "zaplin@iqs-t.com,sollin@iqs-t.com";
             string SUBJECT = "This is a test mail";
             string BODY = "<h1>Test Mail by ZapLib Mailer</h1>";
 
