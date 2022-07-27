@@ -30,9 +30,9 @@ namespace ZapLib
         public SqlCommand Cmd { get; private set; }
 
         /// <summary>
-        /// 資料庫連線逾時秒數，預設 15 秒
+        /// 資料庫連線逾時秒數，預設 30 秒
         /// </summary>
-        public int Timeout { get; set; } = 15;
+        public int Timeout { get; set; } = 30;
         /// <summary>
         /// 資料庫已經安裝憑證，是否對資料進行 SSL 加密，預設 false
         /// </summary>
@@ -141,6 +141,7 @@ namespace ZapLib
 
                 Cmd = new SqlCommand();
                 Cmd.Connection = Conn;
+                Cmd.CommandTimeout = Timeout;
                 IsConn = true;
 
                 if (isTran)

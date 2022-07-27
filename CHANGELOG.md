@@ -2,6 +2,11 @@
 
 改版紀錄
 
+## `2.2.3`
+
+1. 修改 `SQL` Class 的 `Timeout` 參數，現在也會同步設定到 `CommandTimeout`
+
+
 ## `2.2.2`
 
 1. 寄信功能 Mailer 的 Send 方法，支援一次傳送多個信箱(逗號隔開)
