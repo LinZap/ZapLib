@@ -33,6 +33,11 @@ namespace ZapLib
         public string ErrMsg { get; private set; }
 
         /// <summary>
+        /// 使用連線的加密協議
+        /// </summary>
+        public SecureSocketOptions SecureSocketOption { get; set; }
+
+        /// <summary>
         /// 建構子，初始化必要 SMTP 物件
         /// </summary>
         /// <param name="MAIL_HOST">SMTP Server 位置</param>
@@ -51,7 +56,7 @@ namespace ZapLib
             this.MAIL_HOST = MAIL_HOST;
             this.MAIL_PORT = MAIL_PORT;
             this.MAIL_SSL = MAIL_SSL;
-
+            SecureSocketOption = MAIL_SSL ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
             retry = MAIL_RETRY;
         }
 
@@ -76,9 +81,9 @@ namespace ZapLib
 
                 using (smtp = new SmtpClient())
                 {
-                    SecureSocketOptions option = MAIL_SSL? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
+                    
                     // 連接 Mail Server (郵件伺服器網址, 連接埠, 是否使用 SSL)
-                    smtp.Connect(MAIL_HOST, MAIL_PORT, option);
+                    smtp.Connect(MAIL_HOST, MAIL_PORT, SecureSocketOption);
                     smtp.Authenticate(MAIL_ACT, MAIL_PWD);
                     mail = new MimeMessage();
                     mail.Subject = subject;
@@ -97,6 +102,7 @@ namespace ZapLib
                 ErrMsg = e.ToString();
                 MyLog log = new MyLog();
                 log.SilentMode = Config.Get("SilentMode");
+                log.Write($"SMTP Connect Fail, MAIL_HOST={MAIL_HOST}, MAIL_PORT={MAIL_PORT}, SecureSocketOption={SecureSocketOption}, MAIL_ACT={MAIL_ACT}, MAIL_PWD={MAIL_PWD}");
                 log.Write(e.ToString());
                 return false;
             }
@@ -115,7 +121,8 @@ namespace ZapLib
                 catch (Exception e)
                 {
                     ErrMsg = e.ToString();
-                    log.Write("can not send mail: " + e.ToString());
+                    log.Write($"SMTP Send Fail, MAIL_HOST={MAIL_HOST}, MAIL_PORT={MAIL_PORT}, SecureSocketOption={SecureSocketOption}, MAIL_ACT={MAIL_ACT}, MAIL_PWD={MAIL_PWD}");
+                    log.Write(e.ToString());
                     retry--;
                     send_mail();
                 }

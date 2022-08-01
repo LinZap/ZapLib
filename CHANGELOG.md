@@ -2,6 +2,11 @@
 
 改版紀錄
 
+## `2.2.4`
+
+1. 修改 Mailer 成員允許修改 SecureSocketOptions
+
+
 ## `2.2.3`
 
 1. 修改 `SQL` Class 的 `Timeout` 參數，現在也會同步設定到 `CommandTimeout`
