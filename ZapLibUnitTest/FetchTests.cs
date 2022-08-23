@@ -81,10 +81,8 @@ namespace ZapLib.Tests
         [TestMethod()]
         public void Get()
         {
-            Fetch f = new Fetch("http://192.168.1.102:8888/api/search?q=%E9%9F%93");
+            Fetch f = new Fetch("http://httpbin.org/get?q=123456");
             string res = f.Get();
-            Trace.WriteLine(f.Url);
-            Trace.WriteLine(f.StatusCode);
             Trace.WriteLine(res);
         }
 

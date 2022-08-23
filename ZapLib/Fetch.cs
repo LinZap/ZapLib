@@ -65,12 +65,15 @@ namespace ZapLib
             get => Client.BaseAddress.Query;
             set
             {
-                Url = string.Format("{0}{1}{2}{3}{4}",
-                    Client.BaseAddress?.Scheme,
-                    Uri.SchemeDelimiter,
-                    Client.BaseAddress?.Authority,
-                    Client.BaseAddress?.AbsolutePath,
-                    value == null ? "" : "?" + QueryString.Parse(value));
+                if (value != null)
+                {
+                    Url = string.Format("{0}{1}{2}{3}{4}",
+                   Client.BaseAddress?.Scheme,
+                   Uri.SchemeDelimiter,
+                   Client.BaseAddress?.Authority,
+                   Client.BaseAddress?.AbsolutePath,
+                   QueryString.Parse(value));
+                }
             }
         }
 

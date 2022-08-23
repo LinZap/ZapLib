@@ -2,6 +2,11 @@
 
 改版紀錄
 
+## `2.2.5`
+
+1. 修改 `Fetch` 允許呼叫 `Get` `Post` 等方法時， 如果 `qs` query string 參數帶入 `null`，會將 URL 中已經指定的 query string 覆蓋的問題。現在指定 `null` 將可保留 URL 中設置的 query string
+
+
 ## `2.2.4`
 
 1. 修改 Mailer 成員允許修改 SecureSocketOptions
