@@ -10,27 +10,34 @@ using System.Diagnostics;
 namespace ZapLib.Tests
 {
     [TestClass()]
-    public class MailerTests
+    public class ImplicitMailerTests
     {
         [TestMethod()]
-        public void send()
+        public void SendTest()
         {
+            /*
             string SMTP_HOST = "smtp.office365.com";
             string MAIL_ACT = "support5@iqs-t.com";
             string MAIL_PWD = "";
-            int MAIL_PORT = 587;
-            bool MAIL_SSL = false;
+            */
+            
+            string SMTP_HOST = "smtp.gmail.com";
+            string MAIL_ACT = "maryzap123@gmail.com";
+            string MAIL_PWD = "";
+            
 
-            Mailer m = new Mailer(SMTP_HOST, MAIL_ACT, MAIL_PWD, MAIL_PORT, MAIL_SSL);
+            int MAIL_PORT = 465;
+            bool MAIL_SSL = true;
+
+            ImplicitMailer m = new ImplicitMailer(SMTP_HOST, MAIL_ACT, MAIL_PWD, MAIL_PORT, MAIL_SSL);
 
             string TO = "zaplin@iqs-t.com,sollin@iqs-t.com";
-            string SUBJECT = "This is a test mail (ZapLib.Mailer)";
-            string BODY = "<h1>Test Mail by ZapLib Mailer</h1>";
+            string SUBJECT = $"This is a test mail (ZapLib.ImplicitMailer) - {DateTime.Now}";
+            string BODY = $"<h1>Test Mail by ZapLib ImplicitMailer</h1>";
 
             bool result = m.Send(TO, SUBJECT, BODY);
             Trace.WriteLine(m.ErrMsg);
             Assert.IsTrue(result);
-
         }
     }
 }

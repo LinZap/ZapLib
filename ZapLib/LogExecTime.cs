@@ -7,6 +7,9 @@ using ZapLib.Utility;
 
 namespace ZapLib
 {
+    /// <summary>
+    /// 執行時間紀錄類別
+    /// </summary>
     public class LogExecTime
     {
         /// <summary>行為名稱</summary>

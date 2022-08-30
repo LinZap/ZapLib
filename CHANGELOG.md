@@ -2,6 +2,31 @@
 
 改版紀錄
 
+## `2.3.0`
+
+1. 新增全新功能 `ImplicitMailer` 類別，底層採用 [Aegis Implicit Mail (AIM)](https://github.com/nilnull/AIM) 套件進行寄信功能，該套件支援隱式 (Implicit) SSL 加密連線，支援 port `465` 的 SMTP 連線加密協議。使用方式如下：
+
+
+```csharp
+string SMTP_HOST = "smtp.gmail.com";
+string MAIL_ACT = "maryzap123@gmail.com";
+string MAIL_PWD = "...";
+            
+int MAIL_PORT = 465;
+bool MAIL_SSL = true; // 指定 false 則會採用 auto 自動適應 SSL or TLS
+
+ImplicitMailer m = new ImplicitMailer(SMTP_HOST, MAIL_ACT, MAIL_PWD, MAIL_PORT, MAIL_SSL);
+
+string TO = "zaplin@iqs-t.com,sollin@iqs-t.com";
+string SUBJECT = $"This is a test mail (ZapLib.ImplicitMailer) - {DateTime.Now}";
+string BODY = $"<h1>Test Mail by ZapLib ImplicitMailer</h1>";
+
+bool result = m.Send(TO, SUBJECT, BODY); // 發送郵件
+
+Trace.WriteLine(m.ErrMsg); // 印出寄信的細節結果
+```
+
+
 ## `2.2.5`
 
 1. 修改 `Fetch` 允許呼叫 `Get` `Post` 等方法時， 如果 `qs` query string 參數帶入 `null`，會將 URL 中已經指定的 query string 覆蓋的問題。現在指定 `null` 將可保留 URL 中設置的 query string

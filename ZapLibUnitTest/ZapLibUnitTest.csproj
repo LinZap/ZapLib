@@ -90,6 +90,7 @@
     <Compile Include="ExpParamTests.cs" />
     <Compile Include="ExtApiHelperTests.cs" />
     <Compile Include="FetchTests.cs" />
+    <Compile Include="ImplicitMailerTests.cs" />
     <Compile Include="LogExecTimeTests.cs" />
     <Compile Include="MailerTests.cs" />
     <Compile Include="QueryStringTests.cs" />
