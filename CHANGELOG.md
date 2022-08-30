@@ -2,6 +2,11 @@
 
 改版紀錄
 
+
+## `2.3.1`
+
+1. 修正因為版本 `2.2.5` 支援  `qs` 為 `null` 時導致 URL 中已經指定的 query string 被覆蓋成  `null` 的問題所產生的副作用錯誤
+
 ## `2.3.0`
 
 1. 新增全新功能 `ImplicitMailer` 類別，底層採用 [Aegis Implicit Mail (AIM)](https://github.com/nilnull/AIM) 套件進行寄信功能，該套件支援隱式 (Implicit) SSL 加密連線，支援 port `465` 的 SMTP 連線加密協議。使用方式如下：

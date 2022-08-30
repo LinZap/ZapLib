@@ -23,7 +23,7 @@ namespace ZapLib.Tests
             f.Cookie = new { passportcode };
             string response = f.Get();
 
-           
+
             var cs = f.ClientHandler.CookieContainer.GetCookies(f.Client.BaseAddress).Cast<Cookie>();
             foreach (var c in cs)
                 Trace.WriteLine(c.Name + ":" + c.Value);
@@ -54,7 +54,7 @@ namespace ZapLib.Tests
             });
 
             Trace.WriteLine(JsonConvert.SerializeObject(res, Formatting.Indented));
-            
+
         }
 
         [TestMethod()]
@@ -86,10 +86,14 @@ namespace ZapLib.Tests
             Trace.WriteLine(res);
         }
 
+
         [TestMethod()]
         public void Get1()
         {
-            Assert.Fail();
+            Fetch f = new Fetch("http://httpbin.org/get");
+            string res = f.Get(new { q = 123456 });
+            Trace.WriteLine(f.GetResponse());
+            //Trace.WriteLine(res);
         }
 
         [TestMethod()]
