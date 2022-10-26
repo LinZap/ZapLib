@@ -2,7 +2,9 @@
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
+using MimeKit.Utils;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using ZapLib.Utility;
@@ -29,6 +31,12 @@ namespace ZapLib
         private string MAIL_ACT;
         private bool MAIL_SSL;
         private string MAIL_HOST;
+
+        /// <summary>
+        /// 郵件的附件列表
+        /// </summary>
+        public List<MimePart> AttachmentsList { get; private set; }
+
         /// <summary>
         /// 錯誤訊息
         /// </summary>
@@ -50,6 +58,7 @@ namespace ZapLib
         /// <param name="MAIL_RETRY">是否啟用失敗重寄機制，預設為啟用</param>
         public Mailer(string MAIL_HOST, string MAIL_ACT, string MAIL_PWD, int MAIL_PORT = 587, bool MAIL_SSL = true, int MAIL_RETRY = 1)
         {
+            AttachmentsList = new List<MimePart>();
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             this.MAIL_HOST = MAIL_HOST;
@@ -70,7 +79,7 @@ namespace ZapLib
         /// <param name="body">信件內文</param>
         /// <param name="cc">副本 (不需要可傳 NULL)</param>
         /// <param name="bcc">密件副本 (不需要可傳 NULL)</param>
-        /// <param name="attchments">附加檔案，完整實體路徑，多個用 , 或 ; 隔開</param>
+        /// <param name="attchments">附加檔案</param>
         public bool Send(string to, string subject, string body, string cc=null, string bcc=null, string[] attchments= null)
         {
             bool result = false;
@@ -103,17 +112,13 @@ namespace ZapLib
                     {
                         foreach(string p in attchments)
                         {
-                            if (!File.Exists(p)) continue;
-                            string mimeType = MimeMapping.GetMimeMapping(p) ?? "application/octet-stream";
-                            MimePart attachment = new MimePart(mimeType)
-                            {
-                                Content = new MimeContent(File.OpenRead(p)),
-                                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-                                ContentTransferEncoding = ContentEncoding.Base64,
-                                FileName = Path.GetFileName(p)
-                            };
-                            multipart.Add(attachment);
+                            AddAttachments(p);    
                         }
+                    }
+
+                    foreach(MimePart p in AttachmentsList)
+                    {
+                        multipart.Add(p);
                     }
                     
 
@@ -132,6 +137,28 @@ namespace ZapLib
                 return false;
             }
             return result;
+        }
+
+        /// <summary>
+        /// 新增郵件附加檔案，回傳檔案的 content id
+        /// </summary>
+        /// <param name="path">檔案實體路徑，如果檔案不存在則回傳 null</param>
+        /// <returns>檔案的 content id</returns>
+        public string AddAttachments(string path)
+        {
+            if (!File.Exists(path)) return null;
+            string mimeType = MimeMapping.GetMimeMapping(path) ?? "application/octet-stream";
+            MimePart attach = new MimePart(mimeType)
+            {
+                Content = new MimeContent(File.OpenRead(path)),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = Path.GetFileName(path),
+                ContentId = MimeUtils.GenerateMessageId()
+        };
+          
+            AttachmentsList.Add(attach);
+            return attach.ContentId;
         }
 
         private bool send_mail()

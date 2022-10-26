@@ -25,6 +25,11 @@ namespace ZapLib
         private string MAIL_HOST;
 
         /// <summary>
+        /// 郵件的附件列表
+        /// </summary>
+        public List<MimeAttachment> AttachmentsList { get; private set; }
+
+        /// <summary>
         /// 郵件本體物件
         /// </summary>
         public MimeMailMessage MimeMailMessage { get; private set; }
@@ -60,6 +65,7 @@ namespace ZapLib
         /// <param name="MAIL_RETRY">是否啟用失敗重寄機制，預設為啟用</param>
         public ImplicitMailer(string MAIL_HOST, string MAIL_ACT, string MAIL_PWD, int MAIL_PORT = 465, bool MAIL_SSL = true, int MAIL_RETRY = 1)
         {
+            AttachmentsList = new List<MimeAttachment>();
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             this.MAIL_HOST = MAIL_HOST;
@@ -130,10 +136,16 @@ namespace ZapLib
                 {
                     foreach (string p in attchments)
                     {
-                        if (!File.Exists(p)) continue;
-                        MimeMailMessage.Attachments.Add(new MimeAttachment(p));
+                        AddAttachments(p);
                     }
                 }
+
+
+                foreach (MimeAttachment p in AttachmentsList)
+                {
+                    MimeMailMessage.Attachments.Add(p);
+                }
+
 
                 MimeMailer.User = MAIL_ACT;
                 MimeMailer.Password = MAIL_PWD;
@@ -157,6 +169,19 @@ namespace ZapLib
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 新增郵件附加檔案，回傳檔案的 content id
+        /// </summary>
+        /// <param name="path">檔案實體路徑，如果檔案不存在則回傳 null</param>
+        /// <returns>檔案的 content id</returns>
+        public string AddAttachments(string path)
+        {
+            if (!File.Exists(path)) return null;
+            MimeAttachment att = new MimeAttachment(path);
+            AttachmentsList.Add(att);
+            return att.ContentId;
         }
 
 

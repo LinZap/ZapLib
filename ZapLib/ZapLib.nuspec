@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>ZapLib</id>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
     <title>ZapLib</title>
     <authors>Zap Lin</authors>
     <owners>Zap Lin</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>https://github.com/LinZap/ZapLib</description>
-    <releaseNotes>v2.4.0 (Stable); v1.22.0 (LTS)</releaseNotes>
+    <releaseNotes>v2.4.1 (Stable); v1.22.0 (LTS)</releaseNotes>
     <copyright>Copyright Zap Lin 2022</copyright>
     <tags>Zap,Lib,API</tags>
     <projectUrl>https://github.com/LinZap/ZapLib</projectUrl>

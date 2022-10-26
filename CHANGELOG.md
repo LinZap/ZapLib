@@ -2,6 +2,22 @@
 
 改版紀錄
 
+## `2.4.1`
+
+1. 在 `ImplicitMailer` 與 `Mailer` 中新增 `AddAttachments()` 方法，可以新增郵件附件，並取得 `cid` 
+2. 新增成員 `AttachmentsList` 可以取得使用 `AddAttachments()` 新增的附件列表
+
+以下是附加檔案，並取得 Content ID 的範例：  
+  
+```csharp
+Mailer m = new Mailer(SMTP_HOST, MAIL_ACT, MAIL_PWD, MAIL_PORT, MAIL_SSL);
+
+string cid = m.AddAttachments(@"D:\Downloads\user.png");
+string BODY = $"<p>Image here: <img src=\"cid:{cid}\" ></p>";
+
+// 附件列表
+var atts =  m.AttachmentsList;
+```
 
 ## `2.4.0`
 
