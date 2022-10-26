@@ -3,6 +3,8 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 using System;
+using System.IO;
+using System.Web;
 using ZapLib.Utility;
 
 namespace ZapLib
@@ -68,7 +70,8 @@ namespace ZapLib
         /// <param name="body">信件內文</param>
         /// <param name="cc">副本 (不需要可傳 NULL)</param>
         /// <param name="bcc">密件副本 (不需要可傳 NULL)</param>
-        public bool Send(string to, string subject, string body, string cc=null, string bcc=null)
+        /// <param name="attchments">附加檔案，完整實體路徑，多個用 , 或 ; 隔開</param>
+        public bool Send(string to, string subject, string body, string cc=null, string bcc=null, string[] attchments= null)
         {
             bool result = false;
             try
@@ -92,7 +95,29 @@ namespace ZapLib
                     mail.To.AddRange(InternetAddressList.Parse(to));
                     if(!string.IsNullOrWhiteSpace(cc)) mail.Cc.AddRange(InternetAddressList.Parse(cc));
                     if (!string.IsNullOrWhiteSpace(bcc)) mail.Bcc.AddRange(InternetAddressList.Parse(bcc));
-                    mail.Body = new TextPart(TextFormat.Html) { Text = body };
+
+                    Multipart multipart = new Multipart("mixed");
+                    multipart.Add(new TextPart(TextFormat.Html) { Text = body });
+
+                    if (attchments != null)
+                    {
+                        foreach(string p in attchments)
+                        {
+                            if (!File.Exists(p)) continue;
+                            string mimeType = MimeMapping.GetMimeMapping(p) ?? "application/octet-stream";
+                            MimePart attachment = new MimePart(mimeType)
+                            {
+                                Content = new MimeContent(File.OpenRead(p)),
+                                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                                ContentTransferEncoding = ContentEncoding.Base64,
+                                FileName = Path.GetFileName(p)
+                            };
+                            multipart.Add(attachment);
+                        }
+                    }
+                    
+
+                    mail.Body = multipart;
                     result = send_mail();
                     smtp.Disconnect(true);
                 }

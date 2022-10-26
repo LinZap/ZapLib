@@ -26,8 +26,9 @@ namespace ZapLib.Tests
             string TO = "zaplin@iqs-t.com,sollin@iqs-t.com";
             string SUBJECT = "This is a test mail (ZapLib.Mailer)";
             string BODY = "<h1>Test Mail by ZapLib Mailer</h1>";
+            string[] Attachment = new string[] { @"D:\Downloads\delivered.png", @"D:\Downloads\abstract-christmas-tree.zip", @"D:\Downloads\.gitignore" };
 
-            bool result = m.Send(TO, SUBJECT, BODY);
+            bool result = m.Send(TO, SUBJECT, BODY, attchments: Attachment);
             Trace.WriteLine(m.ErrMsg);
             Assert.IsTrue(result);
 

@@ -37,6 +37,7 @@ namespace ZapLib
         /// </summary>
         public HttpResponseMessage Response { private set; get; }
 
+
         /// <summary> 
         /// 網址 URL
         /// </summary>
@@ -533,6 +534,8 @@ namespace ZapLib
             if (ValidPlatform) ProcValidPlatform();
             if (!string.IsNullOrWhiteSpace(Proxy)) ClientHandler.Proxy = WebProxy;
 
+            if(Config.Get("TLS12")?.ToLower()=="true")
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             try
             {

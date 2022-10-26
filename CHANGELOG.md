@@ -3,6 +3,16 @@
 改版紀錄
 
 
+## `2.4.0`
+
+1. 新增 `ImplicitMailer` 與 `Mailer` 的 `Send()` 方法中新增 `attchments` 參數，允許傳入實體檔案路徑作為郵件附加檔案，一起寄出
+2. 新增 Config `TLS12` 如果設為 `true` 則全系統使用 `Fetch` 功能時，會強制呼叫 TLS1.2 協議，呼叫方式如下：
+
+```csharp
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+```
+
+
 ## `2.3.1`
 
 1. 修正因為版本 `2.2.5` 支援  `qs` 為 `null` 時導致 URL 中已經指定的 query string 被覆蓋成  `null` 的問題所產生的副作用錯誤

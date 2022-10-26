@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ZapLib.Utility;
 using AegisImplicitMail;
 using System.ComponentModel;
+using System.IO;
 
 namespace ZapLib
 {
@@ -83,7 +84,7 @@ namespace ZapLib
         /// <param name="body">信件內文</param>
         /// <param name="cc">副本 (不需要可傳 NULL)</param>
         /// <param name="bcc">密件副本 (不需要可傳 NULL)</param>
-        public bool Send(string to, string subject, string body, string cc = null, string bcc = null)
+        public bool Send(string to, string subject, string body, string cc = null, string bcc = null, string[] attchments = null)
         {
 
             bool result = false;
@@ -125,11 +126,22 @@ namespace ZapLib
                 MimeMailMessage.IsBodyHtml = true;
                 MimeMailMessage.Body = body;
 
+                if (attchments != null)
+                {
+                    foreach (string p in attchments)
+                    {
+                        if (!File.Exists(p)) continue;
+                        MimeMailMessage.Attachments.Add(new MimeAttachment(p));
+                    }
+                }
+
                 MimeMailer.User = MAIL_ACT;
                 MimeMailer.Password = MAIL_PWD;
                 MimeMailer.SslType = SecureSocketOption;
                 MimeMailer.AuthenticationMode = AuthenticationType;
                 MimeMailer.SendCompleted += compEvent;
+
+
 
                 MimeMailer.SendMail(MimeMailMessage);
 
