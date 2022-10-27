@@ -96,7 +96,7 @@ namespace ZapLib
                     
                     // 連接 Mail Server (郵件伺服器網址, 連接埠, 是否使用 SSL)
                     smtp.Connect(MAIL_HOST, MAIL_PORT, SecureSocketOption);
-                    smtp.Authenticate(MAIL_ACT, MAIL_PWD);
+                    if(!string.IsNullOrWhiteSpace(MAIL_PWD)) smtp.Authenticate(MAIL_ACT, MAIL_PWD);
                     mail = new MimeMessage();
                     mail.Subject = subject;
 

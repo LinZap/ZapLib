@@ -2,6 +2,11 @@
 
 改版紀錄
 
+## `2.4.2`
+
+1. 新增支援 `Mailer` 中支援 Password 參數如果給 `null` 則可跳過驗證
+2. `ImplicitMailer` 已經支援
+
 ## `2.4.1`
 
 1. 在 `ImplicitMailer` 與 `Mailer` 中新增 `AddAttachments()` 方法，可以新增郵件附件，並取得 `cid` 
