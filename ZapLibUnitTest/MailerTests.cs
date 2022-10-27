@@ -17,7 +17,7 @@ namespace ZapLib.Tests
         {
             string SMTP_HOST = "smtp.office365.com";
             string MAIL_ACT = "support5@iqs-t.com";
-            string MAIL_PWD = "IQChina888";
+            string MAIL_PWD = "";
             int MAIL_PORT = 587;
             bool MAIL_SSL = false;
 
