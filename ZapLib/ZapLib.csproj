@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ZapLib</RootNamespace>
     <AssemblyName>ZapLib</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -103,4 +104,7 @@
     <Content Include="Scripts\jquery.signalR-2.2.3.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell -Command "$f=$null; $asm=$null;if(Test-Path '..\Properties\AssemblyInfo.cs'){$nuname=(Get-ChildItem ..\*.nuspec | Select -exp  Name);$f='..\'+$nuname;if(!(Test-Path $f)){echo 'Can not find: ..\..\Properties\AssemblyInfo.cs';return;}$asm='..\Properties\AssemblyInfo.cs';}if(Test-Path '..\..\Properties\AssemblyInfo.cs'){$nuname=(Get-ChildItem ..\..\*.nuspec | Select -exp  Name);$f='..\..\'+$nuname;if(!(Test-Path $f)){echo 'Can not find: ..\..\Properties\AssemblyInfo.cs';return;}$asm='..\..\Properties\AssemblyInfo.cs';}if($asm -eq $null) {echo 'Can not find: *.nuspec or AssemblyInfo.cs'; return;}$nu=(gc $f); $found = \"$nu\" -match 'version&gt;(.*)&lt;/version&gt;';$a=(gc $asm); if ($a -like '*AssemblyInformationalVersion*') { $r=( $a -replace 'AssemblyInformationalVersion\(.*\)', ('AssemblyInformationalVersion(\"'+ $matches[1] +'\")') );  $r | Out-File -encoding utf8 $asm } else { $out=('[assembly: AssemblyInformationalVersion(\"'+$matches[1]+'\")]').replace(\"`n\",\"\"); ($a + $out) | Out-File -encoding utf8 $asm;echo $out;}"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

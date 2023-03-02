@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>ZapLib</id>
-    <version>1.22.0</version>
+    <version>1.23.0</version>
     <title>ZapLib</title>
     <authors>Zap Lin</authors>
     <owners>Zap Lin</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>This is a very helpful library for Web API developing</description>
-    <releaseNotes>v1.22.0 - New MyLog</releaseNotes>
-    <copyright>Copyright Zap Lin 2018</copyright>
+    <releaseNotes>v1.23.0 - New MyLog</releaseNotes>
+    <copyright>Copyright Zap Lin 2023</copyright>
     <tags>Zap,Lib,API</tags>
     <projectUrl>https://linzap.gitbooks.io/zaplib/content/</projectUrl>
     <iconUrl>https://avatars2.githubusercontent.com/u/5173346</iconUrl>
