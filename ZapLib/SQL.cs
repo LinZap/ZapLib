@@ -73,7 +73,7 @@ namespace ZapLib
                    template = "Server={0};Database={1};User ID={2};Password={3}",
                    basestring = string.Format(template, DBHost, DBName, DBAct, DBPwd);
             isTran = transaction;
-            connString = buildconnString(basestring);
+            connString = BuildconnString(basestring);
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
@@ -94,7 +94,7 @@ namespace ZapLib
             string template = "Server={0};Database={1};User ID={2};Password={3}",
                    basestring = string.Format(template, dbHost, dbName, dbAct, dbPwd);
             isTran = transaction;
-            connString = buildconnString(basestring);
+            connString = BuildconnString(basestring);
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
@@ -159,7 +159,20 @@ namespace ZapLib
             lextime.Log();
         }
 
-        private string buildconnString(string s) => (s += $";Connect Timeout={Timeout};Encrypt={Encrypt};TrustServerCertificate={TrustServerCertificate};ApplicationIntent={ApplicationIntent};MultiSubnetFailover={MultiSubnetFailover}");
+        /// <summary>
+        /// 建構連線字串
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public string BuildconnString(string s)
+        {
+            if (!s.Contains("Connect Timeout")) s += $";Connect Timeout={Timeout}";
+            if (!s.Contains("Encrypt")) s += $";Encrypt={Encrypt}";
+            if (!s.Contains("TrustServerCertificate")) s += $";TrustServerCertificate={TrustServerCertificate}";
+            if (!s.Contains("ApplicationIntent")) s += $";ApplicationIntent={ApplicationIntent}";
+            if (!s.Contains("MultiSubnetFailover")) s += $";MultiSubnetFailover={MultiSubnetFailover}";
+            return s;
+        }
 
         /// <summary>
         /// 手動執行查詢命令，需自行控制可能發生的錯誤
@@ -252,7 +265,7 @@ namespace ZapLib
         /// <returns>綁定查詢語法輸出表格的資料模型陣列</returns>
         public T[] QuickQuery<T>(string sql, object param = null, bool isfetchall = true)
         {
-            T[] data = null;        
+            T[] data = null;
             Connet();
             if (IsConn)
             {
@@ -350,7 +363,7 @@ namespace ZapLib
             T obj = default;
             Connet();
             if (IsConn)
-            {              
+            {
                 try
                 {
                     obj = _Exec<T>(sql, param);
@@ -375,7 +388,7 @@ namespace ZapLib
                         log.Write(x.ToString());
                     }
                 }
-                Close();   
+                Close();
             }
             return obj;
         }
@@ -494,7 +507,7 @@ namespace ZapLib
                 data.Add(obj);
                 if (!fetchAll) break;
             }
-            T[] resarray =  data.ToArray();
+            T[] resarray = data.ToArray();
             lxt.Log();
             return resarray;
 
@@ -523,7 +536,7 @@ namespace ZapLib
                 data.Add(dict);
                 if (!fetchAll) break;
             }
-            dynamic[]  resdata = data.ToArray();
+            dynamic[] resdata = data.ToArray();
             lxt.Log();
             return resdata;
         }

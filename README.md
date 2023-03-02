@@ -4,28 +4,43 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕�
 
 ## Installation
 
-**Package Manager (v1.22.0 stable)**
+**Package Manager (v1.23.0 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 1.22.0
+PM> Install-Package ZapLib -Version 1.23.0
 ```
   
-**Package Manager (v2.4.2 stable)**
+**Package Manager (v2.4.3 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.4.2
+PM> Install-Package ZapLib -Version 2.4.3
 ```
 
 
 
 ## System requirement
 
+| version | .NET Framework | 
+| --- | --- | 
+|
+
 * `v2.1.0` 開始的版本僅支援 .NET Framework 4.7.2 以上
+* `v1.23.0` 版本開始支援 .NET Framework 4.7.2 以上
 * `v1.10.0` 以前的版本支援 .NET Framework 4.0 以上
 * `v1.12.0` 開始的版本僅支援 .NET Framework 4.5 以上
-* `v1.16.0` 開始的版本包含 SignalR
 
-## [Documentation](https://linzap.gitbooks.io/zaplib/content/)
+## SignalR Issue
+
+`v1.16.0` 開始的版本包含 SignalR，若您在 .NET WebAPI 的專案使用 ZapLib，且並未使用 SignalR 相關功能，請在 `Web.config` 加入設定
+
+```xml
+<appSettings>
+    <add key="owin:AutomaticAppStartup" value="false" />
+</appSettings>
+```
+## [Documentation V2](https://zaplib.gitbook.io/zaplib2/)
+## [Documentation V1](https://linzap.gitbooks.io/zaplib/content/)
+
 
 ## API Reference
 
@@ -46,7 +61,7 @@ PM> Install-Package ZapLib -Version 2.4.2
 
 ## License MIT
 
-	Copyright (C) 2022 ZapLin
+	Copyright (C) 2023 ZapLin
 	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

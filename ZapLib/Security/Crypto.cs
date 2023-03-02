@@ -16,6 +16,20 @@ namespace ZapLib.Security
         public string IV { get; set; }
 
         /// <summary>
+        /// 加密類別使用的編碼方式，可自行指定為 UTF8 (預設為 ASCII)
+        /// </summary>
+        public Encoding CryptoEncoding { get; set; }
+
+        /// <summary>
+        /// 建構子
+        /// </summary>
+        /// <param name="encoding">編碼方式，預設為 ASCII，可自行修改為 UTF8</param>
+        public Crypto(Encoding encoding=null)
+        {
+            if (encoding == null) encoding = Encoding.ASCII;
+            CryptoEncoding = encoding;
+        }
+        /// <summary>
         /// MD5 雜湊資料
         /// </summary>
         /// <param name="content">資料</param>
@@ -23,7 +37,7 @@ namespace ZapLib.Security
         public string Md5(string content = "")
         {
             MD5 md5 = MD5.Create();
-            byte[] source = Encoding.Default.GetBytes(content);
+            byte[] source = CryptoEncoding.GetBytes(content);
             byte[] crypto = md5.ComputeHash(source);
             return Convert.ToBase64String(crypto);
         }
@@ -39,9 +53,9 @@ namespace ZapLib.Security
             if (iv != null) this.IV = iv;
             if (this.IV == null) this.IV = RandomString(Const.Key.Length);
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
-            des.Key = Encoding.ASCII.GetBytes(Const.Key);
-            des.IV = Encoding.ASCII.GetBytes(this.IV);
-            byte[] s = Encoding.ASCII.GetBytes(content);
+            des.Key = CryptoEncoding.GetBytes(Const.Key);
+            des.IV = CryptoEncoding.GetBytes(this.IV);
+            byte[] s = CryptoEncoding.GetBytes(content);
             ICryptoTransform desencrypt = des.CreateEncryptor();
             return BitConverter.ToString(desencrypt.TransformFinalBlock(s, 0, s.Length)).Replace("-", string.Empty);
         }
@@ -55,8 +69,8 @@ namespace ZapLib.Security
         public string DESDecryption(string content, string iv)
         {
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
-            des.Key = Encoding.ASCII.GetBytes(Const.Key);
-            des.IV = Encoding.ASCII.GetBytes(iv);
+            des.Key = CryptoEncoding.GetBytes(Const.Key);
+            des.IV = CryptoEncoding.GetBytes(iv);
             byte[] s = new byte[content.Length / 2];
             int j = 0;
             for (int i = 0; i < content.Length / 2; i++)
@@ -65,7 +79,7 @@ namespace ZapLib.Security
                 j += 2;
             }
             ICryptoTransform desencrypt = des.CreateDecryptor();
-            return Encoding.ASCII.GetString(desencrypt.TransformFinalBlock(s, 0, s.Length));
+            return CryptoEncoding.GetString(desencrypt.TransformFinalBlock(s, 0, s.Length));
         }
 
         /// <summary>

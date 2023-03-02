@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ZapLib.Utility;
 
 namespace ZapLib.Tests
 {
@@ -226,6 +227,33 @@ namespace ZapLib.Tests
             Trace.WriteLine(JsonConvert.SerializeObject(res));
             if (res == null) db.GetErrorMessage();
             Assert.IsNotNull(res);
+        }
+
+        [TestMethod()]
+        public void BuildconnStringTest()
+        {
+            SQL db = new SQL();
+
+            string[] testpool = new string[] {
+                @"Data Source=10.190.173.134\support6;Min Pool Size=0;Max Pool Size=100;Pooling=true;Initial Catalog=Drive;Persist Security Info=True;User ID=sa;Password=123456",
+                @"Data Source=10.190.173.134\support6;Min Pool Size=0;Max Pool Size=100;Pooling=true;Initial Catalog=Drive;Persist Security Info=True;User ID=sa;Password=123456;Connect Timeout=999",
+            };
+
+            string[] exps = new string[]{
+                ";Connect Timeout=30",
+                ";Connect Timeout=999",
+            };
+
+            for (int i = 0; i < testpool.Length; i++)
+            {
+                string cs = testpool[i];
+                string res = db.BuildconnString(cs);
+                Trace.WriteLine(cs);
+                Trace.WriteLine(res);
+                Assert.IsTrue(res.Contains(exps[i]));
+            }
+
+
         }
     }
 

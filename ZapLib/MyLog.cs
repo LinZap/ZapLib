@@ -32,6 +32,11 @@ namespace ZapLib
         /// </summary>
         public int PageSize { get; set; } = 2048;
         //public int PageSize { get; set; } = 50;
+        
+        /// <summary>
+        /// 最後一次 Log 檔案寫入位置
+        /// </summary>
+        public string LastWritePath { get; set; }
 
         /// <summary>
         /// 建構子，可指定 log 檔案名稱預設將以今天 yyyyMMdd 形式命名，也可自行指定其他日期，以利讀取
@@ -77,8 +82,7 @@ namespace ZapLib
         {
             string logfile = Path ?? Config.Get("MyLog") ?? Config.Get("Storage");
             if (!Directory.Exists(logfile)) return null;
-            string name = Name ?? DateTime.Now.ToString("yyyyMMdd");
-            name += ".txt";
+            string name = Name ?? (DateTime.Now.ToString("yyyyMMdd") + ".txt");
             return string.Format(@"{0}\{1}", logfile, name);
         }
 
@@ -87,6 +91,7 @@ namespace ZapLib
             try
             {
                 File.AppendAllText(path, content);
+                LastWritePath = path;
             }
             catch (Exception e)
             {

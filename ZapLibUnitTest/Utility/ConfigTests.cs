@@ -55,5 +55,16 @@ namespace ZapLib.Utility.Tests
             Assert.AreEqual(storage, new_storage_nofresh);
             Assert.AreNotEqual(storage, new_storage_fresh);
         }
+
+        [TestMethod()]
+        public void GetConnectionStringTest()
+        {
+            string s = Config.GetConnectionString("DriveConnectionString");
+            Assert.IsNotNull(s);
+            s = Config.GetConnectionString("Drive2ConnectionString");
+            Assert.IsNull(s);
+            s = Config.GetConnectionString(null);
+            Assert.IsNull(s);
+        }
     }
 }

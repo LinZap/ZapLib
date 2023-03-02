@@ -2,6 +2,14 @@
 
 改版紀錄
 
+## `2.4.3`
+
+1. `MyLog` 支援自訂義 Log 檔案副檔名 (原本只能強制 `.txt`) [使用範例](https://gist.github.com/LinZap/9fd8579854283b10c51ddf3c18b6acf9)
+2. `RegExp` 支援自訂正規表達式選項 (原本強制只能 `RegexOptions.IgnoreCase`) [使用範例](https://gist.github.com/LinZap/1e203e9b719580011c8c3ab95dceb394)
+3. `SQL` 優化成會根據 ConnectionString 動態填補缺少的設定，已經指定於 ConnectionString 中的設定將不會被覆蓋 (例如 Connect Timeout) [使用範例](https://gist.github.com/LinZap/63ec2bbabca5a9972bb68d0a0583b665)
+4. `Crypto` 支援可指定自訂義編碼 (原本只能 `Encoding.ASCII`) [使用範例](https://gist.github.com/LinZap/c7551251a0085a6b0e9c9f69e7826bca)
+ 
+
 ## `2.4.2`
 
 1. 新增支援 `Mailer` 中支援 Password 參數如果給 `null` 則可跳過驗證

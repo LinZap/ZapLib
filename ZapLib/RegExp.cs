@@ -20,6 +20,16 @@ namespace ZapLib
         }
 
         /// <summary>
+        /// 建構子，初始化正規表達式物件
+        /// </summary>
+        /// <param name="pattern">正規表達式</param>
+        /// <param name="options">正規表達式篩選選項</param>
+        public RegExp(string pattern, RegexOptions options)
+        {
+            rgx = new Regex(pattern, options);
+        }
+
+        /// <summary>
         /// 執行正規表達式匹配，將所有結果組成陣列回傳
         /// </summary>
         /// <param name="input">欲匹配的字串</param>

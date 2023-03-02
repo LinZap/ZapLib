@@ -97,6 +97,7 @@
     <Compile Include="MailerTests.cs" />
     <Compile Include="QueryStringTests.cs" />
     <Compile Include="RegExpTests.cs" />
+    <Compile Include="Security\CryptoTests.cs" />
     <Compile Include="Security\ValidPlatformAttributeTests.cs" />
     <Compile Include="SQLTests.cs" />
     <Compile Include="MyLogTests.cs" />

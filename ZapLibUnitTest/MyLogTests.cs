@@ -86,9 +86,9 @@ namespace ZapLib.Tests
         public void ReadTest()
         {
             //string LogFileName = new DateTime(2021,12,23).ToString("yyyyMMdd");
-            
+
             string LogFileName = new DateTime(2021, 12, 21).ToString("yyyyMMdd");
-            
+
             MyLog log = new MyLog(LogFileName);
             // 改變每一頁的內容大小 (byte)
             log.PageSize = 2048;
@@ -100,7 +100,7 @@ namespace ZapLib.Tests
                 Trace.WriteLine("Success");
                 Trace.WriteLine(JsonConvert.SerializeObject(logres));
             }
-           
+
 
 
             // 取得第二頁
@@ -121,6 +121,16 @@ namespace ZapLib.Tests
             Assert.IsTrue(logres.Result);
 
 
+
+        }
+
+        [TestMethod()]
+        public void WriteTest1()
+        {
+            MyLog log = new MyLog("mylog.log");
+            log.Write("這是一個測試LOG");
+            Trace.WriteLine(log.LastWritePath);
+            Assert.IsTrue(File.Exists(log.LastWritePath));
 
         }
     }
