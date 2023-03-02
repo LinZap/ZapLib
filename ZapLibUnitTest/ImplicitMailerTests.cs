@@ -23,7 +23,7 @@ namespace ZapLib.Tests
 
             string SMTP_HOST = "smtp.gmail.com";
             string MAIL_ACT = "maryzap123@gmail.com";
-            string MAIL_PWD = "mwydfkirmrtfvxql";
+            string MAIL_PWD = "";
 
 
             int MAIL_PORT = 465;
