@@ -20,14 +20,15 @@ PM> Install-Package ZapLib -Version 2.4.3
 
 ## System requirement
 
+版本支援度 
+
 | version | .NET Framework | 
 | --- | --- | 
-|
+| ≥ `v2.1.0` | .NET Framework 4.7.2 | 
+| ≥ `v1.23.0` | .NET Framework 4.7.2 | 
+| ≥ `v1.12.0` | .NET Framework 4.5 | 
+| ≤ `v1.10.0` | .NET Framework 4.0 | 
 
-* `v2.1.0` 開始的版本僅支援 .NET Framework 4.7.2 以上
-* `v1.23.0` 版本開始支援 .NET Framework 4.7.2 以上
-* `v1.10.0` 以前的版本支援 .NET Framework 4.0 以上
-* `v1.12.0` 開始的版本僅支援 .NET Framework 4.5 以上
 
 ## SignalR Issue
 
