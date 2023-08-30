@@ -2,6 +2,10 @@
 
 改版紀錄
 
+## `2.4.4`
+
+1. 新增了 `SQL` class 中的一個新方法 `QuickBulkCopy()`，允許一次性大量寫入資料，避免逐筆寫入的效能問題 [使用範例](https://gist.github.com/LinZap/db56534b0ac9893306e5cb99b3cb66ae)
+
 ## `2.4.3`
 
 1. `MyLog` 支援自訂義 Log 檔案副檔名 (原本只能強制 `.txt`) [使用範例](https://gist.github.com/LinZap/9fd8579854283b10c51ddf3c18b6acf9)

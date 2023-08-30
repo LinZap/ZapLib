@@ -441,7 +441,7 @@ namespace ZapLib
         /// <param name="data">儲存大量資料的資料表物件</param>
         /// <param name="tableName">寫入的資料表名稱</param>
         /// <returns>是否寫入成功</returns>
-        public bool quickBulkCopy(DataTable data, string tableName)
+        public bool QuickBulkCopy(DataTable data, string tableName)
         {
             bool result = false;
             Connet();
@@ -453,6 +453,10 @@ namespace ZapLib
                     using (var bcp = new SqlBulkCopy(Conn, SqlBulkCopyOptions.FireTriggers, null))
                     {
                         bcp.DestinationTableName = tableName;
+                        foreach (DataColumn col in data.Columns)
+                        {
+                            bcp.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+                        }
                         bcp.WriteToServer(data);
                     }
                     if (isTran) Tran.Commit();

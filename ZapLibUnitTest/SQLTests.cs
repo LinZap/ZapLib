@@ -127,21 +127,23 @@ namespace ZapLib.Tests
         {
 
             var dt = new DataTable();
+            dt.Columns.Add("name", typeof(string));
             dt.Columns.Add("oid", typeof(int));
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 var row = dt.NewRow();
                 row["oid"] = i;
+                row["name"] = "user_" + i;
                 dt.Rows.Add(row);
             }
-            string Host = "192.168.1.190";
+            string Host = "10.190.173.190";
             string DBName = "TestFpage";
             string User = "sa";
             string Password = "1qaz@WSX";
             SQL db = new SQL(Host, DBName, User, Password);
 
-            bool result = db.quickBulkCopy(dt, "dbo.TestTable");
+            bool result = db.QuickBulkCopy(dt, "dbo.TestTable");
 
             if (!result)
                 Console.WriteLine(db.GetErrorMessage());

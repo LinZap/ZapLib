@@ -1,6 +1,8 @@
 # [ZapLib](https://www.nuget.org/packages/ZapLib/)
 
-ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕巧的函式庫，開發人員能夠快速完成複雜的功能。無論您需要 Http 請求、SQL Server 的查詢、.NET Web Api 的擴充函式、SMTP 寄信、Regular Expression... 等，都能用簡單的程式碼來完成它！
+Inspired by jQuery and Node.js, ZapLib is a lightweight library for C# that empowers developers to swiftly accomplish intricate tasks. Whether it's performing HTTP requests, executing SQL Server queries, extending .NET Web API functions, sending SMTP emails, working with regular expressions, and more, all can be achieved using straightforward code with ZapLib.
+
+## [ChangeLog](./blob/master/CHANGELOG.md)
 
 ## Installation
 
@@ -10,17 +12,16 @@ ZapLib 受到 jQuery, Node.js 的靈感啟發，在 C# 也提供一套非常輕�
 PM> Install-Package ZapLib -Version 1.23.0
 ```
   
-**Package Manager (v2.4.3 stable)**
+**Package Manager (v2.4.4 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.4.3
+PM> Install-Package ZapLib -Version 2.4.4
 ```
-
 
 
 ## System requirement
 
-版本支援度 
+Version Compatibility
 
 | version | .NET Framework | 
 | --- | --- | 
@@ -32,13 +33,14 @@ PM> Install-Package ZapLib -Version 2.4.3
 
 ## SignalR Issue
 
-`v1.16.0` 開始的版本包含 SignalR，若您在 .NET WebAPI 的專案使用 ZapLib，且並未使用 SignalR 相關功能，請在 `Web.config` 加入設定
+Starting from version v1.16.0, SignalR is included. If you are using ZapLib in a .NET WebAPI project and you are not utilizing SignalR-related features, please add the configuration to your Web.config file.
 
 ```xml
 <appSettings>
     <add key="owin:AutomaticAppStartup" value="false" />
 </appSettings>
 ```
+  
 ## [Documentation V2](https://zaplib.gitbook.io/zaplib2/)
 ## [Documentation V1](https://linzap.gitbooks.io/zaplib/content/)
 
@@ -55,10 +57,7 @@ PM> Install-Package ZapLib -Version 2.4.3
 * [QueryString API](https://linzap.gitbooks.io/zaplib/content/querystring-api/querystring-api.md)
 * [Config API](https://linzap.gitbooks.io/zaplib/content/config-api/config-api.md)
 * [MyLog API](https://linzap.gitbooks.io/zaplib/content/mylog-api/mylog-api.md)
-* [實務案例(一)：FSX 小型檔案儲存系統](http://10.190.173.136/SideProject/FSX)
-* [實務案例(二)：使用 SignalR 推播技術的聊天室](http://10.190.173.136/zap/signalr-server)
 
-## [ChangeLog](http://10.190.173.136/SideProject/ZapLib/blob/master/CHANGELOG.md)
 
 ## License MIT
 
