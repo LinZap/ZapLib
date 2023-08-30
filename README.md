@@ -2,7 +2,7 @@
 
 Inspired by jQuery and Node.js, ZapLib is a lightweight library for C# that empowers developers to swiftly accomplish intricate tasks. Whether it's performing HTTP requests, executing SQL Server queries, extending .NET Web API functions, sending SMTP emails, working with regular expressions, and more, all can be achieved using straightforward code with ZapLib.
 
-## [ChangeLog](./blob/master/CHANGELOG.md)
+## [ChangeLog](https://github.com/LinZap/ZapLib/blob/master/CHANGELOG.md)
 
 ## Installation
 
