@@ -12,10 +12,10 @@ Inspired by jQuery and Node.js, ZapLib is a lightweight library for C# that empo
 PM> Install-Package ZapLib -Version 1.23.0
 ```
   
-**Package Manager (v2.4.4 stable)**
+**Package Manager (v2.4.5 stable)**
 
 ```
-PM> Install-Package ZapLib -Version 2.4.4
+PM> Install-Package ZapLib -Version 2.4.5
 ```
 
 

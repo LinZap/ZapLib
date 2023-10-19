@@ -16,7 +16,7 @@ namespace ZapLib.Tests
 
             data.CreateProperty("ao_sid", typeof(int), 100);
             data.CreateProperty("aa_name", typeof(string), "Zap");
-            data.CreateProperty("is_admin", typeof(bool), true);
+            data.CreateProperty("is_admin", typeof(bool?), (bool?)null);
             data.CreateProperty("bdate", typeof(DateTime), DateTime.Parse("2020-03-04"));
 
             object MyDynamicObject = data.CreateObject();
@@ -25,14 +25,14 @@ namespace ZapLib.Tests
             {
                 {"ao_sid" ,  "100"},
                 {"aa_name" ,  "Zap"},
-                {"is_admin" ,  "True"},
+                {"is_admin" ,  null},
                 {"bdate" ,   DateTime.Parse("2020-03-04").ToString()},
             };
 
             Mirror.EachMembers<string, object>(MyDynamicObject, (k, v) =>
             {
-                Trace.WriteLine(k + " : " + v.ToString());
-                Assert.AreEqual(v.ToString(), ans[k]);
+                Trace.WriteLine(k + " : " + v?.ToString());
+                Assert.AreEqual(v?.ToString(), ans[k]);
             });
         }
 

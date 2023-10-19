@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Configuration;
 
 namespace ZapLib.Utility
@@ -35,6 +36,23 @@ namespace ZapLib.Utility
             try
             {
                 return ConfigurationManager.AppSettings[key];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// 取得 App.config 或 Web.config 的 appSetting 中的所有設定
+        /// </summary>
+        /// <returns>所有設定 NameValueCollection</returns>
+        public static NameValueCollection Get()
+        {
+            try
+            {
+                return ConfigurationManager.AppSettings;
             }
             catch (Exception)
             {

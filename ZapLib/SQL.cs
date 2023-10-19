@@ -7,7 +7,8 @@ using System.Dynamic;
 using System.Reflection;
 using System.Linq;
 using ZapLib.Utility;
-
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 
 namespace ZapLib
 {
@@ -53,11 +54,15 @@ namespace ZapLib
         /// <summary> 追蹤馬, 同一個追蹤馬表是同一個SQL物件 </summary>
         public string TraceCode { get; private set; }
 
+        /// <summary>資料庫名稱取代規則</summary>
+        public List<Tuple<string,string>> SQLDBReplaceRules { get; set; }
+
         private string connString;
         private SqlConnection Conn = null;
         private bool isTran = false;
         private MyLog log;
         private List<string> errormessage;
+        
 
 
         /// <summary>
@@ -78,7 +83,7 @@ namespace ZapLib
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
-
+            BuildSQLDBReplaceRules();
         }
 
         /// <summary>
@@ -99,6 +104,7 @@ namespace ZapLib
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
+            BuildSQLDBReplaceRules();
         }
 
         /// <summary>
@@ -114,6 +120,7 @@ namespace ZapLib
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
+            BuildSQLDBReplaceRules();
         }
 
         /// <summary>
@@ -182,7 +189,9 @@ namespace ZapLib
         /// <returns>返回 SqlDataReader 物件可自行控制</returns>
         public SqlDataReader Query(string sql, object param = null)
         {
+
             LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
+            sql = SQLDBReplace(sql);
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.Text;
             Cmd.Parameters.Clear();
@@ -203,6 +212,7 @@ namespace ZapLib
         public T Exec<T>(string sql, object param = null)
         {
             LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
+            sql = SQLDBReplace(sql);
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.Clear();
@@ -225,6 +235,7 @@ namespace ZapLib
         private T _Exec<T>(string sql, object param = null)
         {
             LogExecTime lextime2 = new LogExecTime($"Exec sql: {sql}\r\nParam: {JsonConvert.SerializeObject(param)}\r\nTraceCode: {TraceCode}");
+            sql = SQLDBReplace(sql);
             Cmd.CommandText = sql;
             Cmd.CommandType = CommandType.StoredProcedure;
             Cmd.Parameters.Clear();
@@ -670,6 +681,55 @@ namespace ZapLib
             if (Conn != null)
                 if (Conn.State == ConnectionState.Open)
                     Conn.Close();
+        }
+
+        /// <summary>
+        /// 如果 config 中有指定 SQLDBReplace=true 則會啟動此功能，會抓取 config 中所有 db name 取代的設定，在 SQL 執行前進行檢查，
+        /// 目前不分大小寫支援4種 Pattern，分別為: xxx.dbo, [xxx].[dbo], [xxx].dbo 與 xxx.[dbo] ，如果不是以上 pattern 則不會取代
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public string SQLDBReplace(string sql)
+        {
+            if(SQLDBReplaceRules==null) return sql;
+            string tmpsql = sql;
+            foreach (Tuple<string, string> rule in SQLDBReplaceRules)
+            {
+                (string pattern, string repto) = rule;
+                tmpsql = Regex.Replace(tmpsql, @pattern, repto, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            }
+            return tmpsql;
+        }
+
+        /// <summary>
+        /// 建立 SQL DB Replace Rules (從 config)
+        /// </summary>
+        private void BuildSQLDBReplaceRules()
+        {
+
+            if (Config.Get("SQLDBReplace")?.ToLower() != "true") return;
+
+            // 取出所有取代設定
+            NameValueCollection configs = Config.Get();
+            if (configs == null) return;
+
+            SQLDBReplaceRules = new List<Tuple<string, string>>();
+
+            //string tmpsql = sql;
+            foreach (string key in configs)
+            {
+                // 取出取代來自目標
+                if (!Regex.IsMatch(key, @"^SQLDBReplace:")) continue;
+                string repfrom = key.Replace("SQLDBReplace:", "");
+                if (string.IsNullOrWhiteSpace(repfrom)) continue;
+                string repto = $" {configs[key]}.dbo";
+
+                // 使用 regexp 將 sql 取代成另一個 db 設定
+                string pattern = $@"[\[\r\n ]+{repfrom} *\]*[\t\r\n ]*\.[\t\r\n ]*\[*dbo *\]*";
+                Tuple<string, string> rule = new Tuple<string, string>(pattern, repto);
+                SQLDBReplaceRules.Add(rule);
+
+            }
         }
 
     }

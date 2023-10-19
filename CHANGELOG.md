@@ -2,6 +2,12 @@
 
 改版紀錄
 
+
+## `2.4.5`
+
+1. 新增了 `SQL` class 中的一個新功能 `SQLDBReplace()`，提供了無須變更任何 SQL 語法即可自動變更 SQL 語法中 DB Name 部分格式的功能  [詳情說明](https://gist.github.com/LinZap/158b604d89acf62ba104d03c4c53029c)
+
+
 ## `2.4.4`
 
 1. 新增了 `SQL` class 中的一個新方法 `QuickBulkCopy()`，允許一次性大量寫入資料，避免逐筆寫入的效能問題 [使用範例](https://gist.github.com/LinZap/db56534b0ac9893306e5cb99b3cb66ae)

@@ -257,6 +257,55 @@ namespace ZapLib.Tests
 
 
         }
+
+        [TestMethod()]
+        public void SQLDBReplaceTest()
+        {
+            (bool, string)[] testcase = new (bool, string)[] {
+            (false, "Update KBH522.dbo.Aud_Answer Set fa_sid"),
+            (false, "Update [AKBH52].dbo.Aud_Answer Set fa_sid"),
+            (false,"Update AKBH52.dbo.Aud_Answer Set fa_sid"),
+            (false, @"select* from KbH522.[DbO].Aud_Answer,
+            AKbH52.[DbO].Aud_Answer"),
+            (true,"Update [KBH52].dbo.Aud_Answer Set fa_sid"),
+            (true,"Update kbh52.[dbo].Aud_Answer Set fa_sid"),
+            (true,"Update KbH52.DBO.Aud_Answer Set fa_sid"),
+            (true,"Update [KbH52   ].[DbO].Aud_Answer Set fa_sid"),
+            (true,"select * from [KbH52].[DbO].Aud_Answer c,[KbH52].[DbO].Aud_Answer d"),
+            (true,"select* from KbH52.[DbO].Aud_Answer,[KbH52].[DbO].Aud_Answer"),
+            (true,  @"select* from KbH52.[DbO].Aud_Answer, 
+             [KbH52].[DbO].Aud_Answer"),
+            (true, @"select* from KbH52.[DbO].Aud_Answer,
+            [bH522].[DbO].Aud_Answer"),
+            (true, @"select* from KbH522.[DbO].Aud_Answer,
+            [KbH52].[DbO].Aud_Answer"),
+            (true, "Update KBH52 . dbo.Aud_Answer Set fa_sid"),
+            (true,"Update[KBH52].dbo.Aud_Answer Set fa_sid"),
+            (true,"Update kbh52.  [dbo].Aud_Answer Set fa_sid"),
+            (true,"Update kbh52.	[dbo].Aud_Answer Set fa_sid"),
+            (true,@"Update kbh52.
+
+
+            [dbo].Aud_Answer Set fa_sid")
+
+           };
+
+
+            SQL db = new SQL();
+            foreach ((bool ans, string q) in testcase)
+            {
+                string nq = db.SQLDBReplace(q);
+                Trace.WriteLine(q);
+                Trace.WriteLine(nq);
+                bool isdiff = nq != q;
+                if (isdiff != ans)
+                {
+                    Trace.WriteLine(JsonConvert.SerializeObject(db.SQLDBReplaceRules));
+                }
+                Assert.AreEqual(ans, isdiff);
+                Trace.WriteLine("");
+            }
+        }
     }
 
     enum MyID
