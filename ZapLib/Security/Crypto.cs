@@ -24,23 +24,25 @@ namespace ZapLib.Security
         /// 建構子
         /// </summary>
         /// <param name="encoding">編碼方式，預設為 ASCII，可自行修改為 UTF8</param>
-        public Crypto(Encoding encoding=null)
+        public Crypto(Encoding encoding = null)
         {
             if (encoding == null) encoding = Encoding.ASCII;
             CryptoEncoding = encoding;
         }
+
+
         /// <summary>
         /// MD5 雜湊資料
         /// </summary>
         /// <param name="content">資料</param>
         /// <returns>雜湊後的資料</returns>
         public string Md5(string content = "")
-        {
-            MD5 md5 = MD5.Create();
+        {       
             byte[] source = CryptoEncoding.GetBytes(content);
-            byte[] crypto = md5.ComputeHash(source);
+            byte[] crypto = Utility.MD5.ComputeHash(source);
             return Convert.ToBase64String(crypto);
         }
+
 
         /// <summary>
         /// DES 加密

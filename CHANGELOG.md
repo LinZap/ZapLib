@@ -3,6 +3,11 @@
 改版紀錄
 
 
+## `2.4.6`
+
+1. 將 `Crypto.Md5()` 方法中原先依賴使用 [`System.Security.Cryptography.MD5`](https://learn.microsoft.com/zh-tw/dotnet/api/system.security.cryptography.md5?view=net-8.0) 的部分移除，並改為自行實作 MD5 雜湊的方式提供
+
+
 ## `2.4.5`
 
 1. 新增了 `SQL` class 中的一個新功能 `SQLDBReplace()`，提供了無須變更任何 SQL 語法即可自動變更 SQL 語法中 DB Name 部分格式的功能  [詳情說明](https://gist.github.com/LinZap/158b604d89acf62ba104d03c4c53029c)
