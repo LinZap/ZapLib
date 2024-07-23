@@ -2,8 +2,15 @@
 
 改版紀錄
 
+## `2.4.7`
 
-## `2.4.6`
+1. 新增了 `Config` class 中的 3 個新功能 (以下功能皆可在 Config 檔案被加密的狀況下正常運作)
+  * **`Config.SetOrAdd(key, val)`**：設定既有的或新增全新的 `appSettings` 中的參數 (已存在則會修改，不存在則會新增)
+  * **`Config.SetOrAddConnectionString(key, val, providerName)`**：設定既有的或新增全新的 `connectionStrings` 資料庫連線字串 (已存在則會修改，不存在則會新增)
+  * **`Config.GetConnectionStrings()`**：取得所有資料庫連線字串設定，如果無法取得則回傳 `null`
+  * 詳細使用方式請參閱：[使用範例](https://gist.github.com/LinZap/db56534b0ac9893306e5cb99b3cb66ae)
+
+## `2.4.
 
 1. 將 `Crypto.Md5()` 方法中原先依賴使用 [`System.Security.Cryptography.MD5`](https://learn.microsoft.com/zh-tw/dotnet/api/system.security.cryptography.md5?view=net-8.0) 的部分移除，並改為自行實作 MD5 雜湊的方式提供
 

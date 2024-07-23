@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using System.Collections.Specialized;
+using System.Configuration;
 
 namespace ZapLib.Utility.Tests
 {
@@ -65,6 +67,61 @@ namespace ZapLib.Utility.Tests
             Assert.IsNull(s);
             s = Config.GetConnectionString(null);
             Assert.IsNull(s);
+        }
+
+        [TestMethod()]
+        public void SetOrAddTest()
+        {
+            string key = "CurrentTime";
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            bool res = Config.SetOrAdd(key, timestamp);
+            Assert.IsTrue(res);
+            string actual_timestamp = Config.Get(key);
+            Assert.AreEqual(timestamp, actual_timestamp);
+
+            timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            res = Config.SetOrAdd(key, timestamp);
+            Assert.IsTrue(res);
+            actual_timestamp = Config.Get(key);
+            Assert.AreEqual(timestamp, actual_timestamp);
+        }
+
+        [TestMethod()]
+        public void SetOrAddConnectionStringTest()
+        {
+            string key = "KB52ConnectionString";
+            string connectionstring = DateTime.Now.ToString("yyyyMMddHHmmss");
+            bool res = Config.SetOrAddConnectionString(key, connectionstring);
+            Assert.IsTrue(res);
+            string actual_connectionstring = Config.GetConnectionString(key);
+            Assert.AreEqual(connectionstring, actual_connectionstring);
+        }
+
+        [TestMethod()]
+        public void GetAllTest()
+        {
+            NameValueCollection collection = Config.Get();
+            foreach (string key in collection.AllKeys)
+            {
+
+                foreach (string value in collection.GetValues(key))
+                {
+                    Trace.WriteLine("<" + key + ">" + " : " + value);
+                }
+            }
+            Assert.IsNotNull(collection);
+        }
+
+        [TestMethod()]
+        public void GetConnectionStringsTest()
+        {
+            var cscolleciton = Config.GetConnectionStrings();
+
+            foreach (ConnectionStringSettings cs in cscolleciton)
+            {
+                Trace.WriteLine("<" + cs.Name + ">" + " : " + cs.ConnectionString);
+            }
+            Assert.IsNotNull(cscolleciton);
         }
     }
 }
