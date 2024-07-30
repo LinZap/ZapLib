@@ -123,5 +123,25 @@ namespace ZapLib.Utility.Tests
             }
             Assert.IsNotNull(cscolleciton);
         }
+
+        [TestMethod()]
+        public void DeleteTest()
+        {
+            string key = "CurrentTime";
+            Config.Delete(key);
+            var actual_timestamp = Config.Get(key);
+            Assert.IsNull(actual_timestamp);
+
+        }
+
+        [TestMethod()]
+        public void DeleteConnectionStringTest()
+        {
+
+            string key = "KB52ConnectionString";
+            Config.DeleteConnectionString(key);
+            var actual_connectionstring = Config.GetConnectionString(key);
+            Assert.IsNull(actual_connectionstring);
+        }
     }
 }

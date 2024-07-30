@@ -103,12 +103,52 @@ namespace ZapLib.Utility
         }
 
         /// <summary>
+        /// 刪除指定參數名稱的 Config 參數 (如果不存在還是會回 true)
+        /// </summary>
+        /// <param name="key">參數名稱</param>
+        /// <returns>是否刪除成功</returns>
+        public static bool Delete(string key)
+        {
+            Configuration configFile;
+            try
+            {
+                if (System.Web.HttpContext.Current != null)
+                {
+                    configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                }
+                else
+                {
+                    configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                }
+
+                AppSettingsSection section = (AppSettingsSection)configFile.GetSection("appSettings");
+                KeyValueConfigurationCollection setting = section.Settings;
+                if (setting[key] == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    setting.Remove(key);
+                }
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+            catch (Exception e)
+            {
+                new MyLog().Write(e.ToString());
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 設定既有的或新增全新的資料庫連線字串 (已存在則會修改，不存在則會新增)
         /// </summary>
         /// <param name="key">連線字串名稱</param>
         /// <param name="val">連線字串</param>
         /// <param name="providerName">資料提供者的名稱</param>
-        /// <returns></returns>
+        /// <returns>是否執行成功</returns>
         public static bool SetOrAddConnectionString(string key, string val, string providerName = "System.Data.SqlClient")
         {
             try
@@ -146,6 +186,49 @@ namespace ZapLib.Utility
             }
             return true;
         }
+
+        /// <summary>
+        /// 刪除指定連線字串名稱的資料庫連線字串 (不存在仍會回 true)
+        /// </summary>
+        /// <param name="key">連線字串名稱</param>
+        /// <returns>是否執行成功</returns>
+        public static bool DeleteConnectionString(string key)
+        {
+            try
+            {
+                Configuration configFile;
+                if (System.Web.HttpContext.Current != null)
+                {
+                    configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                }
+                else
+                {
+                    configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                }
+
+                ConnectionStringsSection section = (ConnectionStringsSection)configFile.GetSection("connectionStrings");
+                ConnectionStringSettingsCollection setting = section.ConnectionStrings;
+
+                if (setting[key] == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    setting.Remove(key);
+                }
+
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("connectionStrings");
+            }
+            catch (Exception e)
+            {
+                new MyLog().Write(e.ToString());
+                return false;
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// 取得所有資料庫連線字串設定，如果無法取得則回傳 null
