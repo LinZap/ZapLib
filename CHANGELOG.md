@@ -2,6 +2,14 @@
 
 改版紀錄
 
+
+## `2.4.8`
+
+1. 新增了 `Config` class 中的 2 個新功能
+  * **`Config.Delete(key)`**：刪除指定的 `appSettings` 中的參數
+  * **`Config.DeleteConnectionString(key)`** 刪除指定的 `connectionStrings` 資料庫連線字串
+  * 詳細使用方式請參閱：[使用範例](https://gist.github.com/LinZap/ece1a8c6ac04a49b6348dc071a946c3f)
+
 ## `2.4.7`
 
 1. 新增了 `Config` class 中的 3 個新功能 (以下功能皆可在 Config 檔案被加密的狀況下正常運作)
