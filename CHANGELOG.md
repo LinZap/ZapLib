@@ -2,6 +2,13 @@
 
 改版紀錄
 
+## `2.4.9`
+
+1. 新增了 `SQL` class 支援讀寫分離的 DB 連線參數設定
+  * 新增成員 **`EnableDBAlwaysOn`** : 是否啟用 DB Always On 才有的 `ApplicationIntent=ReadOnly` 設定，預設為 `false`。也可於 Config 檔案中指定 `EnableDBAlwaysOn` 為 `True` 。
+  * 新增成員 **`SQLReadOnly`** : 必須設置 `EnableDBAlwaysOn` 設置為 `true` 時，此設定才會生效 (否則為空操作)。 如果此值為 `true`，且 `EnableDBAlwaysOn` 也為 `true` 時，會自動將資料庫連線字串中的 `ApplicationIntent` 設置為 `ReadOny`。此數值預設為 `false`。
+  * 請注意 Config 檔案中 `EnableDBAlwaysOn` 指定為 `False` 或不指定時， 連線字串將強制設置 `ApplicationIntent=ReadWrite`。
+  * 詳細使用方式請參閱：[使用範例](https://gist.github.com/LinZap/a0a491ed24aa8e5c862376136d457c07)
 
 ## `2.4.8`
 

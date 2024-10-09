@@ -257,8 +257,28 @@ namespace ZapLib.Tests
 
 
         }
-
         [TestMethod()]
+        public void BuildconnStringTest2()
+        {
+            SQL db = new SQL();
+            string testsql = "Data Source=10.190.173.134\\support6;Initial Catalog=Drive;User ID=sa;Password=123";
+
+            string connstr = db.BuildconnString(testsql);
+            Trace.WriteLine(testsql + "\n" + connstr);
+            Assert.IsTrue(connstr.Contains("ReadWrite"));
+
+            db.SQLReadOnly = true;
+            
+            string connstr2 = db.BuildconnString(testsql);
+            Trace.WriteLine(testsql + "\n" + connstr2);
+
+            Assert.IsTrue(connstr2.Contains("ReadWrite"));
+
+        }
+
+
+
+            [TestMethod()]
         public void SQLDBReplaceTest()
         {
             (bool, string)[] testcase = new (bool, string)[] {

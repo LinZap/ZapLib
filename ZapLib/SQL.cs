@@ -9,6 +9,7 @@ using System.Linq;
 using ZapLib.Utility;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
+using System.Data.Common;
 
 namespace ZapLib
 {
@@ -57,6 +58,19 @@ namespace ZapLib
         /// <summary>資料庫名稱取代規則</summary>
         public List<Tuple<string,string>> SQLDBReplaceRules { get; set; }
 
+        /// <summary>
+        /// 是否啟用 DB Always On 才有的 ApplicationIntent=ReadOnly 架構，預設為 false。
+        /// 也可於 Config 中指定 EnableDBAlwaysOn 為 True。
+        /// </summary>
+        public bool EnableDBAlwaysOn { get; set; }
+
+        /// <summary>
+        /// 必須設置 EnableDBAlwaysOn 設置為 true 時，此設定才會生效 (否則為空操作)。
+        /// 如果此值為 true，且 EnableDBAlwaysOn 也為 true 時，會自動將 sql connection string 中的 ApplicationIntent 設置為 ReadOnly。
+        /// 此數值預設為 false
+        /// </summary>
+        public bool SQLReadOnly { get; set; }
+
         private string connString;
         private SqlConnection Conn = null;
         private bool isTran = false;
@@ -84,6 +98,7 @@ namespace ZapLib
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
             BuildSQLDBReplaceRules();
+            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
         }
 
         /// <summary>
@@ -105,6 +120,7 @@ namespace ZapLib
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
             BuildSQLDBReplaceRules();
+            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
         }
 
         /// <summary>
@@ -114,13 +130,14 @@ namespace ZapLib
         /// <param name="transaction">是否開啟 transaction</param>
         public SQL(string connectionString, bool transaction = false)
         {
-            connString = Config.GetConnectionString(connectionString) ?? connectionString;
+            connString = BuildconnString(Config.GetConnectionString(connectionString) ?? connectionString);
             isTran = transaction;
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
             BuildSQLDBReplaceRules();
+            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
         }
 
         /// <summary>
@@ -145,7 +162,6 @@ namespace ZapLib
             {
                 Conn = new SqlConnection(connString);
                 Conn.Open();
-
                 Cmd = new SqlCommand();
                 Cmd.Connection = Conn;
                 Cmd.CommandTimeout = Timeout;
@@ -173,12 +189,25 @@ namespace ZapLib
         /// <returns></returns>
         public string BuildconnString(string s)
         {
-            if (!s.Contains("Connect Timeout")) s += $";Connect Timeout={Timeout}";
-            if (!s.Contains("Encrypt")) s += $";Encrypt={Encrypt}";
-            if (!s.Contains("TrustServerCertificate")) s += $";TrustServerCertificate={TrustServerCertificate}";
-            if (!s.Contains("ApplicationIntent")) s += $";ApplicationIntent={ApplicationIntent}";
-            if (!s.Contains("MultiSubnetFailover")) s += $";MultiSubnetFailover={MultiSubnetFailover}";
-            return s;
+            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = s;
+            if (!builder.ContainsKey("Connect Timeout")) builder.Add("Connect Timeout", Timeout);
+            if (!builder.ContainsKey("Encrypt")) builder.Add("Encrypt", Encrypt);
+            if (!builder.ContainsKey("TrustServerCertificate")) builder.Add("TrustServerCertificate", TrustServerCertificate);
+            if (!builder.ContainsKey("MultiSubnetFailover")) builder.Add("MultiSubnetFailover", MultiSubnetFailover);
+            if (!builder.ContainsKey("ApplicationIntent")) builder.Add("ApplicationIntent", ApplicationIntent);
+
+            // 只有啟用 DB Always On 並指定 SQL 為 Read Only 時，才可以啟用 ReadOnly 的 router
+            if (EnableDBAlwaysOn && SQLReadOnly)
+            {
+                builder["ApplicationIntent"] = "ReadOnly";
+            }
+            else
+            {
+                builder["ApplicationIntent"] = "ReadWrite";
+            }
+
+            return builder.ConnectionString;
         }
 
         /// <summary>
