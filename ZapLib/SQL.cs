@@ -56,7 +56,7 @@ namespace ZapLib
         public string TraceCode { get; private set; }
 
         /// <summary>資料庫名稱取代規則</summary>
-        public List<Tuple<string,string>> SQLDBReplaceRules { get; set; }
+        public List<Tuple<string, string>> SQLDBReplaceRules { get; set; }
 
         /// <summary>
         /// 是否啟用 DB Always On 才有的 ApplicationIntent=ReadOnly 架構，預設為 false。
@@ -69,14 +69,37 @@ namespace ZapLib
         /// 如果此值為 true，且 EnableDBAlwaysOn 也為 true 時，會自動將 sql connection string 中的 ApplicationIntent 設置為 ReadOnly。
         /// 此數值預設為 false
         /// </summary>
-        public bool SQLReadOnly { get; set; }
+        public bool SQLReadOnly
+        {
+            get => GetSQLReadOnly();
+            set => SetSQLReadOnly(value);
+        }
+
+        private bool GetSQLReadOnly()
+        {
+            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = connString;
+            if (builder.ContainsKey("ApplicationIntent")) return builder["ApplicationIntent"].ToString() == "ReadOnly";
+            else return false;
+        }
+
+        private void SetSQLReadOnly(bool value)
+        {
+            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = connString;
+            if (value)
+            {
+                builder["ApplicationIntent"] = "ReadOnly";
+                connString = builder.ConnectionString;
+            }
+        }
 
         private string connString;
         private SqlConnection Conn = null;
         private bool isTran = false;
         private MyLog log;
         private List<string> errormessage;
-        
+
 
 
         /// <summary>
@@ -720,7 +743,7 @@ namespace ZapLib
         /// <returns></returns>
         public string SQLDBReplace(string sql)
         {
-            if(SQLDBReplaceRules==null) return sql;
+            if (SQLDBReplaceRules == null) return sql;
             string tmpsql = sql;
             foreach (Tuple<string, string> rule in SQLDBReplaceRules)
             {

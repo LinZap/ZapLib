@@ -268,7 +268,7 @@ namespace ZapLib.Tests
             Assert.IsTrue(connstr.Contains("ReadWrite"));
 
             db.SQLReadOnly = true;
-            
+
             string connstr2 = db.BuildconnString(testsql);
             Trace.WriteLine(testsql + "\n" + connstr2);
 
@@ -278,7 +278,7 @@ namespace ZapLib.Tests
 
 
 
-            [TestMethod()]
+        [TestMethod()]
         public void SQLDBReplaceTest()
         {
             (bool, string)[] testcase = new (bool, string)[] {
@@ -326,6 +326,23 @@ namespace ZapLib.Tests
                 Trace.WriteLine("");
             }
         }
+
+        [TestMethod()]
+        public void QuickQueryTest1()
+        {
+            SQL db = new SQL("CSWebAgRW");
+            string SqlString = $@"SELECT @@SERVERNAME as ServerName, SERVERPROPERTY('MachineName') as MachineName";
+            ModelAgServer[] res =  db.QuickQuery<ModelAgServer>(SqlString);
+            Trace.WriteLine(res[0].MachineName + " " + res[0].ServerName);
+
+
+            SQL db2 = new SQL("CSWebAgRW");
+            db2.SQLReadOnly = true;
+            string SqlString2 = $@"SELECT @@SERVERNAME as ServerName, SERVERPROPERTY('MachineName') as MachineName";
+            ModelAgServer[] res2 = db2.QuickQuery<ModelAgServer>(SqlString);
+            Trace.WriteLine(res2[0].MachineName + " " + res2[0].ServerName);
+
+        }
     }
 
     enum MyID
@@ -357,5 +374,13 @@ namespace ZapLib.Tests
         public DateTime since { get; set; }
     };
 
+    public class ModelAgServer
+    {
+        /// <summary>連線伺服器名稱</summary>
+        public string ServerName { get; set; }
+
+        // <summary>機器名稱</summary>
+        public string MachineName { get; set; }
+    }
 
 }
