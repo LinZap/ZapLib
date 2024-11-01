@@ -2,10 +2,11 @@
 
 改版紀錄
 
-## `2.4.10`
-* 修正了 dll 編譯出來版本號碼錯誤的問題
 
-## `2.4.9`
+
+## `2.4.12`
+
+> 包含了 `2.4.9` ~ `2.4.12`
 
 1. 新增了 `SQL` class 支援讀寫分離的 DB 連線參數設定
   * 新增成員 **`EnableDBAlwaysOn`** : 是否啟用 DB Always On 才有的 `ApplicationIntent=ReadOnly` 設定，預設為 `false`。也可於 Config 檔案中指定 `EnableDBAlwaysOn` 為 `True` 。
