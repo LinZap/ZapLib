@@ -90,6 +90,7 @@ namespace ZapLib
         /// <param name="body">信件內文</param>
         /// <param name="cc">副本 (不需要可傳 NULL)</param>
         /// <param name="bcc">密件副本 (不需要可傳 NULL)</param>
+        /// <param name="attchments">多個附件(實體檔案路徑字串陣列)</param>
         public bool Send(string to, string subject, string body, string cc = null, string bcc = null, string[] attchments = null)
         {
 

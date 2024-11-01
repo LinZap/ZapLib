@@ -339,7 +339,7 @@ namespace ZapLib.Tests
             SQL db2 = new SQL("CSWebAgRW");
             db2.SQLReadOnly = true;
             string SqlString2 = $@"SELECT @@SERVERNAME as ServerName, SERVERPROPERTY('MachineName') as MachineName";
-            ModelAgServer[] res2 = db2.QuickQuery<ModelAgServer>(SqlString);
+            ModelAgServer[] res2 = db2.QuickQuery<ModelAgServer>(SqlString2);
             Trace.WriteLine(res2[0].MachineName + " " + res2[0].ServerName);
 
         }

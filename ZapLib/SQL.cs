@@ -71,28 +71,10 @@ namespace ZapLib
         /// </summary>
         public bool SQLReadOnly
         {
-            get => GetSQLReadOnly();
-            set => SetSQLReadOnly(value);
+            get => ApplicationIntent == "ReadOnly";
+            set => ApplicationIntent = (value ? "ReadOnly" : "ReadWrite");
         }
 
-        private bool GetSQLReadOnly()
-        {
-            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            builder.ConnectionString = connString;
-            if (builder.ContainsKey("ApplicationIntent")) return builder["ApplicationIntent"].ToString() == "ReadOnly";
-            else return false;
-        }
-
-        private void SetSQLReadOnly(bool value)
-        {
-            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            builder.ConnectionString = connString;
-            if (value)
-            {
-                builder["ApplicationIntent"] = "ReadOnly";
-                connString = builder.ConnectionString;
-            }
-        }
 
         private string connString;
         private SqlConnection Conn = null;
@@ -101,27 +83,17 @@ namespace ZapLib
         private List<string> errormessage;
 
 
-
         /// <summary>
         /// 初始化 SQL 連線物件，將使用 .config 中的資料庫連線資訊進行連線
         /// </summary>
         /// <param name="transaction">是否開啟 transaction</param>
         public SQL(bool transaction = false)
         {
-            string DBName = Config.Get("DBName"),
-                   DBHost = Config.Get("DBHost"),
-                   DBAct = Config.Get("DBAct"),
-                   DBPwd = Config.Get("DBPwd"),
-                   template = "Server={0};Database={1};User ID={2};Password={3}",
-                   basestring = string.Format(template, DBHost, DBName, DBAct, DBPwd);
+            string DBName = Config.Get("DBName"), DBHost = Config.Get("DBHost"), DBAct = Config.Get("DBAct"), DBPwd = Config.Get("DBPwd"), 
+                template = "Server={0};Database={1};User ID={2};Password={3}";
+            connString = string.Format(template, DBHost, DBName, DBAct, DBPwd);
             isTran = transaction;
-            connString = BuildconnString(basestring);
-            log = new MyLog();
-            log.SilentMode = Config.Get("SilentMode");
-            errormessage = new List<string>();
-            TraceCode = Guid.NewGuid().ToString();
-            BuildSQLDBReplaceRules();
-            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
+            GeneralProcessing();
         }
 
         /// <summary>
@@ -134,16 +106,10 @@ namespace ZapLib
         /// <param name="transaction">是否開啟 transaction</param>
         public SQL(string dbHost, string dbName, string dbAct, string dbPwd, bool transaction = false)
         {
-            string template = "Server={0};Database={1};User ID={2};Password={3}",
-                   basestring = string.Format(template, dbHost, dbName, dbAct, dbPwd);
+            string template = "Server={0};Database={1};User ID={2};Password={3}";
+            connString = string.Format(template, dbHost, dbName, dbAct, dbPwd);
             isTran = transaction;
-            connString = BuildconnString(basestring);
-            log = new MyLog();
-            log.SilentMode = Config.Get("SilentMode");
-            errormessage = new List<string>();
-            TraceCode = Guid.NewGuid().ToString();
-            BuildSQLDBReplaceRules();
-            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
+            GeneralProcessing();
         }
 
         /// <summary>
@@ -153,14 +119,25 @@ namespace ZapLib
         /// <param name="transaction">是否開啟 transaction</param>
         public SQL(string connectionString, bool transaction = false)
         {
-            connString = BuildconnString(Config.GetConnectionString(connectionString) ?? connectionString);
+            connString = Config.GetConnectionString(connectionString) ?? connectionString;
             isTran = transaction;
+            GeneralProcessing();
+        }
+
+        /// <summary>
+        /// 建構子通用功能
+        /// </summary>
+        private void GeneralProcessing()
+        {
             log = new MyLog();
             log.SilentMode = Config.Get("SilentMode");
             errormessage = new List<string>();
             TraceCode = Guid.NewGuid().ToString();
             BuildSQLDBReplaceRules();
-            EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn")?.ToLower() == "true";
+
+            // 使否啟用 DB AlwaysOn, 預設不啟用
+            string _EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn");
+            EnableDBAlwaysOn = string.IsNullOrWhiteSpace(_EnableDBAlwaysOn)? false: _EnableDBAlwaysOn.ToLower() == "true";
         }
 
         /// <summary>
@@ -180,6 +157,7 @@ namespace ZapLib
         /// </summary>
         public void Connet()
         {
+            connString = BuildconnString(connString);
             LogExecTime lextime = new LogExecTime($"DB Connection time\r\nTraceCode: {TraceCode}");
             try
             {
@@ -208,8 +186,8 @@ namespace ZapLib
         /// <summary>
         /// 建構連線字串
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
+        /// <param name="s">連線字串</param>
+        /// <returns>重新補全過的連線字串</returns>
         public string BuildconnString(string s)
         {
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
@@ -219,17 +197,8 @@ namespace ZapLib
             if (!builder.ContainsKey("TrustServerCertificate")) builder.Add("TrustServerCertificate", TrustServerCertificate);
             if (!builder.ContainsKey("MultiSubnetFailover")) builder.Add("MultiSubnetFailover", MultiSubnetFailover);
             if (!builder.ContainsKey("ApplicationIntent")) builder.Add("ApplicationIntent", ApplicationIntent);
-
-            // 只有啟用 DB Always On 並指定 SQL 為 Read Only 時，才可以啟用 ReadOnly 的 router
-            if (EnableDBAlwaysOn && SQLReadOnly)
-            {
-                builder["ApplicationIntent"] = "ReadOnly";
-            }
-            else
-            {
-                builder["ApplicationIntent"] = "ReadWrite";
-            }
-
+            // [總開關] 只有啟用 DB Always On 並指定 SQL 為 Read Only 時，才可以啟用 ReadOnly 的 router
+            if (!EnableDBAlwaysOn)builder["ApplicationIntent"] = "ReadWrite";     
             return builder.ConnectionString;
         }
 
