@@ -89,7 +89,7 @@ namespace ZapLib
         /// <param name="transaction">是否開啟 transaction</param>
         public SQL(bool transaction = false)
         {
-            string DBName = Config.Get("DBName"), DBHost = Config.Get("DBHost"), DBAct = Config.Get("DBAct"), DBPwd = Config.Get("DBPwd"), 
+            string DBName = Config.Get("DBName"), DBHost = Config.Get("DBHost"), DBAct = Config.Get("DBAct"), DBPwd = Config.Get("DBPwd"),
                 template = "Server={0};Database={1};User ID={2};Password={3}";
             connString = string.Format(template, DBHost, DBName, DBAct, DBPwd);
             isTran = transaction;
@@ -137,7 +137,7 @@ namespace ZapLib
 
             // 使否啟用 DB AlwaysOn, 預設不啟用
             string _EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn");
-            EnableDBAlwaysOn = string.IsNullOrWhiteSpace(_EnableDBAlwaysOn)? false: _EnableDBAlwaysOn.ToLower() == "true";
+            EnableDBAlwaysOn = string.IsNullOrWhiteSpace(_EnableDBAlwaysOn) ? false : _EnableDBAlwaysOn.ToLower() == "true";
         }
 
         /// <summary>
@@ -193,12 +193,17 @@ namespace ZapLib
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
             builder.ConnectionString = s;
             if (!builder.ContainsKey("Connect Timeout")) builder.Add("Connect Timeout", Timeout);
+            else builder["Connect Timeout"] = Timeout;
             if (!builder.ContainsKey("Encrypt")) builder.Add("Encrypt", Encrypt);
+            else builder["Encrypt"] = Encrypt;
             if (!builder.ContainsKey("TrustServerCertificate")) builder.Add("TrustServerCertificate", TrustServerCertificate);
+            else builder["TrustServerCertificate"] = TrustServerCertificate;
             if (!builder.ContainsKey("MultiSubnetFailover")) builder.Add("MultiSubnetFailover", MultiSubnetFailover);
+            else builder["MultiSubnetFailover"] = MultiSubnetFailover;
             if (!builder.ContainsKey("ApplicationIntent")) builder.Add("ApplicationIntent", ApplicationIntent);
+            else builder["ApplicationIntent"] = ApplicationIntent;
             // [總開關] 只有啟用 DB Always On 並指定 SQL 為 Read Only 時，才可以啟用 ReadOnly 的 router
-            if (!EnableDBAlwaysOn)builder["ApplicationIntent"] = "ReadWrite";     
+            if (!EnableDBAlwaysOn) builder["ApplicationIntent"] = "ReadWrite";
             return builder.ConnectionString;
         }
 
@@ -332,9 +337,21 @@ namespace ZapLib
                     }
                 }
                 Close();
+
+
+                if (SQLReadOnly && data != null)
+                {
+                    if (data.Length == 0)
+                    {
+                        SQLReadOnly = false;
+                        return QuickQuery<T>(sql, param, isfetchall);
+                    }
+                }
+
             }
             return data;
         }
+
 
         /// <summary>
         /// [有風險] 自動開啟連線並執行查詢語法，執行完畢後自動關閉連線

@@ -331,16 +331,18 @@ namespace ZapLib.Tests
         public void QuickQueryTest1()
         {
             SQL db = new SQL("CSWebAgRW");
-            string SqlString = $@"SELECT @@SERVERNAME as ServerName, SERVERPROPERTY('MachineName') as MachineName";
-            ModelAgServer[] res =  db.QuickQuery<ModelAgServer>(SqlString);
-            Trace.WriteLine(res[0].MachineName + " " + res[0].ServerName);
+            string SqlString = $@"insert into Log_ParamAction(action_id,action_name)values(22,'測試')";
+            object[] res =  db.QuickQuery<object>(SqlString);
+            Assert.IsNotNull(res);
+            Trace.WriteLine("寫入:" + res != null);
 
 
             SQL db2 = new SQL("CSWebAgRW");
             db2.SQLReadOnly = true;
-            string SqlString2 = $@"SELECT @@SERVERNAME as ServerName, SERVERPROPERTY('MachineName') as MachineName";
-            ModelAgServer[] res2 = db2.QuickQuery<ModelAgServer>(SqlString2);
-            Trace.WriteLine(res2[0].MachineName + " " + res2[0].ServerName);
+            string SqlString2 = $@"select * from Log_ParamAction where action_id=22";
+            ModelLogSI[] res2 = db2.QuickQuery<ModelLogSI>(SqlString2);
+            Assert.IsNotNull(res2);
+            Trace.WriteLine(res2[0].action_id + " " + res2[0].action_name);
 
         }
     }
@@ -381,6 +383,17 @@ namespace ZapLib.Tests
 
         // <summary>機器名稱</summary>
         public string MachineName { get; set; }
+    }
+
+
+    public class ModelLogSI
+    {
+        /// <summary>連線伺服器名稱</summary>
+        public int param_sid { get; set; }
+
+        // <summary>機器名稱</summary>
+        public int action_id { get; set; }
+        public string action_name { get; set; }
     }
 
 }
