@@ -3,6 +3,9 @@
 改版紀錄
 
 
+## `2.4.13-beta2`
+
+* 新增了一個實驗機制，當 `SQL` class 啟用 `EnableDBAlwaysOn` 設定時， `QuickDynamicQuery` 與 `QuickQuery` 兩個方法會偵測查詢結果的資料筆數，如果為 0 筆時，此時若為 `SQLReadOnly=true` 模式，則會自動重新建立一次 SQL 連線，並且改用 `SQLReadOnly=false` 重新執行一次查詢。此功能是為了避免讀寫分離架構啟用時，寫入的資料在 primary db 尚未同步到 secondary db 上的錯誤。由於此方式過於粗糙因此目前僅為歸納為實驗性質，後續仍待評估更好的做法。  
 
 ## `2.4.12`
 

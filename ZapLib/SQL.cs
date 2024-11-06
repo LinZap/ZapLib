@@ -339,7 +339,7 @@ namespace ZapLib
                 Close();
 
 
-                if (SQLReadOnly && data != null)
+                if (EnableDBAlwaysOn && SQLReadOnly && data != null)
                 {
                     if (data.Length == 0)
                     {
@@ -396,6 +396,15 @@ namespace ZapLib
                     }
                 }
                 Close();
+
+                if (EnableDBAlwaysOn && SQLReadOnly && data != null)
+                {
+                    if (data.Length == 0)
+                    {
+                        SQLReadOnly = false;
+                        return QuickDynamicQuery(sql, param, isfetchall);
+                    }
+                }
             }
             return data;
         }
