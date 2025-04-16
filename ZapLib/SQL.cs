@@ -81,6 +81,7 @@ namespace ZapLib
         private bool isTran = false;
         private MyLog log;
         private List<string> errormessage;
+        private DbConnectionStringBuilder builder;
 
 
         /// <summary>
@@ -138,6 +139,17 @@ namespace ZapLib
             // 使否啟用 DB AlwaysOn, 預設不啟用
             string _EnableDBAlwaysOn = Config.Get("EnableDBAlwaysOn");
             EnableDBAlwaysOn = string.IsNullOrWhiteSpace(_EnableDBAlwaysOn) ? false : _EnableDBAlwaysOn.ToLower() == "true";
+
+
+            builder = new DbConnectionStringBuilder();
+            builder.ConnectionString = connString;
+
+            if (builder.ContainsKey("Connect Timeout"))
+            {
+                int.TryParse(builder["Connect Timeout"]?.ToString(), out int conn_str_timeout);
+                Timeout = conn_str_timeout;
+            }
+
         }
 
         /// <summary>
@@ -157,7 +169,7 @@ namespace ZapLib
         /// </summary>
         public void Connet()
         {
-            connString = BuildconnString(connString);
+            connString = BuildconnString();
             LogExecTime lextime = new LogExecTime($"DB Connection time\r\nTraceCode: {TraceCode}");
             try
             {
@@ -186,12 +198,9 @@ namespace ZapLib
         /// <summary>
         /// 建構連線字串
         /// </summary>
-        /// <param name="s">連線字串</param>
         /// <returns>重新補全過的連線字串</returns>
-        public string BuildconnString(string s)
+        public string BuildconnString()
         {
-            DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            builder.ConnectionString = s;
             if (!builder.ContainsKey("Connect Timeout")) builder.Add("Connect Timeout", Timeout);
             else builder["Connect Timeout"] = Timeout;
             if (!builder.ContainsKey("Encrypt")) builder.Add("Encrypt", Encrypt);

@@ -2,6 +2,10 @@
 
 改版紀錄
 
+## `2.4.13-beta3`
+
+* 新增了 SQL 類別中 Timout 的機制，除非在程式中明確指定了 Timeout 數值，否則將會嘗試從 SQL Connection String 中抓取，如果都抓不到則會預設 30 秒
+
 
 ## `2.4.13-beta2`
 

@@ -249,7 +249,7 @@ namespace ZapLib.Tests
             for (int i = 0; i < testpool.Length; i++)
             {
                 string cs = testpool[i];
-                string res = db.BuildconnString(cs);
+                string res = new SQL(cs).BuildconnString();
                 Trace.WriteLine(cs);
                 Trace.WriteLine(res);
                 Assert.IsTrue(res.Contains(exps[i]));
@@ -257,25 +257,84 @@ namespace ZapLib.Tests
 
 
         }
+
+
+
         [TestMethod()]
         public void BuildconnStringTest2()
         {
-            SQL db = new SQL();
-            string testsql = "Data Source=10.190.173.134\\support6;Initial Catalog=Drive;User ID=sa;Password=123";
 
-            string connstr = db.BuildconnString(testsql);
+            string testsql = "Data Source=10.190.173.134\\support6;Initial Catalog=Drive;User ID=sa;Password=123";
+            var db = new SQL(testsql);
+            string connstr = db.BuildconnString();
             Trace.WriteLine(testsql + "\n" + connstr);
             Assert.IsTrue(connstr.Contains("ReadWrite"));
 
             db.SQLReadOnly = true;
 
-            string connstr2 = db.BuildconnString(testsql);
+            string connstr2 = db.BuildconnString();
             Trace.WriteLine(testsql + "\n" + connstr2);
 
             Assert.IsTrue(connstr2.Contains("ReadWrite"));
 
         }
 
+
+
+        [TestMethod()]
+        public void BuildconnStringTest3()
+        {
+            //SQL db = new SQL();
+
+            string[] testpool = new string[] {
+                @"Data Source=10.190.173.134\support6;Min Pool Size=0;Max Pool Size=100;Pooling=true;Initial Catalog=Drive;Persist Security Info=True;User ID=sa;Password=123456",
+                @"Data Source=10.190.173.134\support6;Min Pool Size=0;Max Pool Size=100;Pooling=true;Initial Catalog=Drive;Persist Security Info=True;User ID=sa;Password=123456;Connect Timeout=999",
+            };
+
+
+            Trace.WriteLine("case 1");
+            string cs = testpool[0];
+            var db = new SQL(cs);
+            string res = db.BuildconnString();
+            Trace.WriteLine("conn str: " + cs);
+            Trace.WriteLine("build str: " + res);
+            Trace.WriteLine("timeout: " + db.Timeout);
+            Assert.AreEqual(30, db.Timeout);
+
+            Trace.WriteLine("case 2");
+            cs = testpool[1];
+            db = new SQL(cs);
+            res = db.BuildconnString();
+            Trace.WriteLine("conn str: " + cs);
+            Trace.WriteLine("build str: " + res);
+            Trace.WriteLine("timeout: " + db.Timeout);
+            Assert.AreEqual(999, db.Timeout);
+
+
+
+            Trace.WriteLine("case 3");
+            cs = testpool[0];
+            db = new SQL(cs);
+            db.Timeout = 666;
+            res = db.BuildconnString();
+            Trace.WriteLine("conn str: " + cs);
+            Trace.WriteLine("build str: " + res);
+            Trace.WriteLine("timeout: " + db.Timeout);
+            Assert.AreEqual(666, db.Timeout);
+
+
+            Trace.WriteLine("case 4");
+            cs = testpool[1];
+            db = new SQL(cs);
+            db.Timeout = 222;
+            res = db.BuildconnString();
+            Trace.WriteLine("conn str: " + cs);
+            Trace.WriteLine("build str: " + res);
+            Trace.WriteLine("timeout: " + db.Timeout);
+            Assert.AreEqual(222, db.Timeout);
+
+
+        }
 
 
         [TestMethod()]
@@ -332,7 +391,7 @@ namespace ZapLib.Tests
         {
             SQL db = new SQL("CSWebAgRW");
             string SqlString = $@"insert into Log_ParamAction(action_id,action_name)values(22,'測試')";
-            object[] res =  db.QuickQuery<object>(SqlString);
+            object[] res = db.QuickQuery<object>(SqlString);
             Assert.IsNotNull(res);
             Trace.WriteLine("寫入:" + res != null);
 
