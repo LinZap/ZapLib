@@ -167,9 +167,9 @@ namespace ZapLib
         /// <summary>
         /// 手動連線資料庫，可以使用 IsConn 來確認使否連線成功
         /// </summary>
-        public void Connet()
+        public void Connect()
         {
-            connString = BuildconnString();
+            connString = BuildConnectionString();
             LogExecTime lextime = new LogExecTime($"DB Connection time\r\nTraceCode: {TraceCode}");
             try
             {
@@ -199,7 +199,7 @@ namespace ZapLib
         /// 建構連線字串
         /// </summary>
         /// <returns>重新補全過的連線字串</returns>
-        public string BuildconnString()
+        public string BuildConnectionString()
         {
             if (!builder.ContainsKey("Connect Timeout")) builder.Add("Connect Timeout", Timeout);
             else builder["Connect Timeout"] = Timeout;
@@ -312,7 +312,7 @@ namespace ZapLib
         public T[] QuickQuery<T>(string sql, object param = null, bool isfetchall = true)
         {
             T[] data = null;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try
@@ -372,7 +372,7 @@ namespace ZapLib
         public dynamic[] QuickDynamicQuery(string sql, object param = null, bool isfetchall = true)
         {
             dynamic[] data = null;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try
@@ -428,7 +428,7 @@ namespace ZapLib
         public T QuickExec<T>(string sql, object param = null)
         {
             T obj = default;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try
@@ -471,7 +471,7 @@ namespace ZapLib
         public dynamic QuickDynamicExec(string sql, object param = null, object output = null)
         {
             dynamic obj = null;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try
@@ -511,7 +511,7 @@ namespace ZapLib
         public bool QuickBulkCopy(DataTable data, string tableName)
         {
             bool result = false;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 LogExecTime lextime2 = new LogExecTime($"Exec BulkCopy: {tableName}\r\nRows.Count: {data.Rows.Count}\r\nTraceCode: {TraceCode}");
