@@ -253,7 +253,7 @@ namespace ZapLib
             Qs = qs;
             if (files != null) ContentType = "multipart/form-data";
             Request.Method = HttpMethod.Post;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? Response.Content.ReadAsStringAsync().Result : default;
         }
 
@@ -271,7 +271,7 @@ namespace ZapLib
             Qs = qs;
             Accept = "application/json";
             Request.Method = HttpMethod.Post;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result) : default;
         }
 
@@ -286,7 +286,7 @@ namespace ZapLib
         {
             Qs = qs;
             Request.Method = HttpMethod.Delete;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? Response.Content.ReadAsStringAsync().Result : default;
         }
 
@@ -304,7 +304,7 @@ namespace ZapLib
             Qs = qs;
             Accept = "application/json";
             Request.Method = HttpMethod.Delete;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result) : default;
         }
 
@@ -319,7 +319,7 @@ namespace ZapLib
         {
             Qs = qs;
             Request.Method = HttpMethod.Put;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? Response.Content.ReadAsStringAsync().Result : null;
         }
 
@@ -337,7 +337,7 @@ namespace ZapLib
             Qs = qs;
             Accept = "application/json";
             Request.Method = HttpMethod.Put;
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result) : default;
         }
 
@@ -354,7 +354,7 @@ namespace ZapLib
             Qs = qs;
             if (files != null) ContentType = "multipart/form-data";
             Request.Method = new HttpMethod("PATCH");
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? Response.Content.ReadAsStringAsync().Result : default;
         }
 
@@ -372,7 +372,7 @@ namespace ZapLib
             Qs = qs;
             Accept = "application/json";
             Request.Method = new HttpMethod("PATCH");
-            SetRequestContnet(data, files);
+            SetRequestContent(data, files);
             return Send() ? JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result) : default;
         }
 
@@ -485,7 +485,7 @@ namespace ZapLib
         /// </summary>
         /// <param name="data">資料</param>
         /// <param name="files">檔案</param>
-        public void SetRequestContnet(object data = null, object files = null)
+        public void SetRequestContent(object data = null, object files = null)
         {
             if (string.IsNullOrWhiteSpace(ContentType)) ContentType = "application/json";
             if (files != null) ContentType = "multipart/form-data";

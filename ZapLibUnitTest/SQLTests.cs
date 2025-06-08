@@ -91,8 +91,8 @@ namespace ZapLib.Tests
             SQL db1 = new SQL(Host1, DBName1, User1, Password1);
             SQL db2 = new SQL(Host2, DBName2, User2, Password2);
 
-            db1.Connet();
-            db2.Connet();
+            db1.Connect();
+            db2.Connect();
 
             if (db1.IsConn && db2.IsConn)
             {
@@ -164,7 +164,7 @@ namespace ZapLib.Tests
 
             SQL db = new SQL(Host, DBName, User, Password, true);
 
-            db.Connet();
+            db.Connect();
 
             if (db.IsConn)
             {
@@ -232,7 +232,7 @@ namespace ZapLib.Tests
         }
 
         [TestMethod()]
-        public void BuildconnStringTest()
+        public void BuildConnectionStringTest()
         {
             SQL db = new SQL();
 
@@ -249,7 +249,7 @@ namespace ZapLib.Tests
             for (int i = 0; i < testpool.Length; i++)
             {
                 string cs = testpool[i];
-                string res = new SQL(cs).BuildconnString();
+                string res = new SQL(cs).BuildConnectionString();
                 Trace.WriteLine(cs);
                 Trace.WriteLine(res);
                 Assert.IsTrue(res.Contains(exps[i]));
@@ -261,18 +261,18 @@ namespace ZapLib.Tests
 
 
         [TestMethod()]
-        public void BuildconnStringTest2()
+        public void BuildConnectionStringTest2()
         {
 
             string testsql = "Data Source=10.190.173.134\\support6;Initial Catalog=Drive;User ID=sa;Password=123";
             var db = new SQL(testsql);
-            string connstr = db.BuildconnString();
+            string connstr = db.BuildConnectionString();
             Trace.WriteLine(testsql + "\n" + connstr);
             Assert.IsTrue(connstr.Contains("ReadWrite"));
 
             db.SQLReadOnly = true;
 
-            string connstr2 = db.BuildconnString();
+            string connstr2 = db.BuildConnectionString();
             Trace.WriteLine(testsql + "\n" + connstr2);
 
             Assert.IsTrue(connstr2.Contains("ReadWrite"));
@@ -282,7 +282,7 @@ namespace ZapLib.Tests
 
 
         [TestMethod()]
-        public void BuildconnStringTest3()
+        public void BuildConnectionStringTest3()
         {
             //SQL db = new SQL();
 
@@ -295,7 +295,7 @@ namespace ZapLib.Tests
             Trace.WriteLine("case 1");
             string cs = testpool[0];
             var db = new SQL(cs);
-            string res = db.BuildconnString();
+            string res = db.BuildConnectionString();
             Trace.WriteLine("conn str: " + cs);
             Trace.WriteLine("build str: " + res);
             Trace.WriteLine("timeout: " + db.Timeout);
@@ -304,7 +304,7 @@ namespace ZapLib.Tests
             Trace.WriteLine("case 2");
             cs = testpool[1];
             db = new SQL(cs);
-            res = db.BuildconnString();
+            res = db.BuildConnectionString();
             Trace.WriteLine("conn str: " + cs);
             Trace.WriteLine("build str: " + res);
             Trace.WriteLine("timeout: " + db.Timeout);
@@ -316,7 +316,7 @@ namespace ZapLib.Tests
             cs = testpool[0];
             db = new SQL(cs);
             db.Timeout = 666;
-            res = db.BuildconnString();
+            res = db.BuildConnectionString();
             Trace.WriteLine("conn str: " + cs);
             Trace.WriteLine("build str: " + res);
             Trace.WriteLine("timeout: " + db.Timeout);
@@ -327,7 +327,7 @@ namespace ZapLib.Tests
             cs = testpool[1];
             db = new SQL(cs);
             db.Timeout = 222;
-            res = db.BuildconnString();
+            res = db.BuildConnectionString();
             Trace.WriteLine("conn str: " + cs);
             Trace.WriteLine("build str: " + res);
             Trace.WriteLine("timeout: " + db.Timeout);
