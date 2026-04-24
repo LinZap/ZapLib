@@ -2,6 +2,52 @@
 
 改版紀錄
 
+## `2.5.0-beta1`
+
+1. 新增全新類別 `OracleSQL`，用於連線 Oracle 資料庫，使用方式比照既有的 `SQL` class 設計，主要差異如下：
+    * 底層採用 [Oracle.ManagedDataAccess](https://www.nuget.org/packages/Oracle.ManagedDataAccess) 純託管套件，部署機器**不需要安裝 Oracle Client**。
+    * 建構子僅提供一種 `public OracleSQL(string connectionString)`，傳入的參數可以是 `.config` 中 `connectionStrings` 的名稱，也可以直接傳入連線字串。
+    * SQL 語法中的參數寫法維持與 `SQL` class 相同，使用 `@name`，內部會自動轉為 Oracle 原生的 `:name` 並啟用 `BindByName` 按名稱綁定。
+    * 本版本為精簡版，僅先行支援 `Query` / `QuickQuery<T>` / `QuickDynamicQuery` 三個常用查詢方法，其餘功能 (BulkCopy、Stored Procedure、Transaction 等) 後續版本再行擴充。
+
+
+**`App.config` 或 `Web.config` 設定範例**
+
+可於 `connectionStrings` 中加入 Oracle 連線字串，注意 `providerName` 需指定為 `Oracle.ManagedDataAccess.Client`：
+
+```xml
+<connectionStrings>
+  <add name="OracleConn"
+       connectionString="User Id=zaplib;Password=zaplib123;Data Source=10.190.173.129:1521/FREEPDB1"
+       providerName="Oracle.ManagedDataAccess.Client" />
+</connectionStrings>
+```
+
+**使用範例**
+
+直接比照 `SQL` class 的寫法，透過 config 的連線名稱建立物件並查詢：
+
+```csharp
+// 以 connectionStrings 中的名稱連線
+OracleSQL db = new OracleSQL("OracleConn");
+
+// 也可以直接傳入完整連線字串
+// OracleSQL db = new OracleSQL("User Id=zaplib;Password=zaplib123;Data Source=10.190.173.129:1521/FREEPDB1");
+
+// 動態查詢，返回 dynamic[]
+dynamic[] rows = db.QuickDynamicQuery("SELECT * FROM HR_VIEW");
+
+// 泛型查詢，自動對應到 POCO 的屬性 (欄位比對不分大小寫)
+HR_Row[] users = db.QuickQuery<HR_Row>(
+    "SELECT * FROM HR_VIEW WHERE EMPN = @empn",
+    new { empn = "625871" }
+);
+
+// 查詢失敗時可取得錯誤訊息
+string err = db.GetErrorMessage();
+```
+
+
 ## `2.4.13-beta3`
 
 * 新增了 SQL 類別中 Timout 的機制，除非在程式中明確指定了 Timeout 數值，否則將會嘗試從 SQL Connection String 中抓取，如果都抓不到則會預設 30 秒

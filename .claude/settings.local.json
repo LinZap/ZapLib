@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nuget help *)",
+      "Bash(nuget install *)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe\" ZapLib/ZapLib.csproj //p:Configuration=Debug //nologo //v:minimal)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe\" ZapLib/ZapLib.csproj //p:Configuration=Debug //nologo)",
+      "Bash(ssh -V)",
+      "Bash(plink -ssh -l master -pw 'Iq123456' 10.190.173.129 \"uname -a; whoami; which docker; docker --version 2>&1; docker ps 2>&1 | head -20\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"df -h / ; echo '---'; free -h ; echo '---'; ss -tlnp 2>/dev/null | grep -E ':\\(1521|1522|8521\\)\\\\\\\\b' || echo 'ports 1521/1522/8521 look free'; echo '---'; docker ps -a --format '{{.Names}}' | grep -i oracle || echo 'no existing oracle container'\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"docker pull gvenzl/oracle-free:slim-faststart 2>&1 | tail -15\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"docker run -d --name oracle-zaplib --restart unless-stopped -p 1521:1521 -e ORACLE_PASSWORD=Oracle123 -e APP_USER=zaplib -e APP_USER_PASSWORD=zaplib123 -v oracle-zaplib-data:/opt/oracle/oradata gvenzl/oracle-free:slim-faststart 2>&1; echo '---'; docker ps --filter name=oracle-zaplib --format 'table {{.Names}}\\\\t{{.Status}}\\\\t{{.Ports}}'\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"docker inspect --format '{{.State.Health.Status}}' oracle-zaplib\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"docker logs oracle-zaplib 2>&1 | tail -30\")",
+      "Bash(plink -batch -ssh -l master -pw 'Iq123456' 10.190.173.129 \"docker exec oracle-zaplib bash -c \\\\\"echo 'SELECT 1 AS ONE FROM DUAL;' | sqlplus -S zaplib/zaplib123@localhost:1521/FREEPDB1\\\\\"\")",
+      "Bash(plink -batch *)",
+      "Bash(python \"D:/Csharp/ZapLib/tmp/gen_hr_sql.py\")",
+      "Bash(pscp -V)",
+      "Bash(pscp -batch -pw 'Iq123456' \"D:/Csharp/ZapLib/tmp/hr_load.sql\" master@10.190.173.129:/tmp/hr_load.sql)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe\" ZapLibUnitTest/ZapLibUnitTest.csproj //p:Configuration=Debug //nologo)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TestWindow/vstest.console.exe\" ZapLibUnitTest/bin/Debug/ZapLibUnitTest.dll //TestCaseFilter:\"FullyQualifiedName~OracleSQLTests\" //logger:console //verbosity:normal)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TestWindow/vstest.console.exe\" ZapLibUnitTest/bin/Debug/ZapLibUnitTest.dll //TestCaseFilter:\"FullyQualifiedName~OracleSQLTests\")",
+      "Bash(unzip -p \"Oracle.ManagedDataAccess.23.26.200.nupkg\" \"Oracle.ManagedDataAccess.nuspec\")",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/MSBuild.exe\" ZapLib.sln /p:Configuration=Debug /v:minimal /nologo)",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe\" ZapLib.sln /p:Configuration=Debug /v:minimal /nologo)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\2019\\\\Enterprise\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" D:\\\\Csharp\\\\ZapLib\\\\ZapLib.sln /p:Configuration=Debug /v:minimal /nologo 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\2019\\\\Enterprise\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe\" \"D:\\\\Csharp\\\\ZapLib\\\\ZapLibUnitTest\\\\bin\\\\Debug\\\\ZapLibUnitTest.dll\" /TestCaseFilter:\"FullyQualifiedName~OracleSQLTests\" /Logger:console 2>&1)"
+    ]
+  }
+}
