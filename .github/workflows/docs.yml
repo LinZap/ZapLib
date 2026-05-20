@@ -40,8 +40,12 @@ jobs:
         run: dotnet tool install -g docfx
         shell: pwsh
 
-      - name: NuGet Restore
-        run: nuget restore ZapLib.sln
+      - name: NuGet Restore (main project only)
+        # Restore packages for ZapLib.csproj only — the ZapLibUnitTest
+        # project references an internal-only package (Interface-SSO)
+        # that is not on public nuget.org. DocFX only needs the main
+        # project's metadata anyway.
+        run: nuget restore ZapLib\packages.config -PackagesDirectory packages
         shell: pwsh
 
       - name: Build ZapLib (so DocFX metadata can resolve refs)
