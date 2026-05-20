@@ -57,7 +57,7 @@ Console.WriteLine(rows[0].name);
 本文件分成兩大區塊：
 
 * **[Articles](articles/getting-started.md)** — 主題式教學，從安裝、設定到各模組的真實情境範例
-* **[API Reference](api/index.md)** — 由 source code 自動產生的完整型別 / 方法 / 屬性字典
+* **[API Reference](api/)** — 由 source code 自動產生的完整型別 / 方法 / 屬性字典
 
 如果你是第一次使用 ZapLib，建議從 [Getting Started](articles/getting-started.md) 開始。
 

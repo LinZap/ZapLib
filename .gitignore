@@ -31,5 +31,8 @@ _notes
 
 # DocFX (auto-generated)
 docs/_site/
-docs/api/
 docs/obj/
+# api/ holds auto-generated *.yml from DocFX metadata, but keep our
+# manual landing page (index.md) so the "API Reference" link resolves.
+docs/api/*
+!docs/api/index.md
