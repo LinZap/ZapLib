@@ -28,3 +28,8 @@ _notes
 *.exe
 *.nupkg
 **/.claude/
+
+# DocFX (auto-generated)
+docs/_site/
+docs/api/
+docs/obj/
