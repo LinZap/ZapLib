@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <package >
   <metadata>
     <id>ZapLib</id>
@@ -7,11 +7,22 @@
     <authors>Zap Lin</authors>
     <owners>Zap Lin</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>Docs: https://github.com/LinZap/ZapLib</description>
-    <releaseNotes>v2.4.12 (Stable); v1.22.0 (LTS)</releaseNotes>
-    <copyright>Copyright Zap Lin 2026</copyright>
-    <tags>Zap,Lib,API</tags>
-    <projectUrl>https://github.com/LinZap/ZapLib</projectUrl>
+    <description>
+      Inspired by jQuery and Node.js, ZapLib is a lightweight C# library that helps developers accomplish complex tasks with minimal code — HTTP requests, SQL Server / Oracle queries, .NET Web API extensions, SMTP mail, regular expressions, and more.
+
+      📚 Documentation: https://linzap.github.io/ZapLib/
+      🔧 Source &amp; Issues: https://github.com/LinZap/ZapLib
+    </description>
+    <releaseNotes>
+      v2.5.0-beta1 — NEW OracleSQL class for Oracle database queries (managed driver, no Oracle Client needed)
+      v2.4.12 (Stable) — SQL AlwaysOn read-only routing support
+      v1.22.0 (LTS for .NET 4.5)
+
+      Full changelog: https://github.com/LinZap/ZapLib/blob/master/CHANGELOG.md
+    </releaseNotes>
+    <copyright>Copyright Zap Lin 2018-2026</copyright>
+    <tags>Zap Lib API HTTP Fetch SQL Oracle WebAPI SignalR SMTP Mailer Regex JSON Crypto</tags>
+    <projectUrl>https://linzap.github.io/ZapLib/</projectUrl>
     <readme>docs\README.md</readme>
     <license type="expression">MIT</license>
     <icon>docs\icon.png</icon>
