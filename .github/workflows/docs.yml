@@ -20,28 +20,36 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET (for DocFX CLI)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Setup MSBuild (for net472 metadata)
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
 
       - name: Install DocFX
         run: dotnet tool install -g docfx
+        shell: pwsh
 
-      - name: Restore NuGet packages
+      - name: NuGet Restore
         run: nuget restore ZapLib.sln
         shell: pwsh
 
+      - name: Build ZapLib (so DocFX metadata can resolve refs)
+        run: msbuild ZapLib\ZapLib.csproj /p:Configuration=Release /m /nologo /verbosity:minimal
+        shell: pwsh
+
       - name: Build DocFX site
-        run: docfx docs/docfx.json
+        run: docfx docs/docfx.json --logLevel Info
         shell: pwsh
 
       - name: Upload artifact
