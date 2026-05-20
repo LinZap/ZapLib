@@ -27,3 +27,4 @@ _notes
 *.csproj.vspscc
 *.exe
 *.nupkg
+**/.claude/
