@@ -120,7 +120,7 @@ public class CreateOrderResult
 
 ```csharp
 SQL db = new SQL("DefaultConn");
-db.Connet();
+db.Connect();
 
 if (db.IsConn)
 {

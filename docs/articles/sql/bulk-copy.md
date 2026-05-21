@@ -92,7 +92,7 @@ bool ok = db.QuickBulkCopy(dt, "Book");
 
 ```csharp
 SQL db = new SQL("DefaultConn");
-db.Connet();
+db.Connect();
 
 if (db.IsConn)
 {

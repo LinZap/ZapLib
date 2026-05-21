@@ -81,11 +81,17 @@ foreach (dynamic row in rows)
 
 ## Manual Query
 
-需要更精細控制？走手動三部曲：**`Connet()` → `Query()` → `Close()`**：
+需要更精細控制？走手動三部曲：**`Connect()` → `Query()` → `Close()`**：
 
 ```csharp
 SQL db = new SQL("DefaultConn");
-db.Connet();   // 注意：方法名是 Connet，非 Connect (歷史拼字)
+db.Connect();
+
+// > 💡 v2.5.0 起，原本的 db.Connet() 仍可使用，但已標記為 [Obsolete]，
+// > 編譯時會出現 warning 提示遷移到新名字 db.Connect()。下一個 major
+// > 版本將完全移除 Connet。同樣的還有 SQL.BuildconnString() →
+// > BuildConnectionString()、Fetch.SetRequestContnet() →
+// > SetRequestContent()。
 
 if (db.IsConn)
 {
@@ -123,7 +129,7 @@ if (db.IsConn)
 
 ```csharp
 SQL db = new SQL("DefaultConn");
-db.Connet();
+db.Connect();
 
 if (db.IsConn)
 {
@@ -155,7 +161,7 @@ if (db.IsConn)
 拿到 `SqlDataReader` 後，可以用 `fetch<T>()` 一鍵綁定 model：
 
 ```csharp
-db.Connet();
+db.Connect();
 SqlDataReader reader = db.Query("SELECT * FROM Users");
 
 ModelUser[] users = db.fetch<ModelUser>(reader);   // 全部

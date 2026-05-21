@@ -67,7 +67,7 @@ db.QuickQuery<dynamic>(
 `QuickQuery<T>` 不直接給你 affected rows。要拿到要走手動模式：
 
 ```csharp
-db.Connet();
+db.Connect();
 if (db.IsConn)
 {
     try

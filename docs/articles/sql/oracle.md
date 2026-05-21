@@ -112,7 +112,7 @@ if (users == null)
 
 ```csharp
 OracleSQL db = new OracleSQL("OracleConn");
-db.Connet();
+db.Connect();
 
 if (db.IsConn)
 {
