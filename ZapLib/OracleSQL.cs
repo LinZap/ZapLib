@@ -89,7 +89,13 @@ namespace ZapLib
         /// <summary>
         /// 手動連線資料庫，可以使用 IsConn 來確認是否連線成功
         /// </summary>
-        public void Connet()
+        [Obsolete("方法已重新命名為 Connect，原拼字錯誤的版本將於下一個 major 版本移除")]
+        public void Connet() => Connect();
+
+        /// <summary>
+        /// 手動連線資料庫，可以使用 IsConn 來確認是否連線成功
+        /// </summary>
+        public void Connect()
         {
             LogExecTime lextime = new LogExecTime($"DB Connection time\r\nTraceCode: {TraceCode}");
             try
@@ -142,7 +148,7 @@ namespace ZapLib
         public T[] QuickQuery<T>(string sql, object param = null, bool isfetchall = true)
         {
             T[] data = null;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try
@@ -176,7 +182,7 @@ namespace ZapLib
         public dynamic[] QuickDynamicQuery(string sql, object param = null, bool isfetchall = true)
         {
             dynamic[] data = null;
-            Connet();
+            Connect();
             if (IsConn)
             {
                 try

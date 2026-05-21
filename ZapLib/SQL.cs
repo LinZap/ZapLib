@@ -165,6 +165,12 @@ namespace ZapLib
         public SqlConnection GetConnection() => Conn;
 
         /// <summary>
+        /// [已棄用] 手動連線資料庫。請改用 <see cref="Connect"/>
+        /// </summary>
+        [Obsolete("方法已重新命名為 Connect，原拼字錯誤的版本將於下一個 major 版本移除")]
+        public void Connet() => Connect();
+
+        /// <summary>
         /// 手動連線資料庫，可以使用 IsConn 來確認使否連線成功
         /// </summary>
         public void Connect()
@@ -194,6 +200,13 @@ namespace ZapLib
             }
             lextime.Log();
         }
+
+        /// <summary>
+        /// [已棄用] 建構連線字串。請改用 <see cref="BuildConnectionString"/>
+        /// </summary>
+        /// <returns>重新補全過的連線字串</returns>
+        [Obsolete("方法已重新命名為 BuildConnectionString，原拼字錯誤的版本將於下一個 major 版本移除")]
+        public string BuildconnString() => BuildConnectionString();
 
         /// <summary>
         /// 建構連線字串

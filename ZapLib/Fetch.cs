@@ -481,6 +481,14 @@ namespace ZapLib
             new StringContent(data, RequestEncoding, ContentType);
 
         /// <summary>
+        /// [已棄用] 設定 Request.Content 的資料。請改用 <see cref="SetRequestContent"/>
+        /// </summary>
+        /// <param name="data">資料</param>
+        /// <param name="files">檔案</param>
+        [Obsolete("方法已重新命名為 SetRequestContent，原拼字錯誤的版本將於下一個 major 版本移除")]
+        public void SetRequestContnet(object data = null, object files = null) => SetRequestContent(data, files);
+
+        /// <summary>
         /// 設定 Request.Content 的資料
         /// </summary>
         /// <param name="data">資料</param>
