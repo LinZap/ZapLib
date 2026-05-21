@@ -2,6 +2,25 @@
 
 改版紀錄
 
+## `2.5.0-beta2`
+
+安全性更新 (Security fixes) — 升級多個有 CVE 公告的相依套件，無公開 API 變動，使用者可直接更新。
+
+升級內容：
+
+| 套件 | 原版本 | 新版本 | CVE / Advisory |
+| --- | --- | --- | --- |
+| `Newtonsoft.Json` | 12.0.1 | 13.0.3 | [GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr) (high) |
+| `Microsoft.Owin` (+ `.Security`, `.Host.SystemWeb`) | 4.2.0 | 4.2.3 | [GHSA-3rq8-h3gj-r5c6](https://github.com/advisories/GHSA-3rq8-h3gj-r5c6) (high) |
+| `MailKit` | 3.3.0 | 4.16.0 | [GHSA-9j88-vvj5-vhgr](https://github.com/advisories/GHSA-9j88-vvj5-vhgr) (moderate) |
+| `MimeKit` | 3.3.0 | 4.16.0 | [GHSA-gmc6-fwg3-75m5](https://github.com/advisories/GHSA-gmc6-fwg3-75m5) (high), [GHSA-g7hc-96xr-gvvx](https://github.com/advisories/GHSA-g7hc-96xr-gvvx) (moderate) |
+
+備註：
+
+* MailKit/MimeKit 由 3.x 升級到 4.x，原本相依的 `Portable.BouncyCastle 1.9.0` 改為 `BouncyCastle.Cryptography 2.6.2`，並一併拉新 `System.Buffers` / `System.Memory` / `System.Numerics.Vectors` / `System.Runtime.CompilerServices.Unsafe` / `System.Threading.Tasks.Extensions`，並新增 `System.Formats.Asn1`。
+* `Mailer` class 公開介面 (`Send`, `AddAttachments`, `SecureSocketOption` 等) 維持不變，使用方式完全相同。
+* 仍維持 .NET Framework 4.7.2 目標，未變更 TFM。
+
 ## `2.5.0-beta1`
 
 1. 新增全新類別 `OracleSQL`，用於連線 Oracle 資料庫，使用方式比照既有的 `SQL` class 設計，主要差異如下：
