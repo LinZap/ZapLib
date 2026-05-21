@@ -4,18 +4,45 @@
 
 本頁列出近期版本的重點：
 
+## `2.5.0` 🎉
+
+**v2.5.x 系列正式版**。同時也是新文件站 [linzap.github.io/ZapLib](https://linzap.github.io/ZapLib/) 的首個正式版。
+
+### ✨ 新功能
+
+* **`OracleSQL` 類別** — 純託管 Oracle 連線，免裝 Oracle Client。詳見 [SQL / Oracle](sql/oracle.md)
+* 自動產生的 [API Reference](../api/) 由 DocFX 從 source code 的 XML doc comments 抽出
+
+### 🔒 安全性更新
+
+升級多個有 CVE 公告的相依套件，**無公開 API 變動**：
+
+| 套件 | 原版本 | 新版本 | CVE |
+|---|---|---|---|
+| `Newtonsoft.Json` | 12.0.1 | 13.0.3 | [GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr) |
+| `Microsoft.Owin` 家族 | 4.2.0 | 4.2.3 | [GHSA-3rq8-h3gj-r5c6](https://github.com/advisories/GHSA-3rq8-h3gj-r5c6) |
+| `MailKit` + `MimeKit` | 3.3.0 | 4.16.0 | 3 個 advisories |
+
+> MailKit 跳了 major 版本，但 ZapLib 的 `Mailer` 公開 API 維持不變，使用方式完全相同。
+
+### 🔤 方法命名修正（含 Obsolete 別名）
+
+修正三個 public method 的英文拼字錯誤。**舊名稱仍可使用**（編譯時有 warning），下一個 major 版本才會移除：
+
+| 舊名稱 | 新名稱 |
+|---|---|
+| `SQL.Connet()` | `SQL.Connect()` |
+| `SQL.BuildconnString()` | `SQL.BuildConnectionString()` |
+| `OracleSQL.Connet()` | `OracleSQL.Connect()` |
+| `Fetch.SetRequestContnet()` | `Fetch.SetRequestContent()` |
+
+升級 2.4.x → 2.5.0 的程式碼**不需任何修改**，只會看到 deprecation warning。
+
+---
+
 ## `2.5.0-beta1`
 
-### 🎉 OracleSQL — 新類別
-
-新增類別 `OracleSQL`，用於連線 Oracle 資料庫。使用方式比照 [`SQL`](sql/basic-usage.md) class。
-
-* **底層採用 [Oracle.ManagedDataAccess](https://www.nuget.org/packages/Oracle.ManagedDataAccess) 純託管套件** — 部署機器**不需要安裝 Oracle Client**
-* 建構子僅提供一種 `OracleSQL(string connectionString)`，可傳 connectionStrings 名稱或完整連線字串
-* SQL 參數寫法維持 `@name` — 內部自動轉成 Oracle 原生的 `:name` 並啟用 `BindByName`
-* 本版本為精簡版，**僅先支援** `Query` / `QuickQuery<T>` / `QuickDynamicQuery` 三個查詢方法。BulkCopy / Stored Procedure / Transaction 等將於後續版本擴充
-
-詳細用法請見 **[SQL / Oracle](sql/oracle.md)**。
+OracleSQL 類別首次出現。詳見 [SQL / Oracle](sql/oracle.md)。
 
 ---
 

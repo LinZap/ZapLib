@@ -22,8 +22,8 @@ PM> Install-Package ZapLib
 **Specific Version**
 
 ```
-PM> Install-Package ZapLib -Version 2.4.12      # v2 stable
-PM> Install-Package ZapLib -Version 2.5.0-beta1 # v2 with OracleSQL support
+PM> Install-Package ZapLib -Version 2.5.0       # v2 stable (latest)
+PM> Install-Package ZapLib -Version 2.4.12      # previous v2 stable
 PM> Install-Package ZapLib -Version 1.23.0      # v1 legacy
 ```
 
@@ -74,7 +74,7 @@ dynamic[] rows = db.QuickDynamicQuery("SELECT * FROM Book WHERE id = @id", new {
 Console.WriteLine(rows[0].name);
 ```
 
-**Oracle Query** (since `v2.5.0-beta1`)
+**Oracle Query** (since `v2.5.0`)
 
 ```csharp
 using ZapLib;

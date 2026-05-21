@@ -2,6 +2,25 @@
 
 改版紀錄
 
+## `2.5.0`
+
+🎉 **v2.5.x 系列正式版**。彙整 `2.5.0-beta1` 與 `2.5.0-beta2` 全部內容，並新增以下：
+
+1. **方法命名修正**：修正三個 public method 的英文拼字錯誤。原拼字錯誤的版本仍以 `[Obsolete]` 別名保留，**現有程式碼不需修改即可升級**，編譯時會看到 warning 提示遷移。
+
+    | 舊名稱 | 新名稱（推薦） |
+    | --- | --- |
+    | `SQL.Connet()` | `SQL.Connect()` |
+    | `SQL.BuildconnString()` | `SQL.BuildConnectionString()` |
+    | `OracleSQL.Connet()` | `OracleSQL.Connect()` |
+    | `Fetch.SetRequestContnet()` | `Fetch.SetRequestContent()` |
+
+    > ⚠️ 下一個 major 版本（v3.0）將完全移除舊名稱。請盡快遷移。
+
+2. **全新文件站** [https://linzap.github.io/ZapLib/](https://linzap.github.io/ZapLib/) 上線，由 DocFX 自動產生，包含完整教學文章 + API Reference。
+
+3. 本版本綜合 `2.5.0-beta1` 新增的 `OracleSQL` 類別，與 `2.5.0-beta2` 的多個 CVE 安全更新。詳見下方各 beta 版說明。
+
 ## `2.5.0-beta2`
 
 安全性更新 (Security fixes) — 升級多個有 CVE 公告的相依套件，無公開 API 變動，使用者可直接更新。
